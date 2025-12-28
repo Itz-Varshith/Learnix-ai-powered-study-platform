@@ -1,24 +1,42 @@
-import express from "express"
-import cors from "cors"
-import dotenv from "dotenv"; 
+// backend/index.js
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import { auth } from "./firebaseAdmin.js"; 
 
-const app= new express();
+const app = express();
 
-// Config for allowing json request, responses
-app.use(express.json())
-// Config for CORS
-app.use(cors({
-  origin: "http://localhost:3000", 
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true
-}));
-// Config for dotenv
-dotenv.config()
-app.get("/",(req,res)=>{
-    return res.send("Backend running for Learnix AI Powered Study platform")    
-})
+app.use(express.json());
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+dotenv.config();
+app.post("/auth/login", async (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).send("No token provided");
+  }
 
-// Server Runs on the port 9000.
-app.listen(9000,()=>{
-    console.log("Server started running on port 9000")
-})
+  const token = authHeader.split("Bearer ")[1];
+
+  try {
+    const decodedToken = await auth.verifyIdToken(token);
+    const { uid, email } = decodedToken;
+
+    if (!email.endsWith("@iiti.ac.in")) {       //Internal user only
+      console.log(`Blocked login attempt from: ${email}`);
+      return res.status(403).json({ error: "Institution email required" });
+    }
+
+    console.log(`User verified: ${email}`);
+    
+    
+    return res.status(200).json({ message: "User is authentic", uid });
+
+  } catch (error) {
+    console.error("Verification failed:", error);
+    return res.status(403).send("Invalid Token");
+  }
+});
+
+app.listen(9000, () => {
+  console.log("Server running on port 9000");
+});

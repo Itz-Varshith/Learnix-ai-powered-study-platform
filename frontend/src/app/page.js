@@ -15,7 +15,7 @@ export default function LandingPage() {
 
         <div className="mt-8 flex gap-4 justify-center">
           <Link
-            href="/signup"
+            href="/signin"
             className="px-6 py-3 bg-black text-white rounded-md"
           >
             Get Started
