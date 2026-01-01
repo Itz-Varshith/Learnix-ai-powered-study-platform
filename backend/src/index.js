@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 // Import Routes
 import authRoutes from "./routes/authRoutes.js";
 import todoRoutes from "./routes/todoRoutes.js";
+import focusRoutes from "./routes/focusRoutes.js"
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 // Use Routes
 app.use("/auth", authRoutes);      // Endpoints starting with /auth
 app.use("/api/todos", todoRoutes); // Endpoints starting with /api/todos
+app.use("/api/focus", focusRoutes);
 
 // Start Server
 app.listen(PORT, () => {

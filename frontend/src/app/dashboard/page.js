@@ -10,10 +10,11 @@ import {
   BookOpen, 
   Settings, 
   LogOut,
-  Loader2 // Added spinner for loading state
+  Loader2,
+  User // <--- 1. Import User Icon
 } from 'lucide-react';
-import { onAuthStateChanged, signOut } from 'firebase/auth'; // Import Firebase Auth methods
-import { auth } from '@/lib/firebase'; // Import your firebase config
+import { onAuthStateChanged, signOut } from 'firebase/auth'; 
+import { auth } from '@/lib/firebase'; 
 
 // Import your components
 import FocusSession from '@/components/tools/FocusSession';
@@ -21,6 +22,7 @@ import TodoList from '@/components/tools/TodoList';
 import StudyGroups from '@/components/tools/StudyGroups';
 import MyCourses from '@/components/tools/MyCourses';
 import Navbar from '@/components/ui/navbar';
+import Profile from '@/components/tools/Profile'; // <--- 2. Import Profile Component
 
 const Dashboard = () => {
   const router = useRouter();
@@ -39,7 +41,6 @@ const Dashboard = () => {
       if (currentUser) {
         setUser(currentUser);
       } else {
-        // Optional: Redirect to login if not authenticated
         router.push('/'); 
       }
       setLoading(false);
@@ -64,6 +65,7 @@ const Dashboard = () => {
     { id: 'tasks', label: 'My Tasks', icon: CheckSquare, component: <TodoList /> },
     { id: 'focus', label: 'Focus Session', icon: Timer, component: <FocusSession /> },
     { id: 'groups', label: 'Study Groups', icon: Users, component: <StudyGroups /> },
+    { id: 'profile', label: 'My Profile', icon: User, component: <Profile user={user} /> },
   ];
 
   const ActiveComponent = navItems.find(item => item.id === activeTab)?.component;
@@ -111,7 +113,6 @@ const Dashboard = () => {
             <Settings className="w-5 h-5" /> Settings
           </button>
           
-          {/* Logout Button in Sidebar */}
           <button 
             onClick={handleSignOut}
             className="flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 text-sm font-medium w-full rounded-lg transition-colors mt-1"
@@ -124,7 +125,6 @@ const Dashboard = () => {
       {/* --- Main Content --- */}
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
         
-        {/* --- 3. Navbar Component with Real User --- */}
         <Navbar 
           user={user}
           activeView={activeTab}
@@ -132,7 +132,6 @@ const Dashboard = () => {
           onSignOut={handleSignOut}
         />
 
-        {/* Mobile Menu Dropdown (Controlled by Navbar toggle) */}
         {isMobileMenuOpen && (
           <div className="md:hidden bg-white border-b border-gray-200 absolute w-full top-16 z-10 shadow-lg animate-in slide-in-from-top-2">
             {navItems.map((item) => (
@@ -153,7 +152,6 @@ const Dashboard = () => {
           </div>
         )}
 
-        {/* Dynamic Content Area */}
         <div className="flex-1 overflow-auto p-4 md:p-8 scroll-smooth">
           <div className="max-w-6xl mx-auto">
             <div className="transition-all duration-300 ease-in-out">
