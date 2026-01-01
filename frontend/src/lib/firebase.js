@@ -1,8 +1,8 @@
 // frontend/src/lib/firebase.js
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
-// PASTE YOUR CONFIG FROM FIREBASE CONSOLE HERE
 const firebaseConfig = {
   apiKey: "AIzaSyA9hMD0wpA-AYITLaRQzOjoy3n9tgB_2uM",
   authDomain: "learnix-2b566.firebaseapp.com",
@@ -15,3 +15,4 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
+export const db = getFirestore(app);
