@@ -17,7 +17,7 @@ const MyCourses = () => {
   const handleCourseClick = (courseCode) => {
     // Converts "CS 201" -> "cs201" for a cleaner URL
     const formattedId = courseCode.replace(/\s+/g, '').toLowerCase();
-    router.push(`/dashboard/course/${formattedId}`);
+    router.push(`/course/${formattedId}`);
   };
 
   return (

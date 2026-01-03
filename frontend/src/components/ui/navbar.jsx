@@ -54,7 +54,7 @@ export default function Navbar({ user, activeView, onSignOut, toggleSidebar }) {
         <div className="h-6 w-px bg-gray-200 hidden sm:block mx-2"></div>
         
         <h2 className="text-sm font-medium text-gray-500 capitalize hidden sm:block">
-          {activeView === "overview" ? "Dashboard" : activeView.replace("-", " ")}
+         {activeView ? (activeView === "overview" ? "Dashboard" : activeView.replace("-", " ")) : "Dashboard"}
         </h2>
       </div>
 
