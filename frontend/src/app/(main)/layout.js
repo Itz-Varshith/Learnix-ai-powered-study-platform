@@ -12,7 +12,8 @@ import {
   Settings, 
   LogOut,
   Loader2,
-  User 
+  User,
+  ShieldPlus
 } from 'lucide-react';
 import { onAuthStateChanged, signOut } from 'firebase/auth'; 
 import { auth } from '@/lib/firebase'; 
@@ -55,6 +56,7 @@ export default function MainLayout({ children }) {
     { href: '/focus', label: 'Focus Session', icon: Timer },
     { href: '/groups', label: 'Study Groups', icon: Users },
     { href: '/profile', label: 'My Profile', icon: User },
+    { href: '/admin', label: 'Admin Panel', icon: ShieldPlus },
   ];
 
   if (loading) {

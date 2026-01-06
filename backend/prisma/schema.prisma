@@ -25,7 +25,7 @@ model User {
 }
 
 model Course { 
-  id String @id
+  id String @id @default(uuid())
   courseCode String @unique
   courseName String
   courseDescription String
@@ -35,6 +35,7 @@ model Course {
   updatedAt DateTime @updatedAt
   users User[] @relation("CourseUsers")
   CourseEnrollment CourseEnrollment[]
+  fileMetaData fileMetaData[]
 }
 
 model CourseEnrollment {
@@ -44,3 +45,16 @@ model CourseEnrollment {
   course Course @relation(fields: [courseId], references: [id ])
   @@id([userId, courseId])
 }
+
+model fileMetaData {
+  id String @id @default(uuid())
+  storedLink String
+  fileName String
+  fileType String
+  fileSize Int
+  uploadedAt DateTime @default(now())
+  uploadedBy String
+  courseId String
+  course Course @relation(fields: [courseId], references: [id])
+}
+

@@ -6,31 +6,55 @@ import { useParams, usePathname, useRouter } from 'next/navigation';
 import { 
   Library, MessageSquare, Bot, Layers, FileText, BrainCircuit, ChevronLeft, Loader2 
 } from 'lucide-react';
-import { onAuthStateChanged, signOut } from 'firebase/auth'; // <--- 1. Import Auth
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase'; 
 import Navbar from '@/components/ui/navbar'; 
+
+const API_BASE = "http://localhost:9000/api/courses";
 
 export default function CourseLayout({ children }) {
   const params = useParams();
   const pathname = usePathname();
   const router = useRouter();
   
-  // --- 2. Add User State ---
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [courseDetails, setCourseDetails] = useState(null);
 
-  // --- 3. Listen for User (Just like in Main Layout) ---
+  // Listen for User
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
         setUser(currentUser);
       } else {
-        router.push('/'); // Protect the route
+        router.push('/');
       }
       setLoading(false);
     });
     return () => unsubscribe();
   }, [router]);
+
+  // Fetch course details
+  useEffect(() => {
+    const fetchCourseDetails = async () => {
+      try {
+        const response = await fetch(`${API_BASE}/all-courses`);
+        const data = await response.json();
+        if (data.success) {
+          const course = data.data.find(c => c.id === params.courseId);
+          if (course) {
+            setCourseDetails(course);
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching course details:", err);
+      }
+    };
+
+    if (params.courseId) {
+      fetchCourseDetails();
+    }
+  }, [params.courseId]);
 
   const handleSignOut = async () => {
     await signOut(auth);
@@ -84,11 +108,15 @@ export default function CourseLayout({ children }) {
           
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 bg-indigo-100 rounded-lg flex items-center justify-center text-indigo-600 font-bold uppercase">
-              {courseId?.substring(0, 2) || 'CS'}
+              {courseDetails?.courseCode?.substring(0, 2) || courseId?.substring(0, 2) || 'CS'}
             </div>
             <div>
-              <h2 className="font-bold text-gray-900 uppercase leading-tight">{courseId}</h2>
-              <p className="text-xs text-gray-500">Course Workspace</p>
+              <h2 className="font-bold text-gray-900 leading-tight line-clamp-2">
+                {courseDetails?.courseName || 'Loading...'}
+              </h2>
+              <p className="text-xs text-gray-500">
+                {courseDetails?.courseCode || 'Course Workspace'}
+              </p>
             </div>
           </div>
         </div>
