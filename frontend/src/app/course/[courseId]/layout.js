@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import { 
-  Library, MessageSquare, Bot, Layers, FileText, BrainCircuit, ChevronLeft, Loader2 
+  Library, MessageSquare, Bot, Layers, FileText, BrainCircuit, ChevronLeft, Loader2, LogOut 
 } from 'lucide-react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase'; 
@@ -20,6 +20,7 @@ export default function CourseLayout({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [courseDetails, setCourseDetails] = useState(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Listen for User
   useEffect(() => {
@@ -150,12 +151,69 @@ export default function CourseLayout({ children }) {
       {/* --- Course Content Area --- */}
       <main className="flex-1 flex flex-col min-w-0">
         
-        {/* --- 4. Pass User to Navbar --- */}
         <Navbar 
           user={user} 
           activeView={getPageTitle()}
           onSignOut={handleSignOut}
+          toggleSidebar={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         /> 
+
+        {/* Mobile Menu Overlay */}
+        {isMobileMenuOpen && (
+          <>
+            {/* Backdrop */}
+            <div 
+              className="md:hidden fixed inset-0 bg-black/30 z-40"
+              onClick={() => setIsMobileMenuOpen(false)}
+            />
+            {/* Menu */}
+            <div className="md:hidden fixed left-0 right-0 top-16 bg-white border-b border-gray-200 z-50 shadow-lg animate-in slide-in-from-top-2 max-h-[calc(100vh-4rem)] overflow-y-auto">
+              {/* Back to Dashboard */}
+              <button 
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  router.push('/dashboard');
+                }}
+                className="w-full text-left px-6 py-4 border-b border-gray-100 flex items-center gap-3 text-gray-500 hover:bg-gray-50"
+              >
+                <ChevronLeft className="w-5 h-5" />
+                Back to Dashboard
+              </button>
+              {/* Course Name Header */}
+              <div className="px-6 py-3 bg-indigo-50 border-b border-indigo-100">
+                <p className="font-semibold text-indigo-700 text-sm">{courseDetails?.courseName || 'Course'}</p>
+                <p className="text-xs text-indigo-500">{courseDetails?.courseCode}</p>
+              </div>
+              {/* Nav Items */}
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`w-full text-left px-6 py-4 border-b border-gray-50 flex items-center gap-3 transition-colors ${
+                    isActive(item.href, item.exact) 
+                      ? 'bg-indigo-50 text-indigo-700 font-medium' 
+                      : 'text-gray-600 hover:bg-gray-50'
+                  }`}
+                >
+                  <item.icon className="w-5 h-5" />
+                  {item.label}
+                </Link>
+              ))}
+              {/* Sign Out */}
+              <button 
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  handleSignOut();
+                }}
+                className="w-full text-left px-6 py-4 flex items-center gap-3 text-red-600 hover:bg-red-50 transition-colors"
+              >
+                <LogOut className="w-5 h-5" />
+                Sign Out
+              </button>
+            </div>
+          </>
+        )}
         
         <div className="p-4 md:p-8 flex-1 overflow-auto">
           {children}

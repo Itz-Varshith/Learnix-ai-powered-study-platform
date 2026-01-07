@@ -119,23 +119,44 @@ export default function MainLayout({ children }) {
             onSignOut={handleSignOut}
           />
 
-          {/* Mobile Menu */}
+          {/* Mobile Menu Overlay */}
           {isMobileMenuOpen && (
-            <div className="md:hidden bg-white border-b border-gray-200 absolute w-full top-16 z-10 shadow-lg animate-in slide-in-from-top-2">
-              {navItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={`w-full text-left px-6 py-4 border-b border-gray-50 flex items-center gap-3 ${
-                    pathname.startsWith(item.href) ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600'
-                  }`}
+            <>
+              {/* Backdrop */}
+              <div 
+                className="md:hidden fixed inset-0 bg-black/30 z-40"
+                onClick={() => setIsMobileMenuOpen(false)}
+              />
+              {/* Menu */}
+              <div className="md:hidden fixed left-0 right-0 top-16 bg-white border-b border-gray-200 z-50 shadow-lg animate-in slide-in-from-top-2 max-h-[calc(100vh-4rem)] overflow-y-auto">
+                {navItems.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`w-full text-left px-6 py-4 border-b border-gray-50 flex items-center gap-3 transition-colors ${
+                      pathname.startsWith(item.href) 
+                        ? 'bg-indigo-50 text-indigo-700 font-medium' 
+                        : 'text-gray-600 hover:bg-gray-50'
+                    }`}
+                  >
+                    <item.icon className="w-5 h-5" />
+                    {item.label}
+                  </Link>
+                ))}
+                {/* Sign Out in mobile menu */}
+                <button 
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    handleSignOut();
+                  }}
+                  className="w-full text-left px-6 py-4 flex items-center gap-3 text-red-600 hover:bg-red-50 transition-colors"
                 >
-                  <item.icon className="w-5 h-5" />
-                  {item.label}
-                </Link>
-              ))}
-            </div>
+                  <LogOut className="w-5 h-5" />
+                  Sign Out
+                </button>
+              </div>
+            </>
           )}
 
           {/* Content Area */}
