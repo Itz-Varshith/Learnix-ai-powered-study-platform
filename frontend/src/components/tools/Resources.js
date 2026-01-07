@@ -588,7 +588,7 @@ export default function Resources({ courseId }) {
                 Upload File
               </>
             )}
-          </button>
+            </button>
         </div>
       </div>
 

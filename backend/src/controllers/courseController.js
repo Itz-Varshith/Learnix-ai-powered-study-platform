@@ -509,6 +509,202 @@ const getStudyGroupMembers = async (req,res) => {
   }
 }
 
+
+const sendStudyGroupRequest = async (req,res) => {
+  try {
+    const {uid, name} = req.user;
+    const {recieverEmail, message, studyGroupId} = req.body;
+    if(!recieverEmail || !message || !uid || !name || !studyGroupId) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required",
+        data: null,
+      })
+    }
+    const recieverId= await prisma.user.findFirst({
+      where: {
+        email: recieverEmail,
+      },
+      select: {
+        id: true
+      }
+    })
+    const studyGroup = await prisma.course.findUnique({
+      where: {
+        id: studyGroupId
+      }
+    })
+    const headDetails = await prisma.studyGroupHead.findFirst({
+      where: {
+        studyGroupId: studyGroupId,
+        userId: uid,
+      }  
+    })
+    if(!headDetails) {
+      return res.status(400).json({
+        success: false,
+        message: "You are not the head of this study group",
+        data: null,
+      })
+    }
+    if(!recieverId) {
+      return res.status(400).json({
+        success: false,
+        message: "Reciever/ StudyGroup not found",
+        data: null,
+      })
+    }
+    if(!studyGroup) {
+      return res.status(400).json({
+        success: false,
+        message: "Study group not found",
+        data: null,
+      })
+    }
+    const newRequest = await prisma.studyGroupRequest.create({
+      data: {
+        senderId: uid, 
+        senderName: name,
+        recieverId: recieverId.id,
+        message: message,
+        studyGroupId: studyGroupId,
+        studyGroupName: studyGroup.courseName,
+        studyGroupCode: studyGroup.courseCode,
+        status: "Pending",
+        
+      }
+    })
+    if(!newRequest) {
+      return res.status(400).json({
+        success: false,
+        message: "Failed to send study group request",
+        data: null,
+      })
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Study group request sent successfully",
+      data: newRequest,
+    })
+  } catch (error) {
+    console.error("Error sending study group request", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error sending study group request",
+      error: error.message,
+    })
+  }
+}
+
+const fetchStudyGroupRequests = async (req, res) => {
+  try {
+    const {uid} = req.user;
+    const studyGroupRequests = await prisma.studyGroupRequest.findMany({
+      where: {
+        recieverId: uid,
+        status: "Pending",
+      },
+    })
+    return res.status(200).json({
+      success: true,
+      message: "Study group requests fetched successfully",
+      data: studyGroupRequests,
+    })
+  } catch (error) {
+    console.error("Error fetching study group requests", error);
+    return res
+      .status(500)
+      .json({
+        success: false,
+        message: "Error fetching study group requests",
+        error: error.message,
+      });
+  }
+};
+
+
+const changeStatusForRequest = async (req,res) => {
+  try {
+    const {uid} = req.user;
+    const {requestId, status} = req.body;
+    if(!requestId || !status || !uid ) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required",
+        data: null,
+      })
+    }
+    if(status !== "Accepted" && status !== "Rejected"){
+      return res.status(400).json({
+        success: false,
+        message: "Invalid status",
+        data: null,
+      })
+    }
+    const request = await prisma.studyGroupRequest.findUnique({
+      where: {
+        id: requestId,
+      }
+    })
+    if(!request) {
+      return res.status(400).json({
+        success: false,
+        message: "Request not found",
+        data: null,
+      })
+    }
+    if(request.recieverId !== uid){
+      return res.status(400).json({
+        success: false,
+        message: "You are not the reciever of this request",
+        data: null,
+      })
+    }
+    const updatedRequest = await prisma.studyGroupRequest.update({
+      where: {
+        id: requestId,
+      },
+      data: {
+        status: status,
+      }
+    })
+    if(!updatedRequest) {
+      return res.status(400).json({
+        success: false,
+        message: "Failed to change status for request",
+        data: null,
+      })
+    }
+    if(status === "Accepted"){
+  const enrollment = await prisma.courseEnrollment.create({
+      data: {
+        userId: uid,
+        courseId: request.studyGroupId,
+      }
+    })
+    if(!enrollment) {
+      return res.status(400).json({
+        success: false,
+        message: "Failed to add sender to study group",
+        data: null,
+      })
+    }
+  }
+    return res.status(200).json({
+      success: true,
+      message: "Status changed for request successfully",
+      data: updatedRequest,
+    })
+  } catch (error) {
+    console.error("Error changing status for request", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error changing status for request",
+      error: error.message,
+    })
+  }
+}
+
 export {
   getEnrolledCourses,
   fetchAllCourses,
@@ -523,4 +719,7 @@ export {
   fetchJoinedStudyGroups,
   addStudyGroupHead,
   getStudyGroupMembers,
+  sendStudyGroupRequest,
+  fetchStudyGroupRequests,
+  changeStatusForRequest,
 };

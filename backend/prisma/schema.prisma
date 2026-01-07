@@ -91,10 +91,10 @@ model StudyGroupRequest {
   reciever   User                    @relation("recieverRelation", fields: [recieverId], references: [id])
   status     StudyGroupRequestStatus @default(Pending)
   message    String?
-  courseId   String
-  courseID   Course                  @relation(fields: [courseId], references: [id])
-  courseName String
-  courseCode String
+  studyGroupId   String
+  studyGroupID   Course                  @relation(fields: [studyGroupId], references: [id])
+  studyGroupName String
+  studyGroupCode String
   createdAt  DateTime                @default(now())
   updatedAt  DateTime                @updatedAt
 }

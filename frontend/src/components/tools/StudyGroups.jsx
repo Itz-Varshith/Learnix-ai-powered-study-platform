@@ -17,7 +17,12 @@ import {
   CheckCircle2,
   AlertCircle,
   RefreshCw,
-  MessageCircle
+  MessageCircle,
+  Mail,
+  Check,
+  XCircle,
+  Clock,
+  UserPlus
 } from 'lucide-react';
 import { auth } from '@/lib/firebase';
 
@@ -30,6 +35,11 @@ const StudyGroups = () => {
   const [joinedGroups, setJoinedGroups] = useState([]);
   const [loadingJoined, setLoadingJoined] = useState(true);
   const [errorJoined, setErrorJoined] = useState(null);
+  
+  // State for pending invites
+  const [pendingInvites, setPendingInvites] = useState([]);
+  const [loadingInvites, setLoadingInvites] = useState(true);
+  const [processingInviteId, setProcessingInviteId] = useState(null);
   
   // State for browse modal
   const [isBrowseModalOpen, setIsBrowseModalOpen] = useState(false);
@@ -53,9 +63,10 @@ const StudyGroups = () => {
     isInviteOnly: false,
   });
 
-  // Fetch joined study groups on mount
+  // Fetch joined study groups and pending invites on mount
   useEffect(() => {
     fetchJoinedStudyGroups();
+    fetchPendingInvites();
   }, []);
 
   const fetchJoinedStudyGroups = async () => {
@@ -89,6 +100,90 @@ const StudyGroups = () => {
     } finally {
       setLoadingJoined(false);
     }
+  };
+
+  const fetchPendingInvites = async () => {
+    try {
+      setLoadingInvites(true);
+
+      const user = auth.currentUser;
+      if (!user) {
+        setLoadingInvites(false);
+        return;
+      }
+
+      const token = await user.getIdToken();
+      const response = await fetch(`${API_BASE}/fetch-study-group-requests`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+
+      if (data.success) {
+        // Only show pending invites
+        const pending = (data.data || []).filter(invite => invite.status === 'Pending');
+        setPendingInvites(pending);
+      }
+    } catch (err) {
+      console.error("Error fetching pending invites:", err);
+    } finally {
+      setLoadingInvites(false);
+    }
+  };
+
+  const handleInviteResponse = async (requestId, status) => {
+    try {
+      setProcessingInviteId(requestId);
+
+      const user = auth.currentUser;
+      if (!user) return;
+
+      const token = await user.getIdToken();
+      const response = await fetch(`${API_BASE}/change-status-for-request`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          requestId,
+          status, // "Accepted" or "Rejected"
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Remove the invite from the list
+        setPendingInvites(prev => prev.filter(invite => invite.id !== requestId));
+        
+        // If accepted, refresh joined groups
+        if (status === 'Accepted') {
+          await fetchJoinedStudyGroups();
+        }
+      }
+    } catch (err) {
+      console.error("Error responding to invite:", err);
+    } finally {
+      setProcessingInviteId(null);
+    }
+  };
+
+  // Format date for display
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 1) return 'Just now';
+    if (diffMins < 60) return `${diffMins}m ago`;
+    if (diffHours < 24) return `${diffHours}h ago`;
+    if (diffDays < 7) return `${diffDays}d ago`;
+    return date.toLocaleDateString();
   };
 
   const fetchAllStudyGroups = async () => {
@@ -329,6 +424,90 @@ const StudyGroups = () => {
           </button>
         </div>
       </div>
+
+      {/* Pending Invites Section */}
+      {!loadingInvites && pendingInvites.length > 0 && (
+        <div className="mb-8">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="p-1.5 bg-amber-100 rounded-lg">
+              <Mail className="w-4 h-4 text-amber-600" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-800">Pending Invites</h3>
+            <span className="px-2 py-0.5 bg-amber-100 text-amber-700 text-xs font-bold rounded-full">
+              {pendingInvites.length}
+            </span>
+          </div>
+          
+          <div className="space-y-3">
+            {pendingInvites.map((invite) => (
+              <div 
+                key={invite.id}
+                className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-4"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  {/* Invite Details */}
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <UserPlus className="w-5 h-5 text-amber-600" />
+                      <span className="font-semibold text-gray-900">
+                        {invite.senderName}
+                      </span>
+                      <span className="text-gray-500 text-sm">invited you to join</span>
+                    </div>
+                    
+                    <div className="bg-white/60 rounded-lg p-3 mb-3">
+                      <h4 className="font-bold text-gray-900 text-lg">{invite.studyGroupName}</h4>
+                      <p className="text-sm text-gray-500 flex items-center gap-2">
+                        <Hash size={12} />
+                        {invite.studyGroupCode}
+                      </p>
+                    </div>
+                    
+                    {invite.message && (
+                      <div className="bg-white/40 rounded-lg p-3 mb-3">
+                        <p className="text-sm text-gray-600 italic">"{invite.message}"</p>
+                      </div>
+                    )}
+                    
+                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                      <Clock size={12} />
+                      <span>Received {formatDate(invite.createdAt)}</span>
+                    </div>
+                  </div>
+                  
+                  {/* Action Buttons */}
+                  <div className="flex flex-col gap-2">
+                    <button
+                      onClick={() => handleInviteResponse(invite.id, 'Accepted')}
+                      disabled={processingInviteId === invite.id}
+                      className="flex items-center gap-2 px-4 py-2 bg-emerald-500 text-white rounded-lg text-sm font-medium hover:bg-emerald-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {processingInviteId === invite.id ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Check className="w-4 h-4" />
+                      )}
+                      Accept
+                    </button>
+                    <button
+                      onClick={() => handleInviteResponse(invite.id, 'Rejected')}
+                      disabled={processingInviteId === invite.id}
+                      className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {processingInviteId === invite.id ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <XCircle className="w-4 h-4" />
+                      )}
+                      Decline
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Empty state */}
       {joinedGroups.length === 0 ? (
