@@ -230,10 +230,6 @@ const uploadFile = async (req, res) => {
   }
 };
 
-const solveDoubt = async (req, res) => {};
-const getFlashcards = async (req, res) => {};
-const getQuiz = async (req, res) => {};
-
 const createCourse = async (req, res) => {
     try {
         let {courseCode, courseName, courseDescription, department, courseCategory, type} = req.body;
@@ -622,7 +618,6 @@ const fetchStudyGroupRequests = async (req, res) => {
   }
 };
 
-
 const changeStatusForRequest = async (req,res) => {
   try {
     const {uid} = req.user;
@@ -704,6 +699,14 @@ const changeStatusForRequest = async (req,res) => {
     })
   }
 }
+
+
+
+
+const solveDoubt = async (req, res) => {};
+const getFlashcards = async (req, res) => {};
+const getQuiz = async (req, res) => {};
+
 
 export {
   getEnrolledCourses,

@@ -25,6 +25,7 @@ model User {
   senderRelation   StudyGroupRequest[] @relation("senderRelation")
   recieverRelation StudyGroupRequest[] @relation("recieverRelation")
   studyGroupHeads  StudyGroupHead[]
+  chatMessages     ChatMessage[]
 }
 
 enum CourseType {
@@ -53,6 +54,7 @@ model Course {
   fileMetaData      fileMetaData[]
   StudyGroupRequest StudyGroupRequest[]
   studyGroupHeads   StudyGroupHead[]
+  chatMessages      ChatMessage[]
 }
 
 model CourseEnrollment {
@@ -83,20 +85,20 @@ enum StudyGroupRequestStatus {
 }
 
 model StudyGroupRequest {
-  id         String                  @id @default(uuid())
-  senderName String
-  senderId   String
-  sender     User                    @relation("senderRelation", fields: [senderId], references: [id])
-  recieverId String
-  reciever   User                    @relation("recieverRelation", fields: [recieverId], references: [id])
-  status     StudyGroupRequestStatus @default(Pending)
-  message    String?
+  id             String                  @id @default(uuid())
+  senderName     String
+  senderId       String
+  sender         User                    @relation("senderRelation", fields: [senderId], references: [id])
+  recieverId     String
+  reciever       User                    @relation("recieverRelation", fields: [recieverId], references: [id])
+  status         StudyGroupRequestStatus @default(Pending)
+  message        String?
   studyGroupId   String
   studyGroupID   Course                  @relation(fields: [studyGroupId], references: [id])
   studyGroupName String
   studyGroupCode String
-  createdAt  DateTime                @default(now())
-  updatedAt  DateTime                @updatedAt
+  createdAt      DateTime                @default(now())
+  updatedAt      DateTime                @updatedAt
 }
 
 model StudyGroupHead {
@@ -107,4 +109,18 @@ model StudyGroupHead {
   studyGroup   Course   @relation(fields: [studyGroupId], references: [id])
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+}
+
+// Chat message model - immutable (append-only, no edits/deletes)
+model ChatMessage {
+  id         String   @id @default(uuid())
+  courseId   String
+  course     Course   @relation(fields: [courseId], references: [id])
+  senderId   String
+  sender     User     @relation(fields: [senderId], references: [id])
+  senderName String // Snapshot of sender name at time of message
+  content    String
+  createdAt  DateTime @default(now())
+
+  @@index([courseId, createdAt(sort: Desc)])
 }
