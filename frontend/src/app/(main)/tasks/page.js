@@ -1,6 +1,6 @@
 'use client';
-import TodoList from '@/components/tools/TodoList';
+import ToDoList from '@/components/tools/ToDoList';
 
 export default function TasksPage() {
-  return <TodoList />;
+  return <ToDoList />;
 }

@@ -16,7 +16,7 @@ const storage = new CloudinaryStorage({
   params: {
     folder: "learnix-courses", // Folder name in Cloudinary
     allowed_formats: ["pdf", "doc", "docx", "ppt", "pptx", "txt", "jpg", "jpeg", "png", "gif"],
-    resource_type: "auto", // Automatically detect file type
+    resource_type: "raw", // Automatically detect file type
   },
 });
 

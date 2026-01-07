@@ -22,6 +22,18 @@ model User {
   updatedAt DateTime @updatedAt
   courses Course[] @relation("CourseUsers")
   CourseEnrollment CourseEnrollment[]
+  senderRelation StudyGroupRequest[] @relation("senderRelation")
+  recieverRelation StudyGroupRequest[] @relation("recieverRelation")
+}
+
+enum CourseType {
+  Course
+  Study_Group
+}
+
+enum courseCategoryEnum {
+  Open
+  Invite_Only
 }
 
 model Course { 
@@ -30,12 +42,15 @@ model Course {
   courseName String
   courseDescription String
   department String
-  memberCount Int
+  memberCount Int @default(0)
+  courseCategory courseCategoryEnum @default(Open)
+  courseType CourseType @default(Course)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   users User[] @relation("CourseUsers")
   CourseEnrollment CourseEnrollment[]
   fileMetaData fileMetaData[]
+  StudyGroupRequest StudyGroupRequest[]
 }
 
 model CourseEnrollment {
@@ -53,8 +68,30 @@ model fileMetaData {
   fileType String
   fileSize Int
   uploadedAt DateTime @default(now())
-  uploadedBy String
+  uploadedByName String @default("Unknown User")
   courseId String
   course Course @relation(fields: [courseId], references: [id])
 }
 
+enum StudyGroupRequestStatus {
+  Pending
+  Accepted
+  Rejected
+}
+
+model StudyGroupRequest {
+  id String @id @default(uuid())
+  senderName String
+  senderId String
+  sender User @relation("senderRelation", fields: [senderId], references: [id])
+  recieverId String
+  reciever User @relation("recieverRelation", fields: [recieverId], references: [id])
+  status StudyGroupRequestStatus @default(Pending)
+  message String?
+  courseId String
+  courseID Course @relation(fields: [courseId], references: [id])
+  courseName String
+  courseCode String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

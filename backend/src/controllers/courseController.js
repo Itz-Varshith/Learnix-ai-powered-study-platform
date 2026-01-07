@@ -44,6 +44,9 @@ const getEnrolledCourses = async (req, res) => {
 const fetchAllCourses = async (req, res) => {
   try {
     const allCourses = await prisma.course.findMany({
+      where:{
+        courseType: "Course"
+      },
       select: {
         id: true,
         courseCode: true,
@@ -86,7 +89,7 @@ const getFiles = async (req, res) => {
         fileType: true,
         fileSize: true,
         uploadedAt: true,
-        uploadedBy: true,
+        uploadedByName: true,
         storedLink: true,
       },
     });
@@ -165,7 +168,7 @@ const enrollInCourse = async (req, res) => {
 const uploadFile = async (req, res) => {
   try {
     const { courseId } = req.body;
-    const { uid } = req.user;
+    const { uid, name } = req.user;
 
     // Validate required fields
     if (!courseId) {
@@ -210,7 +213,7 @@ const uploadFile = async (req, res) => {
         fileType: fileType,
         fileSize: size || 0,
         storedLink: cloudinaryUrl,
-        uploadedBy: uid,
+        uploadedByName: name,
         courseId: courseId,
       },
     });
@@ -236,21 +239,39 @@ const getQuiz = async (req, res) => {};
 
 const createCourse = async (req, res) => {
     try {
-        const {courseCode, courseName, courseDescription, department} = req.body;
-        if(!courseCode || !courseName || !courseDescription || !department) {
+        const {courseCode, courseName, courseDescription, department, courseCategory, type} = req.body;
+        const { uid } = req.user;
+        if(!courseCode || !courseName || !courseDescription || !department || !courseCategory || !type) {
             return res.status(400).json({
                 success: false,
                 message: "All fields are required",
                 data: null,
             })
         }
-        const course = await prisma.course.create({
+        if(courseCategory !== "Open" && courseCategory !== "Invite_Only") {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid course category",
+                data: null,
+            })
+        }
+        if(type !== "Course" && type !== "Study_Group") {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid course type",
+                data: null,
+            })
+        }
+        if(type==="Course"){
+          const course = await prisma.course.create({
             data: {
                 courseCode: courseCode,
                 courseName: courseName,
                 courseDescription: courseDescription,
                 department: department,
                 memberCount: 0,
+                courseCategory: "Open",
+                courseType: type,
             }
         })
         if(!course) {
@@ -265,6 +286,38 @@ const createCourse = async (req, res) => {
             message: "Course created successfully",
             data: course,
         })
+        }
+        if(type==="Study_Group"){
+          const newStudyGroup = await prisma.course.create({
+            data: {
+                courseCode: courseCode,
+                courseName: courseName,
+                courseDescription: courseDescription,
+                department: department,
+                memberCount: 1,
+                courseCategory: courseCategory,
+                courseType: type,
+            }
+          })
+          if(!newStudyGroup) {
+            return res.status(400).json({
+              success: false,
+              message: "Failed to create study group",
+              data: null,
+            })
+          }
+          await prisma.courseEnrollment.create({
+            data: {
+              userId: uid,
+              courseId: newStudyGroup.id,
+            }
+          })
+          return res.status(200).json({
+            success: true,
+            message: "Study group created successfully",
+            data: newStudyGroup,
+          })
+        }
     } catch (error) {
         console.error("Error creating course", error);
         return res.status(500).json({
@@ -274,6 +327,37 @@ const createCourse = async (req, res) => {
         })
     }
 };
+
+const fetchStudyGroups = async (req, res) => {
+  try {
+    const studyGroups = await prisma.course.findMany({
+      where: {
+        courseType: "Study_Group",
+        courseCategory: "Open",
+      },
+      select: {
+        id: true,
+        courseCode: true,
+        courseName: true,
+        courseDescription: true,
+        department: true,
+        memberCount: true,
+      }
+    })
+    return res.status(200).json({
+      success: true,
+      message: "Study groups fetched successfully",
+      data: studyGroups,
+    })
+  } catch (error) {
+    console.error("Error fetching study groups", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error fetching study groups",
+      error: error.message,
+    })
+  }
+}
 
 export {
   getEnrolledCourses,
