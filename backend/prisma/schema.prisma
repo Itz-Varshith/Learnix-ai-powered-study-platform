@@ -15,15 +15,16 @@ datasource db {
 }
 
 model User {
-  id String @id
-  name String
-  email String @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  courses Course[] @relation("CourseUsers")
+  id               String              @id
+  name             String
+  email            String              @unique
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+  courses          Course[]            @relation("CourseUsers")
   CourseEnrollment CourseEnrollment[]
-  senderRelation StudyGroupRequest[] @relation("senderRelation")
+  senderRelation   StudyGroupRequest[] @relation("senderRelation")
   recieverRelation StudyGroupRequest[] @relation("recieverRelation")
+  studyGroupHeads  StudyGroupHead[]
 }
 
 enum CourseType {
@@ -36,41 +37,43 @@ enum courseCategoryEnum {
   Invite_Only
 }
 
-model Course { 
-  id String @id @default(uuid())
-  courseCode String @unique
-  courseName String
+model Course {
+  id                String              @id @default(uuid())
+  courseCode        String              @unique
+  courseName        String
   courseDescription String
-  department String
-  memberCount Int @default(0)
-  courseCategory courseCategoryEnum @default(Open)
-  courseType CourseType @default(Course)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  users User[] @relation("CourseUsers")
-  CourseEnrollment CourseEnrollment[]
-  fileMetaData fileMetaData[]
+  department        String
+  memberCount       Int                 @default(0)
+  courseCategory    courseCategoryEnum  @default(Open)
+  courseType        CourseType          @default(Course)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  users             User[]              @relation("CourseUsers")
+  CourseEnrollment  CourseEnrollment[]
+  fileMetaData      fileMetaData[]
   StudyGroupRequest StudyGroupRequest[]
+  studyGroupHeads   StudyGroupHead[]
 }
 
 model CourseEnrollment {
-  userId String 
+  userId   String
   courseId String
-  user User @relation(fields: [userId], references: [id])
-  course Course @relation(fields: [courseId], references: [id ])
+  user     User   @relation(fields: [userId], references: [id])
+  course   Course @relation(fields: [courseId], references: [id])
+
   @@id([userId, courseId])
 }
 
 model fileMetaData {
-  id String @id @default(uuid())
-  storedLink String
-  fileName String
-  fileType String
-  fileSize Int
-  uploadedAt DateTime @default(now())
-  uploadedByName String @default("Unknown User")
-  courseId String
-  course Course @relation(fields: [courseId], references: [id])
+  id             String   @id @default(uuid())
+  storedLink     String
+  fileName       String
+  fileType       String
+  fileSize       Int
+  uploadedAt     DateTime @default(now())
+  uploadedByName String   @default("Unknown User")
+  courseId       String
+  course         Course   @relation(fields: [courseId], references: [id])
 }
 
 enum StudyGroupRequestStatus {
@@ -80,18 +83,28 @@ enum StudyGroupRequestStatus {
 }
 
 model StudyGroupRequest {
-  id String @id @default(uuid())
+  id         String                  @id @default(uuid())
   senderName String
-  senderId String
-  sender User @relation("senderRelation", fields: [senderId], references: [id])
+  senderId   String
+  sender     User                    @relation("senderRelation", fields: [senderId], references: [id])
   recieverId String
-  reciever User @relation("recieverRelation", fields: [recieverId], references: [id])
-  status StudyGroupRequestStatus @default(Pending)
-  message String?
-  courseId String
-  courseID Course @relation(fields: [courseId], references: [id])
+  reciever   User                    @relation("recieverRelation", fields: [recieverId], references: [id])
+  status     StudyGroupRequestStatus @default(Pending)
+  message    String?
+  courseId   String
+  courseID   Course                  @relation(fields: [courseId], references: [id])
   courseName String
   courseCode String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt  DateTime                @default(now())
+  updatedAt  DateTime                @updatedAt
+}
+
+model StudyGroupHead {
+  id           String   @id @default(uuid())
+  userId       String
+  userID       User     @relation(fields: [userId], references: [id])
+  studyGroupId String
+  studyGroup   Course   @relation(fields: [studyGroupId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }

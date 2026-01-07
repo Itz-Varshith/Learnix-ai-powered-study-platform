@@ -3,17 +3,17 @@ const prisma = new PrismaClient();
 
 export const loginUser = async (req, res) => {
   // If request reaches here, middleware has already verified the user
-  const { uid, email } = req.user;
+  const { uid, email,name } = req.user;
   await prisma.user.upsert({
     where: { id: uid },
     update: {
       email: email,
-      name: email.split("@")[0],
+      name: name,
     },
     create: {
       id: uid,
       email: email,
-      name:  req.user.name,
+      name: name,
     }
   })
   console.log(`User logged in: ${email}`);

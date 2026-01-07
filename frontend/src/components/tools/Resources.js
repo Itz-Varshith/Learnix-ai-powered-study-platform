@@ -200,7 +200,20 @@ export default function Resources({ courseId }) {
     try {
       setLoading(true);
       setError(null);
-      const response = await fetch(`${API_BASE}/get-files/${courseId}`);
+
+      const user = auth.currentUser;
+      if (!user) {
+        setError("Please sign in to view files");
+        setLoading(false);
+        return;
+      }
+
+      const token = await user.getIdToken();
+      const response = await fetch(`${API_BASE}/get-files/${courseId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
       const data = await response.json();
       if (data.success) {
         setFiles(data.data || []);

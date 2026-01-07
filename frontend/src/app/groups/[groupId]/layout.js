@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import { 
-  Library, MessageSquare, Bot, Layers, FileText, BrainCircuit, ChevronLeft, Loader2 
+  Library, MessageSquare, ChevronLeft, Loader2, Users, UsersRound 
 } from 'lucide-react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase'; 
@@ -12,14 +12,14 @@ import Navbar from '@/components/ui/navbar';
 
 const API_BASE = "http://localhost:9000/api/courses";
 
-export default function CourseLayout({ children }) {
+export default function GroupLayout({ children }) {
   const params = useParams();
   const pathname = usePathname();
   const router = useRouter();
   
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [courseDetails, setCourseDetails] = useState(null);
+  const [groupDetails, setGroupDetails] = useState(null);
 
   // Listen for User
   useEffect(() => {
@@ -34,35 +34,35 @@ export default function CourseLayout({ children }) {
     return () => unsubscribe();
   }, [router]);
 
-  // Fetch course details
+  // Fetch group details
   useEffect(() => {
-    const fetchCourseDetails = async () => {
+    const fetchGroupDetails = async () => {
       try {
         const currentUser = auth.currentUser;
         if (!currentUser) return;
 
         const token = await currentUser.getIdToken();
-        const response = await fetch(`${API_BASE}/all-courses`, {
+        const response = await fetch(`${API_BASE}/fetch-study-groups`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
         });
         const data = await response.json();
         if (data.success) {
-          const course = data.data.find(c => c.id === params.courseId);
-          if (course) {
-            setCourseDetails(course);
+          const group = data.data.find(g => g.id === params.groupId);
+          if (group) {
+            setGroupDetails(group);
           }
         }
       } catch (err) {
-        console.error("Error fetching course details:", err);
+        console.error("Error fetching group details:", err);
       }
     };
 
-    if (params.courseId && user) {
-      fetchCourseDetails();
+    if (params.groupId && user) {
+      fetchGroupDetails();
     }
-  }, [params.courseId, user]);
+  }, [params.groupId, user]);
 
   const handleSignOut = async () => {
     await signOut(auth);
@@ -72,20 +72,17 @@ export default function CourseLayout({ children }) {
   // Helper to get the current tool name for the Navbar title
   const getPageTitle = () => {
     const path = pathname.split('/').pop();
-    if (path === params.courseId) return "Resources";
+    if (path === params.groupId) return "Resources";
     return path.charAt(0).toUpperCase() + path.slice(1);
   };
 
-  const courseId = params.courseId; 
-  const baseUrl = `/course/${courseId}`;
+  const groupId = params.groupId; 
+  const baseUrl = `/groups/${groupId}`;
 
   const navItems = [
     { href: `${baseUrl}`, label: 'Resources', icon: Library, exact: true },
     { href: `${baseUrl}/chat`, label: 'Chat Room', icon: MessageSquare },
-    { href: `${baseUrl}/doubtsolver`, label: 'AI Doubt Solver', icon: Bot },
-    { href: `${baseUrl}/flashcards`, label: 'Flashcards', icon: Layers },
-    { href: `${baseUrl}/summarizer`, label: 'Summarizer', icon: FileText },
-    { href: `${baseUrl}/quiz`, label: 'Practice Quiz', icon: BrainCircuit },
+    { href: `${baseUrl}/members`, label: 'Members', icon: UsersRound },
   ];
 
   const isActive = (href, exact) => {
@@ -96,7 +93,7 @@ export default function CourseLayout({ children }) {
   if (loading) {
     return (
       <div className="h-screen flex items-center justify-center bg-gray-50">
-        <Loader2 className="w-8 h-8 text-indigo-600 animate-spin" />
+        <Loader2 className="w-8 h-8 text-purple-600 animate-spin" />
       </div>
     );
   }
@@ -104,26 +101,26 @@ export default function CourseLayout({ children }) {
   return (
     <div className="min-h-screen bg-gray-50 flex font-sans text-gray-900">
       
-      {/* --- Course Sidebar --- */}
+      {/* --- Group Sidebar --- */}
       <aside className="hidden md:flex flex-col w-64 bg-white border-r border-gray-200 h-screen sticky top-0 z-20">
         <div className="p-6 border-b">
           <button 
-            onClick={() => router.push('/dashboard')} 
-            className="flex items-center gap-2 text-gray-500 hover:text-indigo-600 text-sm mb-4 transition-colors"
+            onClick={() => router.push('/groups')} 
+            className="flex items-center gap-2 text-gray-500 hover:text-purple-600 text-sm mb-4 transition-colors"
           >
-            <ChevronLeft size={16} /> Back to Dashboard
+            <ChevronLeft size={16} /> Back to Study Groups
           </button>
           
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 bg-indigo-100 rounded-lg flex items-center justify-center text-indigo-600 font-bold uppercase">
-              {courseDetails?.courseCode?.substring(0, 2) || courseId?.substring(0, 2) || 'CS'}
+            <div className="h-10 w-10 bg-purple-100 rounded-lg flex items-center justify-center text-purple-600">
+              <Users className="w-5 h-5" />
             </div>
             <div>
               <h2 className="font-bold text-gray-900 leading-tight line-clamp-2">
-                {courseDetails?.courseName || 'Loading...'}
+                {groupDetails?.courseName || 'Loading...'}
               </h2>
               <p className="text-xs text-gray-500">
-                {courseDetails?.courseCode || 'Course Workspace'}
+                {groupDetails?.courseCode || 'Study Group'}
               </p>
             </div>
           </div>
@@ -136,7 +133,7 @@ export default function CourseLayout({ children }) {
               href={item.href} 
               className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
                 isActive(item.href, item.exact) 
-                  ? 'bg-indigo-50 text-indigo-700' 
+                  ? 'bg-purple-50 text-purple-700' 
                   : 'text-gray-600 hover:bg-gray-100'
               }`}
             >
@@ -147,10 +144,9 @@ export default function CourseLayout({ children }) {
         </nav>
       </aside>
 
-      {/* --- Course Content Area --- */}
+      {/* --- Group Content Area --- */}
       <main className="flex-1 flex flex-col min-w-0">
         
-        {/* --- 4. Pass User to Navbar --- */}
         <Navbar 
           user={user} 
           activeView={getPageTitle()}
@@ -164,3 +160,4 @@ export default function CourseLayout({ children }) {
     </div>
   );
 }
+

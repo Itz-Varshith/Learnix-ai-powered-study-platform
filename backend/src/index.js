@@ -1,5 +1,5 @@
 import dotenv from "dotenv/config";
-
+import { verifyToken } from "./middlewares/authMiddleware.js";
 
 import express from "express";
 import cors from "cors";
@@ -23,7 +23,7 @@ app.use("/auth", authRoutes); // Endpoints starting with /auth
 app.use("/api/todos", todoRoutes); // Endpoints starting with /api/todos
 app.use("/api/focus", focusRoutes);
 app.use("/api/stats", statsRoutes);
-app.use("/api/courses", courseRoutes); // Endpoints starting with /api/courses
+app.use("/api/courses", verifyToken, courseRoutes); // Endpoints starting with /api/courses (protected)
 
 // Start Server
 app.listen(PORT, () => {

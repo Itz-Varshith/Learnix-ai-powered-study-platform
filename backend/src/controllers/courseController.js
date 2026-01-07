@@ -5,15 +5,12 @@ const prisma = new PrismaClient();
 const getEnrolledCourses = async (req, res) => {
   try {
     const uid = req.params.uid;
-    if (!uid) {
-      return res.status(400).json({
-        success: false,
-        message: "User ID is required",
-      });
-    }
     const allCourses = await prisma.courseEnrollment.findMany({
       where: {
         userId: uid,
+        course:{
+          courseType: "Course"
+        }
       },
       include: {
         course: {
@@ -239,9 +236,13 @@ const getQuiz = async (req, res) => {};
 
 const createCourse = async (req, res) => {
     try {
-        const {courseCode, courseName, courseDescription, department, courseCategory, type} = req.body;
+        let {courseCode, courseName, courseDescription, department, courseCategory, type} = req.body;
         const { uid } = req.user;
-        if(!courseCode || !courseName || !courseDescription || !department || !courseCategory || !type) {
+        if(!type){
+          type = "Course";
+          courseCategory = "Open";
+        }
+        if(!courseCode || !courseName || !courseDescription || !department) {
             return res.status(400).json({
                 success: false,
                 message: "All fields are required",
@@ -312,6 +313,12 @@ const createCourse = async (req, res) => {
               courseId: newStudyGroup.id,
             }
           })
+          await prisma.studyGroupHead.create({
+            data: {
+              userId: uid,
+              studyGroupId: newStudyGroup.id,
+            }
+          })
           return res.status(200).json({
             success: true,
             message: "Study group created successfully",
@@ -359,6 +366,149 @@ const fetchStudyGroups = async (req, res) => {
   }
 }
 
+const fetchJoinedStudyGroups = async (req,res) => {
+  try {
+    const {uid} = req.user;
+    const joinedStudyGroups = await prisma.courseEnrollment.findMany({
+      where:{
+        userId: uid,
+        course:{
+          courseType: "Study_Group"
+        }
+      },
+      include: {
+       course: true
+      }
+    })
+    return res.status(200).json({
+      success: true,
+      message: "Joined study groups fetched successfully",
+      data: joinedStudyGroups,
+    })
+  } catch (error) {
+    console.error("Error fetching joined study groups", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error fetching joined study groups",
+      error: error.message,
+    })
+  }
+}
+
+const addStudyGroupHead = async (req,res) => {
+  try {
+    const studyGroupId = req.params.studyGroupId;
+    const {uid} = req.user;
+    const newHeadId = req.body.newHeadId;
+    if(!studyGroupId || !uid || !newHeadId) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required",
+        data: null,
+      })
+    }
+    const oldHeadVerification = await prisma.studyGroupHead.findFirst({
+      where: {
+        studyGroupId: studyGroupId,
+        userId: uid,
+      }
+    })
+    if(!oldHeadVerification) {
+      return res.status(400).json({
+        success: false,
+        message: "You are not the head of this study group",
+        data: null,
+      })
+    }
+    const newHeadVerification = await prisma.studyGroupHead.findFirst({
+      where: {
+        userId: newHeadId,
+        studyGroupId: studyGroupId,
+      }
+    })
+    if(newHeadVerification) {
+      return res.status(400).json({
+        success: false,
+        message: "The new head is already a head of this study group",
+        data: null,
+      })
+    }
+    const newHeadCreation = await prisma.studyGroupHead.create({
+      data: {
+        userId: newHeadId,
+        studyGroupId: studyGroupId,
+      }
+    })
+    if(!newHeadCreation) {
+      return res.status(400).json({
+        success: false,
+        message: "Failed to add new head",
+        data: null,
+      })
+    }
+    return res.status(200).json({
+      success: true,
+      message: "New head added successfully",
+      data: newHeadCreation,
+    })
+  } catch (error) {
+    console.error("Error adding study group head", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error adding study group head",
+      error: error.message,
+    })
+  }
+}
+
+const getStudyGroupMembers = async (req,res) => {
+  try {
+    const studyGroupId = req.params.studyGroupId;
+    if(!studyGroupId) {
+      return res.status(400).json({
+        success: false,
+        message: "Study group ID is required",
+        data: null,
+      })
+    }
+    const studyGroupMembers = await prisma.courseEnrollment.findMany({
+      where: {
+        courseId: studyGroupId,
+      },
+      include: {
+        user: true
+      }
+    })
+    const studyGroupHeads = await prisma.studyGroupHead.findMany({
+      where: {
+        studyGroupId: studyGroupId,
+      }
+    })
+  
+  const headIds = studyGroupHeads.map(head => head.userId);
+
+  const finalMembersList = studyGroupMembers.map(member => {
+    return {
+      ...member.user,
+      isHead: headIds.includes(member.userId),
+    };
+  });
+  console.log(finalMembersList)
+  return res.status(200).json({
+    success: true,
+    message: "Study group members fetched successfully",
+    data: finalMembersList
+  });
+  } catch (error) {
+    console.error("Error getting study group members", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error getting study group members",
+      error: error.message,
+    })
+  }
+}
+
 export {
   getEnrolledCourses,
   fetchAllCourses,
@@ -369,4 +519,8 @@ export {
   getFlashcards,
   getQuiz,
   createCourse,
+  fetchStudyGroups,
+  fetchJoinedStudyGroups,
+  addStudyGroupHead,
+  getStudyGroupMembers,
 };

@@ -15,6 +15,7 @@ import {
   EyeOff,
   ShieldCheck,
 } from "lucide-react";
+import { auth } from "@/lib/firebase";
 
 const API_BASE = "http://localhost:9000/api/courses";
 const ADMIN_PASSWORD = "learnix@admin2026"; // Password for admin access
@@ -60,10 +61,19 @@ export default function AdminPage() {
     setMessage({ type: "", text: "" });
 
     try {
+      const user = auth.currentUser;
+      if (!user) {
+        setMessage({ type: "error", text: "Please sign in to create courses" });
+        setLoading(false);
+        return;
+      }
+
+      const token = await user.getIdToken();
       const response = await fetch(`${API_BASE}/create-course`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify(formData),
       });

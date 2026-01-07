@@ -69,7 +69,12 @@ const MyCourses = () => {
         return;
       }
 
-      const response = await fetch(`${API_BASE}/enrolled-courses/${user.uid}`);
+      const token = await user.getIdToken();
+      const response = await fetch(`${API_BASE}/enrolled-courses/${user.uid}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
       const data = await response.json();
 
       if (data.success) {
@@ -91,7 +96,19 @@ const MyCourses = () => {
       setModalLoading(true);
       setEnrollMessage({ type: '', text: '' });
 
-      const response = await fetch(`${API_BASE}/all-courses`);
+      const user = auth.currentUser;
+      if (!user) {
+        setEnrollMessage({ type: 'error', text: "Please sign in first" });
+        setModalLoading(false);
+        return;
+      }
+
+      const token = await user.getIdToken();
+      const response = await fetch(`${API_BASE}/all-courses`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
       const data = await response.json();
 
       if (data.success) {
