@@ -1,4 +1,3 @@
-import { db } from "../config/firebase.js";
 import { PrismaClient } from "../../generated/prisma/client.ts";
 const prisma = new PrismaClient();
 
@@ -167,7 +166,6 @@ const uploadFile = async (req, res) => {
     const { courseId } = req.body;
     const { uid, name } = req.user;
 
-    // Validate required fields
     if (!courseId) {
       return res.status(400).json({
         success: false,
@@ -184,7 +182,6 @@ const uploadFile = async (req, res) => {
       });
     }
 
-    // Verify course exists
     const course = await prisma.course.findUnique({
       where: { id: courseId },
     });
@@ -197,13 +194,10 @@ const uploadFile = async (req, res) => {
       });
     }
 
-    // File info from Cloudinary (via multer-storage-cloudinary)
     const { originalname, size, path: cloudinaryUrl } = req.file;
     console.log(originalname);
-    // Get file extension/type
     const fileType = originalname.split(".").pop().toLowerCase();
 
-    // Save metadata to Prisma
     const fileMetadata = await prisma.fileMetaData.create({
       data: {
         fileName: originalname,
@@ -860,7 +854,6 @@ const generateFlashcards = async (req, res) => {
       });
     }
 
-    // Call the ML endpoint
     const response = await fetch("http://localhost:8000/flashcards", {
       method: "POST",
       headers: {
@@ -882,7 +875,6 @@ const generateFlashcards = async (req, res) => {
       });
     }
 
-    // Save to database
     const fileFlashcards = await prisma.fileFlashcards.create({
       data: {
         fileURL: cloudinaryUrl,
@@ -996,7 +988,6 @@ const generateQuiz = async (req, res) => {
       });
     }
 
-    // Call the ML endpoint
     const response = await fetch("http://localhost:8000/quiz", {
       method: "POST",
       headers: {
@@ -1018,7 +1009,6 @@ const generateQuiz = async (req, res) => {
       });
     }
 
-    // Save to database
     const fileQuiz = await prisma.fileQuiz.create({
       data: {
         fileURL: cloudinaryUrl,
@@ -1099,10 +1089,7 @@ const getQuizHistory = async (req, res) => {
 
 const replyTaggedMessage = async (req, res) => {
   try {
-    const {
-      messageString,
-      courseId
-    } = req.body;
+    const { messageString, courseId } = req.body;
     const { uid, name } = req.user;
 
     if (!messageString) {
@@ -1145,9 +1132,10 @@ const replyTaggedMessage = async (req, res) => {
       select: {
         memory: true,
       },
-    })
-    if(!memory) {
-      memory = "This is the start of a conversation with the user, and the user is asking for academic assistance";
+    });
+    if (!memory) {
+      memory =
+        "This is the start of a conversation with the user, and the user is asking for academic assistance";
     }
     const response = await fetch("http://localhost:8000/mention", {
       method: "POST",
@@ -1183,20 +1171,20 @@ const replyTaggedMessage = async (req, res) => {
         courseId: courseId,
       },
       update: {
-        memory: responseData.summary
+        memory: responseData.summary,
       },
       create: {
         courseId: courseId,
-        memory: responseData.summary
-      }
-    })
+        memory: responseData.summary,
+      },
+    });
     return res.status(200).json({
       success: true,
       message: "AI response generated successfully",
       data: {
         userMessage: userMessage,
         aiMessage: aiMessage,
-      }
+      },
     });
   } catch (error) {
     console.error("Error replying to tagged message", error);

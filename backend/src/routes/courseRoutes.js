@@ -34,8 +34,8 @@ courseRouter.get("/get-quiz-history/:courseId", getQuizHistory);
 courseRouter.get("/fetch-study-groups", fetchStudyGroups);
 courseRouter.get("/fetch-joined-study-groups", fetchJoinedStudyGroups);
 courseRouter.get("/get-study-group-members/:studyGroupId", getStudyGroupMembers);
-courseRouter.post("/send-study-group-request", sendStudyGroupRequest);
 courseRouter.get("/fetch-study-group-requests", fetchStudyGroupRequests);
+courseRouter.post("/send-study-group-request", sendStudyGroupRequest);
 courseRouter.post("/change-status-for-request", changeStatusForRequest);
 courseRouter.post("/create-course", createCourse);
 courseRouter.post("/add-study-group-head/:studyGroupId", addStudyGroupHead);
@@ -45,4 +45,5 @@ courseRouter.post("/summarize-file", upload.single("file"), summarizeFile);
 courseRouter.post("/generate-flashcards", upload.single("file"), generateFlashcards);
 courseRouter.post("/generate-quiz", upload.single("file"), generateQuiz);
 courseRouter.post("/reply-tagged-message",replyTaggedMessage)
+
 export default courseRouter;
