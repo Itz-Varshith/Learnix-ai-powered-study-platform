@@ -13,13 +13,14 @@ import {
   LogOut,
   Loader2,
   User,
-  ShieldPlus
+  ShieldPlus // Used for the Admin Icon
 } from 'lucide-react';
 import { onAuthStateChanged, signOut } from 'firebase/auth'; 
 import { auth } from '@/lib/firebase'; 
 import Navbar from '@/components/ui/navbar';
 
-// --- 1. User Context (Allows pages to access user data) ---
+const ADMIN_EMAIL = "me240003034@iiti.ac.in"; 
+
 const UserContext = createContext(null);
 export const useUser = () => useContext(UserContext);
 
@@ -50,14 +51,23 @@ export default function MainLayout({ children }) {
   };
 
   // --- 3. Navigation Config ---
+  // Define the standard items visible to everyone
   const navItems = [
     { href: '/dashboard', label: 'My Courses', icon: BookOpen },
     { href: '/tasks', label: 'My Tasks', icon: CheckSquare },
     { href: '/focus', label: 'Focus Session', icon: Timer },
     { href: '/groups', label: 'Study Groups', icon: Users },
     { href: '/profile', label: 'My Profile', icon: User },
-    { href: '/admin', label: 'Admin Panel', icon: ShieldPlus },
   ];
+
+  // Dynamically add Admin Panel ONLY if email matches
+  if (user && user.email === ADMIN_EMAIL) {
+    navItems.push({ 
+      href: '/admin', 
+      label: 'Admin Panel', 
+      icon: ShieldPlus 
+    });
+  }
 
   if (loading) {
     return (

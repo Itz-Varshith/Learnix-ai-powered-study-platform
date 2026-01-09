@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation"; // To redirect non-admins
 import {
-  Lock,
   Plus,
   BookOpen,
   Hash,
@@ -11,21 +11,21 @@ import {
   Loader2,
   CheckCircle2,
   XCircle,
-  Eye,
-  EyeOff,
-  ShieldCheck,
 } from "lucide-react";
 import { auth } from "@/lib/firebase";
+import { onAuthStateChanged } from "firebase/auth";
 
 const API_BASE = "http://localhost:9000/api/courses";
-const ADMIN_PASSWORD = "learnix@admin2026"; // Password for admin access
+
+const ADMIN_EMAIL = "me240003034@iiti.ac.in"; 
 
 export default function AdminPage() {
+  const router = useRouter();
+  
   // Auth state
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [authError, setAuthError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [isAuthorized, setIsAuthorized] = useState(false); // Controls visibility
+  const [message, setMessage] = useState({ type: "", text: "" });
 
   // Form state
   const [formData, setFormData] = useState({
@@ -34,19 +34,20 @@ export default function AdminPage() {
     courseDescription: "",
     department: "",
   });
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState({ type: "", text: "" });
 
-  // Handle password verification
-  const handlePasswordSubmit = (e) => {
-    e.preventDefault();
-    if (password === ADMIN_PASSWORD) {
-      setIsAuthenticated(true);
-      setAuthError("");
-    } else {
-      setAuthError("Incorrect password. Please try again.");
-    }
-  };
+  // --- 1. Protect the Route ---
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user && user.email === ADMIN_EMAIL) {
+        setIsAuthorized(true); // Allow access
+      } else {
+        // If not logged in, or not the admin, kick them to dashboard
+        router.push("/dashboard"); 
+      }
+    });
+
+    return () => unsubscribe();
+  }, [router]);
 
   // Handle form input changes
   const handleChange = (e) => {
@@ -62,11 +63,7 @@ export default function AdminPage() {
 
     try {
       const user = auth.currentUser;
-      if (!user) {
-        setMessage({ type: "error", text: "Please sign in to create courses" });
-        setLoading(false);
-        return;
-      }
+      if (!user) return;
 
       const token = await user.getIdToken();
       const response = await fetch(`${API_BASE}/create-course`, {
@@ -109,67 +106,12 @@ export default function AdminPage() {
     }
   };
 
-  // Password gate screen
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-[80vh] flex items-center justify-center">
-        <div className="w-full max-w-md">
-          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
-            {/* Header */}
-            <div className="bg-gradient-to-r from-indigo-600 to-purple-600 px-8 py-10 text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-full mb-4">
-                <Lock className="w-8 h-8 text-white" />
-              </div>
-              <h1 className="text-2xl font-bold text-white">Admin Access</h1>
-              <p className="text-indigo-100 mt-2 text-sm">
-                Enter the admin password to continue
-              </p>
-            </div>
+  // If we are checking auth, show nothing or a spinner
+  if (!isAuthorized) return null; 
 
-            {/* Form */}
-            <form onSubmit={handlePasswordSubmit} className="p-8">
-              {authError && (
-                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3 text-red-700">
-                  <XCircle className="w-5 h-5 flex-shrink-0" />
-                  <span className="text-sm">{authError}</span>
-                </div>
-              )}
-
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter admin password"
-                  className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
-                  autoFocus
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                >
-                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                </button>
-              </div>
-
-              <button
-                type="submit"
-                className="w-full mt-6 px-6 py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2"
-              >
-                <ShieldCheck size={20} />
-                Unlock Admin Panel
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Admin dashboard
+  // --- Render The Form (No Password Gate needed now) ---
   return (
-    <div className="animate-in fade-in duration-500">
+    <div className="animate-in fade-in duration-500 max-w-4xl mx-auto">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
@@ -179,7 +121,7 @@ export default function AdminPage() {
           Create New Course
         </h1>
         <p className="text-gray-500 mt-2">
-          Add a new course to the platform for students to enroll
+          Administrator Panel: Add new courses to the platform.
         </p>
       </div>
 
@@ -212,7 +154,7 @@ export default function AdminPage() {
         <div className="p-6 border-b border-gray-100 bg-gray-50">
           <h2 className="font-semibold text-gray-900 flex items-center gap-2">
             <BookOpen className="w-5 h-5 text-indigo-600" />
-            Course Information
+            Course Details
           </h2>
         </div>
 
@@ -230,8 +172,8 @@ export default function AdminPage() {
               name="courseCode"
               value={formData.courseCode}
               onChange={handleChange}
-              placeholder="e.g., CS101, MATH201"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+              placeholder="e.g., CS101"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
               required
             />
           </div>
@@ -250,7 +192,7 @@ export default function AdminPage() {
               value={formData.courseName}
               onChange={handleChange}
               placeholder="e.g., Introduction to Computer Science"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
               required
             />
           </div>
@@ -268,8 +210,8 @@ export default function AdminPage() {
               name="department"
               value={formData.department}
               onChange={handleChange}
-              placeholder="e.g., Computer Science, Mathematics"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+              placeholder="e.g., Computer Science"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
               required
             />
           </div>
@@ -286,9 +228,9 @@ export default function AdminPage() {
               name="courseDescription"
               value={formData.courseDescription}
               onChange={handleChange}
-              placeholder="Provide a brief description of the course content and objectives..."
+              placeholder="Describe the course objectives..."
               rows={4}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all resize-none"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none transition-all resize-none"
               required
             />
           </div>
@@ -298,17 +240,15 @@ export default function AdminPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full sm:w-auto px-8 py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full sm:w-auto px-8 py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
             >
               {loading ? (
                 <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  Creating Course...
+                  <Loader2 className="w-5 h-5 animate-spin" /> Creating...
                 </>
               ) : (
                 <>
-                  <Plus className="w-5 h-5" />
-                  Create Course
+                  <Plus className="w-5 h-5" /> Create Course
                 </>
               )}
             </button>
@@ -318,4 +258,3 @@ export default function AdminPage() {
     </div>
   );
 }
-
