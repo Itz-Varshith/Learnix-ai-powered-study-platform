@@ -5,7 +5,8 @@ import {
   getFiles,
   enrollInCourse,
   uploadFile,
-  solveDoubt,
+  summarizeFile,
+  getSummarizedFiles,
   getFlashcards,
   getQuiz,
   createCourse,
@@ -24,6 +25,7 @@ const courseRouter = new Router();
 courseRouter.get("/enrolled-courses/:uid", getEnrolledCourses);
 courseRouter.get("/all-courses", fetchAllCourses);
 courseRouter.get("/get-files/:courseId", getFiles);
+courseRouter.get("/get-summarized-files/:courseId", getSummarizedFiles);
 courseRouter.get("/get-flashcards", getFlashcards);
 courseRouter.get("/get-quiz", getQuiz);
 courseRouter.get("/fetch-study-groups", fetchStudyGroups);
@@ -36,6 +38,6 @@ courseRouter.post("/create-course", createCourse);
 courseRouter.post("/add-study-group-head/:studyGroupId", addStudyGroupHead);
 courseRouter.post("/enroll/:courseId", enrollInCourse);
 courseRouter.post("/upload-file", upload.single("file"), uploadFile);
-courseRouter.post("/solve-doubt", solveDoubt);
+courseRouter.post("/summarize-file",upload.single("file"), summarizeFile);
 
 export default courseRouter;

@@ -26,6 +26,7 @@ model User {
   recieverRelation StudyGroupRequest[] @relation("recieverRelation")
   studyGroupHeads  StudyGroupHead[]
   chatMessages     ChatMessage[]
+  fileSummaries    fileSummary[]
 }
 
 enum CourseType {
@@ -55,6 +56,7 @@ model Course {
   StudyGroupRequest StudyGroupRequest[]
   studyGroupHeads   StudyGroupHead[]
   chatMessages      ChatMessage[]
+  fileSummaries     fileSummary[]
 }
 
 model CourseEnrollment {
@@ -123,4 +125,17 @@ model ChatMessage {
   createdAt  DateTime @default(now())
 
   @@index([courseId, createdAt(sort: Desc)])
+}
+
+model fileSummary {
+  fileURL     String
+  fileName String @default("Unknown File")
+  summary     String
+  createdById String
+  courseId    String
+  courseID    Course   @relation(fields: [courseId], references: [id])
+  createdBy   User     @relation(fields: [createdById], references: [id])
+  createdAt   DateTime @default(now())
+
+  @@id([fileURL, createdById])
 }

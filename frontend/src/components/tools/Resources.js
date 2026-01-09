@@ -9,7 +9,6 @@ import {
   Loader2,
   X,
   Download,
-  Eye,
   FileSpreadsheet,
   Presentation,
   FileCode,
@@ -211,7 +210,7 @@ export default function Resources({ courseId }) {
       const token = await user.getIdToken();
       const response = await fetch(`${API_BASE}/get-files/${courseId}`, {
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       const data = await response.json();
@@ -370,16 +369,7 @@ export default function Resources({ courseId }) {
           </div>
 
           {/* Hover overlay with actions */}
-          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center gap-3">
-            <a
-              href={file.storedLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-3 bg-white rounded-full text-gray-700 hover:bg-indigo-500 hover:text-white transition-colors shadow-lg"
-              title="View"
-            >
-              <Eye size={18} />
-            </a>
+          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
             <a
               href={file.storedLink}
               download={file.fileName}
@@ -484,15 +474,6 @@ export default function Resources({ courseId }) {
         <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
           <a
             href={file.storedLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-2 text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
-            title="View"
-          >
-            <Eye size={18} />
-          </a>
-          <a
-            href={file.storedLink}
             download={file.fileName}
             target="_blank"
             rel="noopener noreferrer"
@@ -588,7 +569,7 @@ export default function Resources({ courseId }) {
                 Upload File
               </>
             )}
-            </button>
+          </button>
         </div>
       </div>
 
