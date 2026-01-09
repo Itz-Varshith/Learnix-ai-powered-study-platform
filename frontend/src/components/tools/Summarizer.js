@@ -13,6 +13,7 @@ import {
   Clock,
   ChevronRight,
   FileUp,
+  MessageSquare,
 } from "lucide-react";
 import { auth } from "@/lib/firebase";
 import ReactMarkdown from "react-markdown";
@@ -41,6 +42,7 @@ const formatDate = (dateString) => {
 export default function Summarizer({ courseId }) {
   const [activeTab, setActiveTab] = useState("upload"); // "upload" or "history"
   const [file, setFile] = useState(null);
+  const [userPrompt, setUserPrompt] = useState("");
   const [summary, setSummary] = useState("");
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -114,6 +116,7 @@ export default function Summarizer({ courseId }) {
       const formData = new FormData();
       formData.append("file", file);
       formData.append("courseId", courseId);
+      formData.append("userPrompt", userPrompt);
 
       const response = await fetch(`${API_BASE}/summarize-file`, {
         method: "POST",
@@ -147,6 +150,7 @@ export default function Summarizer({ courseId }) {
 
   const handleClear = () => {
     setFile(null);
+    setUserPrompt("");
     setSummary("");
     setError(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
@@ -357,36 +361,55 @@ export default function Summarizer({ courseId }) {
 
             <div className="p-8">
               {file ? (
-                <div className="flex items-center justify-between animate-in fade-in duration-300">
+                <div className="space-y-5 animate-in fade-in duration-300">
+                  {/* File Info Row */}
                   <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 bg-red-50 rounded-2xl flex items-center justify-center shadow-sm">
-                      <FileText size={32} className="text-red-500" />
+                    <div className="w-14 h-14 bg-red-50 rounded-xl flex items-center justify-center shadow-sm">
+                      <FileText size={28} className="text-red-500" />
                     </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900 break-all max-w-md">
+                    <div className="flex-1">
+                      <h3 className="text-base font-semibold text-gray-900 break-all">
                         {file.name}
                       </h3>
-                      <p className="text-sm text-gray-500 mt-0.5">
+                      <p className="text-sm text-gray-500">
                         {(file.size / 1024 / 1024).toFixed(2)} MB
                       </p>
                     </div>
-                    <div className="ml-4 px-4 py-2 bg-green-50 text-green-700 rounded-full text-sm font-medium flex items-center gap-2">
-                      <Check size={16} />
+                    <div className="px-3 py-1.5 bg-green-50 text-green-700 rounded-full text-xs font-medium flex items-center gap-1.5">
+                      <Check size={14} />
                       Ready
                     </div>
                   </div>
-                  <button
-                    onClick={handleSummarize}
-                    disabled={loading}
-                    className="bg-gradient-to-r from-indigo-600 to-violet-600 text-white px-8 py-3 rounded-xl font-semibold hover:from-indigo-700 hover:to-violet-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 transition-all shadow-md hover:shadow-lg active:scale-95"
-                  >
-                    {loading ? (
-                      <Loader2 className="animate-spin" size={20} />
-                    ) : (
-                      <Sparkles size={20} />
-                    )}
-                    {loading ? "Analyzing..." : "Summarize Now"}
-                  </button>
+
+                  {/* Prompt Input */}
+                  <div className="relative">
+                    <div className="absolute left-4 top-3.5 text-gray-400">
+                      <MessageSquare size={18} />
+                    </div>
+                    <textarea
+                      value={userPrompt}
+                      onChange={(e) => setUserPrompt(e.target.value)}
+                      placeholder="Optional: Add specific instructions for the summary (e.g., 'Focus on key concepts', 'Make it concise', 'Include examples'...)"
+                      className="w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none transition-all"
+                      rows={2}
+                    />
+                  </div>
+
+                  {/* Summarize Button */}
+                  <div className="flex justify-end">
+                    <button
+                      onClick={handleSummarize}
+                      disabled={loading}
+                      className="bg-gradient-to-r from-indigo-600 to-violet-600 text-white px-8 py-3 rounded-xl font-semibold hover:from-indigo-700 hover:to-violet-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 transition-all shadow-md hover:shadow-lg active:scale-95"
+                    >
+                      {loading ? (
+                        <Loader2 className="animate-spin" size={20} />
+                      ) : (
+                        <Sparkles size={20} />
+                      )}
+                      {loading ? "Analyzing..." : "Summarize Now"}
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <div

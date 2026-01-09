@@ -707,7 +707,7 @@ const summarizeFile = async (req, res) => {
   try {
     const { originalname, size, path: cloudinaryUrl } = req.file;
     const { uid } = req.user;
-    const { courseId } = req.body;
+    const { courseId, userPrompt = "" } = req.body;
     if (!originalname || !size || !cloudinaryUrl || !courseId) {
       return res.status(400).json({
         success: false,
@@ -742,6 +742,7 @@ const summarizeFile = async (req, res) => {
       },
       body: JSON.stringify({
         fileURL: cloudinaryUrl,
+        user_prompt: userPrompt,
       }),
     });
     const { summary } = await response.json();
@@ -805,6 +806,9 @@ const getSummarizedFiles = async (req, res) => {
         summary: true,
         createdAt: true,
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
     return res.status(200).json({
       success: true,
@@ -821,7 +825,142 @@ const getSummarizedFiles = async (req, res) => {
   }
 };
 
-const getFlashcards = async (req, res) => {};
+const generateFlashcards = async (req, res) => {
+  try {
+    const { originalname, size, path: cloudinaryUrl } = req.file;
+    const { uid } = req.user;
+    const { courseId, nCards = 10 } = req.body;
+
+    if (!originalname || !size || !cloudinaryUrl || !courseId) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required",
+        data: null,
+      });
+    }
+
+    const fileType = originalname.split(".").pop().toLowerCase();
+    if (fileType !== "pdf") {
+      return res.status(400).json({
+        success: false,
+        message: "Only PDF files are supported",
+        data: null,
+      });
+    }
+
+    const course = await prisma.course.findUnique({
+      where: { id: courseId },
+    });
+
+    if (!course) {
+      return res.status(400).json({
+        success: false,
+        message: "Course not found",
+        data: null,
+      });
+    }
+
+    // Call the ML endpoint
+    const response = await fetch("http://localhost:8000/flashcards", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        fileURL: cloudinaryUrl,
+        n_cards: parseInt(nCards),
+      }),
+    });
+
+    const { flashcards } = await response.json();
+
+    if (!flashcards || !Array.isArray(flashcards)) {
+      return res.status(400).json({
+        success: false,
+        message: "Failed to generate flashcards",
+        data: null,
+      });
+    }
+
+    // Save to database
+    const fileFlashcards = await prisma.fileFlashcards.create({
+      data: {
+        fileURL: cloudinaryUrl,
+        fileName: originalname,
+        flashcards: flashcards,
+        createdById: uid,
+        courseId: courseId,
+      },
+    });
+
+    if (!fileFlashcards) {
+      return res.status(400).json({
+        success: false,
+        message: "Failed to save flashcards",
+        data: null,
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Flashcards generated successfully",
+      data: fileFlashcards,
+    });
+  } catch (error) {
+    console.error("Error generating flashcards", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error generating flashcards",
+      error: error.message,
+    });
+  }
+};
+
+const getFlashcardsHistory = async (req, res) => {
+  try {
+    const { courseId } = req.params;
+    const { uid } = req.user;
+
+    if (!uid || !courseId) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required",
+        data: null,
+      });
+    }
+
+    const flashcardsHistory = await prisma.fileFlashcards.findMany({
+      where: {
+        createdById: uid,
+        courseId: courseId,
+      },
+      select: {
+        id: true,
+        fileURL: true,
+        fileName: true,
+        flashcards: true,
+        createdAt: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Flashcards history fetched successfully",
+      data: flashcardsHistory,
+    });
+  } catch (error) {
+    console.error("Error fetching flashcards history", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error fetching flashcards history",
+      error: error.message,
+    });
+  }
+};
+
 const getQuiz = async (req, res) => {};
 
 export {
@@ -831,7 +970,8 @@ export {
   enrollInCourse,
   uploadFile,
   summarizeFile,
-  getFlashcards,
+  generateFlashcards,
+  getFlashcardsHistory,
   getQuiz,
   createCourse,
   fetchStudyGroups,
