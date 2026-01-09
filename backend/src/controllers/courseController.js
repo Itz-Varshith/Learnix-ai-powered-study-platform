@@ -961,7 +961,141 @@ const getFlashcardsHistory = async (req, res) => {
   }
 };
 
-const getQuiz = async (req, res) => {};
+const generateQuiz = async (req, res) => {
+  try {
+    const { originalname, size, path: cloudinaryUrl } = req.file;
+    const { uid } = req.user;
+    const { courseId, nQuestions = 5 } = req.body;
+
+    if (!originalname || !size || !cloudinaryUrl || !courseId) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required",
+        data: null,
+      });
+    }
+
+    const fileType = originalname.split(".").pop().toLowerCase();
+    if (fileType !== "pdf") {
+      return res.status(400).json({
+        success: false,
+        message: "Only PDF files are supported",
+        data: null,
+      });
+    }
+
+    const course = await prisma.course.findUnique({
+      where: { id: courseId },
+    });
+
+    if (!course) {
+      return res.status(400).json({
+        success: false,
+        message: "Course not found",
+        data: null,
+      });
+    }
+
+    // Call the ML endpoint
+    const response = await fetch("http://localhost:8000/quiz", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        fileURL: cloudinaryUrl,
+        n_questions: parseInt(nQuestions),
+      }),
+    });
+    const responseData = await response.json();
+    const { quiz } = responseData;
+
+    if (!quiz || !Array.isArray(quiz)) {
+      return res.status(400).json({
+        success: false,
+        message: "Failed to generate quiz",
+        data: null,
+      });
+    }
+
+    // Save to database
+    const fileQuiz = await prisma.fileQuiz.create({
+      data: {
+        fileURL: cloudinaryUrl,
+        fileName: originalname,
+        questions: quiz,
+        createdById: uid,
+        courseId: courseId,
+      },
+    });
+
+    if (!fileQuiz) {
+      return res.status(400).json({
+        success: false,
+        message: "Failed to save quiz",
+        data: null,
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Quiz generated successfully",
+      data: fileQuiz,
+    });
+  } catch (error) {
+    console.error("Error generating quiz", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error generating quiz",
+      error: error.message,
+    });
+  }
+};
+
+const getQuizHistory = async (req, res) => {
+  try {
+    const { courseId } = req.params;
+    const { uid } = req.user;
+
+    if (!uid || !courseId) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required",
+        data: null,
+      });
+    }
+
+    const quizHistory = await prisma.fileQuiz.findMany({
+      where: {
+        createdById: uid,
+        courseId: courseId,
+      },
+      select: {
+        id: true,
+        fileURL: true,
+        fileName: true,
+        questions: true,
+        createdAt: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Quiz history fetched successfully",
+      data: quizHistory,
+    });
+  } catch (error) {
+    console.error("Error fetching quiz history", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error fetching quiz history",
+      error: error.message,
+    });
+  }
+};
 
 export {
   getEnrolledCourses,
@@ -972,7 +1106,8 @@ export {
   summarizeFile,
   generateFlashcards,
   getFlashcardsHistory,
-  getQuiz,
+  generateQuiz,
+  getQuizHistory,
   createCourse,
   fetchStudyGroups,
   fetchJoinedStudyGroups,

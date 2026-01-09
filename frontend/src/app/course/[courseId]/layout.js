@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import { 
-  Library, MessageSquare, Bot, Layers, FileText, BrainCircuit, ChevronLeft, Loader2, LogOut 
+  Library, MessageSquare, Layers, FileText, BrainCircuit, ChevronLeft, Loader2, LogOut 
 } from 'lucide-react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase'; 
@@ -83,7 +83,6 @@ export default function CourseLayout({ children }) {
   const navItems = [
     { href: `${baseUrl}`, label: 'Resources', icon: Library, exact: true },
     { href: `${baseUrl}/chat`, label: 'Chat Room', icon: MessageSquare },
-    { href: `${baseUrl}/doubtsolver`, label: 'AI Doubt Solver', icon: Bot },
     { href: `${baseUrl}/flashcards`, label: 'Flashcards', icon: Layers },
     { href: `${baseUrl}/summarizer`, label: 'Summarizer', icon: FileText },
     { href: `${baseUrl}/quiz`, label: 'Practice Quiz', icon: BrainCircuit },

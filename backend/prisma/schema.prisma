@@ -28,6 +28,7 @@ model User {
   chatMessages     ChatMessage[]
   fileSummaries    fileSummary[]
   fileFlashcards   fileFlashcards[]
+  fileQuizzes      fileQuiz[]
 }
 
 enum CourseType {
@@ -59,6 +60,7 @@ model Course {
   chatMessages      ChatMessage[]
   fileSummaries     fileSummary[]
   fileFlashcards    fileFlashcards[]
+  fileQuizzes       fileQuiz[]
 }
 
 model CourseEnrollment {
@@ -130,6 +132,7 @@ model ChatMessage {
 }
 
 model fileSummary {
+  id          String   @id @default(uuid())
   fileURL     String
   fileName    String   @default("Unknown File")
   summary     String
@@ -139,7 +142,8 @@ model fileSummary {
   createdBy   User     @relation(fields: [createdById], references: [id])
   createdAt   DateTime @default(now())
 
-  @@id([fileURL, createdById])
+  @@index([createdById, courseId])
+
 }
 
 model fileFlashcards {
@@ -147,6 +151,20 @@ model fileFlashcards {
   fileURL     String
   fileName    String   @default("Unknown File")
   flashcards  Json     // Array of {question, answer} objects
+  createdById String
+  courseId    String
+  course      Course   @relation(fields: [courseId], references: [id])
+  createdBy   User     @relation(fields: [createdById], references: [id])
+  createdAt   DateTime @default(now())
+
+  @@index([createdById, courseId])
+}
+
+model fileQuiz {
+  id          String   @id @default(uuid())
+  fileURL     String
+  fileName    String   @default("Unknown File")
+  questions   Json     // Array of {question, options: {A, B, C, D}, answer} objects
   createdById String
   courseId    String
   course      Course   @relation(fields: [courseId], references: [id])

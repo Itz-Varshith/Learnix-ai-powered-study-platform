@@ -13,13 +13,14 @@ import {
   LogOut,
   Loader2,
   User,
+  Bot,
   ShieldPlus // Used for the Admin Icon
 } from 'lucide-react';
 import { onAuthStateChanged, signOut } from 'firebase/auth'; 
 import { auth } from '@/lib/firebase'; 
 import Navbar from '@/components/ui/navbar';
 
-const ADMIN_EMAIL = "me240003034@iiti.ac.in"; 
+const ADMIN_EMAIL = "cse240001071@iiti.ac.in"; 
 
 const UserContext = createContext(null);
 export const useUser = () => useContext(UserContext);
@@ -57,6 +58,7 @@ export default function MainLayout({ children }) {
     { href: '/tasks', label: 'My Tasks', icon: CheckSquare },
     { href: '/focus', label: 'Focus Session', icon: Timer },
     { href: '/groups', label: 'Study Groups', icon: Users },
+    { href: '/doubtsolver', label: 'AI Doubt Solver', icon: Bot },
     { href: '/profile', label: 'My Profile', icon: User },
   ];
 
