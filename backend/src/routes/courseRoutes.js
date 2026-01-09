@@ -19,6 +19,7 @@ import {
   sendStudyGroupRequest,
   fetchStudyGroupRequests,
   changeStatusForRequest,
+  replyTaggedMessage,
 } from "../controllers/courseController.js";
 import { upload } from "../config/cloudinary.js";
 
@@ -43,5 +44,5 @@ courseRouter.post("/upload-file", upload.single("file"), uploadFile);
 courseRouter.post("/summarize-file", upload.single("file"), summarizeFile);
 courseRouter.post("/generate-flashcards", upload.single("file"), generateFlashcards);
 courseRouter.post("/generate-quiz", upload.single("file"), generateQuiz);
-
+courseRouter.post("/reply-tagged-message",replyTaggedMessage)
 export default courseRouter;

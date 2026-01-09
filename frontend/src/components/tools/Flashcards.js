@@ -277,7 +277,7 @@ export default function Flashcards({ courseId }) {
     }
   };
 
-  return (
+    return (
     <div className="w-full mx-auto animate-in fade-in duration-500">
       {/* Header Section */}
       <div className="text-center mb-8">
@@ -722,19 +722,19 @@ export default function Flashcards({ courseId }) {
                                     {card.answer}
                                   </p>
                                 </div>
-                              </div>
+                            </div>
                             </div>
                           ))}
+                            </div>
                         </div>
-                      </div>
                     </div>
                   )}
-                </div>
-              ))}
+                    </div>
+                ))}
             </div>
           )}
         </div>
       )}
-    </div>
-  );
+        </div>
+    );
 }

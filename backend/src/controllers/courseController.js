@@ -1097,6 +1097,117 @@ const getQuizHistory = async (req, res) => {
   }
 };
 
+const replyTaggedMessage = async (req, res) => {
+  try {
+    const {
+      messageString,
+      courseId
+    } = req.body;
+    const { uid, name } = req.user;
+
+    if (!messageString) {
+      return res.status(400).json({
+        success: false,
+        message: "Message string is required",
+        data: null,
+      });
+    }
+
+    if (!courseId) {
+      return res.status(400).json({
+        success: false,
+        message: "Course ID is required",
+        data: null,
+      });
+    }
+
+    if (!uid) {
+      return res.status(400).json({
+        success: false,
+        message: "User ID is required",
+        data: null,
+      });
+    }
+
+    const userMessage = await prisma.chatMessage.create({
+      data: {
+        courseId: courseId,
+        senderId: uid,
+        senderName: name,
+        content: messageString,
+      },
+    });
+
+    let memory = await prisma.groupChatAIContext.findUnique({
+      where: {
+        courseId: courseId,
+      },
+      select: {
+        memory: true,
+      },
+    })
+    if(!memory) {
+      memory = "This is the start of a conversation with the user, and the user is asking for academic assistance";
+    }
+    const response = await fetch("http://localhost:8000/mention", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        text: messageString,
+        memory: memory,
+      }),
+    });
+
+    const responseData = await response.json();
+
+    if (!responseData || !responseData.response || !responseData.summary) {
+      return res.status(400).json({
+        success: false,
+        message: "Failed to get AI response",
+        data: null,
+      });
+    }
+
+    const aiMessage = await prisma.chatMessage.create({
+      data: {
+        courseId: courseId,
+        senderId: "Bot_Account",
+        senderName: "Learnix",
+        content: responseData.response,
+      },
+    });
+    const updatedMemory = await prisma.groupChatAIContext.upsert({
+      where: {
+        courseId: courseId,
+      },
+      update: {
+        memory: responseData.summary
+      },
+      create: {
+        courseId: courseId,
+        memory: responseData.summary
+      }
+    })
+    return res.status(200).json({
+      success: true,
+      message: "AI response generated successfully",
+      data: {
+        userMessage: userMessage,
+        aiMessage: aiMessage,
+      }
+    });
+  } catch (error) {
+    console.error("Error replying to tagged message", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error getting AI response",
+      error: error.message,
+    });
+  }
+};
+
 export {
   getEnrolledCourses,
   fetchAllCourses,
@@ -1117,4 +1228,5 @@ export {
   fetchStudyGroupRequests,
   changeStatusForRequest,
   getSummarizedFiles,
+  replyTaggedMessage,
 };

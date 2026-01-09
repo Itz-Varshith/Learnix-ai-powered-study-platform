@@ -330,7 +330,7 @@ export default function Quiz({ courseId }) {
     return "border-gray-200 opacity-50";
   };
 
-  return (
+    return (
     <div className="w-full mx-auto animate-in fade-in duration-500">
       {/* Header Section */}
       <div className="text-center mb-8">
@@ -768,8 +768,8 @@ export default function Quiz({ courseId }) {
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center">
                         <BrainCircuit size={24} className="text-emerald-500" />
-                      </div>
-                      <div>
+                        </div>
+                        <div>
                         <h4 className="font-semibold text-gray-900">
                           {item.fileName || "Unknown File"}
                         </h4>
@@ -919,7 +919,7 @@ export default function Quiz({ courseId }) {
                             )}
                           </div>
                         )}
-                      </div>
+                        </div>
                     </div>
                   )}
                 </div>
@@ -928,6 +928,6 @@ export default function Quiz({ courseId }) {
           )}
         </div>
       )}
-    </div>
-  );
+        </div>
+    );
 }

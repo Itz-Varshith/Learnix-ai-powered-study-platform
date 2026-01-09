@@ -4,6 +4,9 @@ import Navbar from "@/components/ui/navbar";
 export const metadata = {
   title: "Learnix",
   description: "AI-powered study platform for engineering students",
+  icons: {
+    icon: "/icon.svg",
+  },
 };
 
 export default function RootLayout({ children }) {

@@ -42,25 +42,26 @@ enum courseCategoryEnum {
 }
 
 model Course {
-  id                String              @id @default(uuid())
-  courseCode        String              @unique
-  courseName        String
-  courseDescription String
-  department        String
-  memberCount       Int                 @default(0)
-  courseCategory    courseCategoryEnum  @default(Open)
-  courseType        CourseType          @default(Course)
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt
-  users             User[]              @relation("CourseUsers")
-  CourseEnrollment  CourseEnrollment[]
-  fileMetaData      fileMetaData[]
-  StudyGroupRequest StudyGroupRequest[]
-  studyGroupHeads   StudyGroupHead[]
-  chatMessages      ChatMessage[]
-  fileSummaries     fileSummary[]
-  fileFlashcards    fileFlashcards[]
-  fileQuizzes       fileQuiz[]
+  id                  String               @id @default(uuid())
+  courseCode          String               @unique
+  courseName          String
+  courseDescription   String
+  department          String
+  memberCount         Int                  @default(0)
+  courseCategory      courseCategoryEnum   @default(Open)
+  courseType          CourseType           @default(Course)
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  users               User[]               @relation("CourseUsers")
+  CourseEnrollment    CourseEnrollment[]
+  fileMetaData        fileMetaData[]
+  StudyGroupRequest   StudyGroupRequest[]
+  studyGroupHeads     StudyGroupHead[]
+  chatMessages        ChatMessage[]
+  fileSummaries       fileSummary[]
+  fileFlashcards      fileFlashcards[]
+  fileQuizzes         fileQuiz[]
+  groupChatAIContexts groupChatAIContext[]
 }
 
 model CourseEnrollment {
@@ -143,14 +144,13 @@ model fileSummary {
   createdAt   DateTime @default(now())
 
   @@index([createdById, courseId])
-
 }
 
 model fileFlashcards {
   id          String   @id @default(uuid())
   fileURL     String
   fileName    String   @default("Unknown File")
-  flashcards  Json     // Array of {question, answer} objects
+  flashcards  Json // Array of {question, answer} objects
   createdById String
   courseId    String
   course      Course   @relation(fields: [courseId], references: [id])
@@ -164,7 +164,7 @@ model fileQuiz {
   id          String   @id @default(uuid())
   fileURL     String
   fileName    String   @default("Unknown File")
-  questions   Json     // Array of {question, options: {A, B, C, D}, answer} objects
+  questions   Json // Array of {question, options: {A, B, C, D}, answer} objects
   createdById String
   courseId    String
   course      Course   @relation(fields: [courseId], references: [id])
@@ -172,4 +172,13 @@ model fileQuiz {
   createdAt   DateTime @default(now())
 
   @@index([createdById, courseId])
+}
+
+model groupChatAIContext {
+  courseId String   @id
+  courseID Course   @relation(fields: [courseId], references: [id])
+  memory   String
+  updateAt DateTime @default(now()) @updatedAt
+
+  @@index([courseId])
 }
