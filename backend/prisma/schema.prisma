@@ -29,6 +29,7 @@ model User {
   fileSummaries    fileSummary[]
   fileFlashcards   fileFlashcards[]
   fileQuizzes      fileQuiz[]
+  aichats          AIChat[]
 }
 
 enum CourseType {
@@ -181,4 +182,29 @@ model groupChatAIContext {
   updateAt DateTime @default(now()) @updatedAt
 
   @@index([courseId])
+}
+
+model AIChat {
+  id             String          @id @default(uuid())
+  userId         String
+  userID         User            @relation(fields: [userId], references: [id])
+  chatName       String          @default("New Chat")
+  chatContext    String          @default("This is the start of a conversation with the user, and the user is asking for academic assistance")
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  aichatMessages AIChatMessage[]
+
+  @@index([userId])
+}
+
+model AIChatMessage {
+  id           String   @id @default(uuid())
+  chatId       String
+  chatID       AIChat   @relation(fields: [chatId], references: [id])
+  message      String
+  isSentByUser Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([chatId])
 }

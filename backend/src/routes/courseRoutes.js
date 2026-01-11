@@ -20,6 +20,10 @@ import {
   fetchStudyGroupRequests,
   changeStatusForRequest,
   replyTaggedMessage,
+  createAIChat,
+  getAIChats,
+  fetchAIChatMessages,
+  sendAIChatMessage,
 } from "../controllers/courseController.js";
 import { upload } from "../config/cloudinary.js";
 
@@ -45,5 +49,8 @@ courseRouter.post("/summarize-file", upload.single("file"), summarizeFile);
 courseRouter.post("/generate-flashcards", upload.single("file"), generateFlashcards);
 courseRouter.post("/generate-quiz", upload.single("file"), generateQuiz);
 courseRouter.post("/reply-tagged-message",replyTaggedMessage)
-
+courseRouter.post("/create-ai-chat", createAIChat);
+courseRouter.get("/get-ai-chats", getAIChats);
+courseRouter.get("/fetch-ai-chat-messages/:chatId", fetchAIChatMessages);
+courseRouter.post("/send-ai-chat-message/:chatId", sendAIChatMessage);
 export default courseRouter;

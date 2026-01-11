@@ -1196,6 +1196,216 @@ const replyTaggedMessage = async (req, res) => {
   }
 };
 
+const createAIChat = async (req,res) => {
+  try {
+    const {uid} = req.user;
+    const {chatName} = req.body;
+    if (!uid || !chatName) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required",
+        data: null,
+      });
+    }
+    const newChat = await prisma.AIChat.create({
+      data: {
+        userId: uid,
+        chatName: chatName,
+      },
+    });
+    if (!newChat) {
+      return res.status(400).json({
+        success: false,
+        message: "Failed to create AI chat",
+        data: null,
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "AI chat created successfully",
+      data: newChat,
+    });
+  } catch (error) {
+    console.error("Error creating AI chat", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error creating AI chat",
+      error: error.message,
+    });
+  }
+}
+
+const getAIChats = async (req,res) => {
+  try {
+    const {uid} = req.user;
+    if (!uid) {
+      return res.status(400).json({
+        success: false,
+        message: "User ID is required",
+        data: null,
+      });
+    }
+    const chats = await prisma.AIChat.findMany({
+      where: {
+        userId: uid,
+      },
+      select: {
+        id: true,
+        chatName: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+      orderBy: {
+        updatedAt: "desc",
+      },
+    });
+    return res.status(200).json({
+      success: true,
+      message: "AI chats fetched successfully",
+      data: chats,
+    });
+  } catch (error) {
+    console.error("Error getting AI chats", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error creating AI chat",
+      error: error.message,
+    });
+  }
+}
+
+const fetchAIChatMessages = async (req,res) => {
+  try {
+    const {chatId} = req.params;
+    if(!chatId) {
+      return res.status(400).json({
+        success: false,
+        message: "Chat ID is required",
+        data: null,
+      });
+    }
+    const messages = await prisma.AIChatMessage.findMany({
+      where: {
+        chatId: chatId,
+      },
+      select: {
+        id: true,
+        message: true,
+        isSentByUser: true,
+        createdAt: true,
+      },
+      orderBy: {
+        createdAt: "asc",
+      },
+    });
+    return res.status(200).json({
+      success: true,
+      message: "AI chat messages fetched successfully",
+      data: messages,
+    });
+  } catch (error) {
+    console.error("Error fetching AI chat messages", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error fetching AI chat messages",
+      error: error.message,
+    });
+  }
+}
+
+const sendAIChatMessage = async (req,res) => {
+  try {
+    const {chatId} = req.params;
+    const {message} = req.body;
+    if(!chatId || !message) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required",
+        data: null,
+      });
+    }
+    const chat = await prisma.AIChat.findUnique({
+      where: {
+        id: chatId,
+      },
+      select: {
+        chatContext: true,
+      },
+    });
+    if (!chat) {
+      return res.status(400).json({
+        success: false,
+        message: "Chat not found",
+        data: null,
+      });
+    }
+    const userMessage = await prisma.AIChatMessage.create({
+      data: {
+        chatId: chatId,
+        message: message,
+        isSentByUser: true,
+      },
+    });
+    if (!userMessage) {
+      return res.status(400).json({
+        success: false,
+        message: "Failed to send user message",
+        data: null,
+      });
+    }
+    const fetchAIResponse = await fetch("http://localhost:8000/chatbot",{
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user_prompt: message,
+        memory: chat.chatContext,
+      }),
+    })
+    const responseData = await fetchAIResponse.json();
+    const reply = responseData.response;
+    const updatedContext = responseData.summary;
+    const aiMessage = await prisma.AIChatMessage.create({
+      data: {
+        chatId: chatId,
+        message: reply,
+        isSentByUser: false,
+      },
+    });
+    if (!aiMessage) {
+      return res.status(400).json({
+        success: false,
+        message: "Failed to send AI message",
+        data: null,
+      });
+    }
+    await prisma.AIChat.update({
+      where: {
+        id: chatId,
+      },
+      data: {
+        chatContext: updatedContext,
+      },
+    });
+    return res.status(200).json({
+      success: true,
+      message: "AI chat message sent successfully",
+      data: {
+        userMessage: userMessage,
+        aiMessage: aiMessage,
+      },
+    });
+  } catch (error) {
+    console.error("Error sending AI chat message", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error sending AI chat message",
+      error: error.message,
+    });
+  }
+}
+
 export {
   getEnrolledCourses,
   fetchAllCourses,
@@ -1217,4 +1427,8 @@ export {
   changeStatusForRequest,
   getSummarizedFiles,
   replyTaggedMessage,
+  createAIChat,
+  getAIChats,
+  fetchAIChatMessages,
+  sendAIChatMessage,
 };
