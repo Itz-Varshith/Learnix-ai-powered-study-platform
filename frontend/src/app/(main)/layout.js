@@ -14,24 +14,29 @@ import {
   Loader2,
   User,
   Bot,
-  ShieldPlus // Used for the Admin Icon
+  ShieldPlus,
+  ChevronLeft, // Import Chevron Icons
+  ChevronRight
 } from 'lucide-react';
 import { onAuthStateChanged, signOut } from 'firebase/auth'; 
 import { auth } from '@/lib/firebase'; 
 import Navbar from '@/components/ui/navbar';
 
-const ADMIN_EMAIL = "cse240001071@iiti.ac.in"; 
+const ADMIN_EMAIL = "me240003034@iiti.ac.in"; 
 
 const UserContext = createContext(null);
 export const useUser = () => useContext(UserContext);
 
 export default function MainLayout({ children }) {
   const router = useRouter();
-  const pathname = usePathname(); // Highlights the active sidebar link
+  const pathname = usePathname(); 
   
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
+  // --- New State for Sidebar Collapse ---
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   // --- 2. Auth Listener ---
   useEffect(() => {
@@ -39,7 +44,7 @@ export default function MainLayout({ children }) {
       if (currentUser) {
         setUser(currentUser);
       } else {
-        router.push('/'); // Redirect to login if not authenticated
+        router.push('/'); 
       }
       setLoading(false);
     });
@@ -52,7 +57,6 @@ export default function MainLayout({ children }) {
   };
 
   // --- 3. Navigation Config ---
-  // Define the standard items visible to everyone
   const navItems = [
     { href: '/dashboard', label: 'My Courses', icon: BookOpen },
     { href: '/tasks', label: 'My Tasks', icon: CheckSquare },
@@ -62,7 +66,6 @@ export default function MainLayout({ children }) {
     { href: '/profile', label: 'My Profile', icon: User },
   ];
 
-  // Dynamically add Admin Panel ONLY if email matches
   if (user && user.email === ADMIN_EMAIL) {
     navItems.push({ 
       href: '/admin', 
@@ -84,40 +87,64 @@ export default function MainLayout({ children }) {
       <div className="min-h-screen bg-gray-50 flex font-sans text-gray-900">
         
         {/* --- Sidebar (Desktop) --- */}
-        <aside className="hidden md:flex flex-col w-64 bg-white border-r border-gray-200 h-screen sticky top-0 z-20">
-          <div className="h-16 flex items-center px-6 border-b border-gray-100">
-            <div className="flex items-center gap-2 text-indigo-600 font-bold text-2xl">
-              <LayoutDashboard className="w-8 h-8" />
-              <span>Dash.</span>
+        <aside 
+          className={`hidden md:flex flex-col bg-white border-r border-gray-200 h-screen sticky top-0 z-20 transition-all duration-300 ease-in-out relative
+          ${isCollapsed ? 'w-20' : 'w-64'}`}
+        >
+          {/* Collapse Toggle Button */}
+          <button 
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            className="absolute -right-3 top-9 bg-white border border-gray-200 text-gray-500 rounded-full p-1.5 shadow-sm hover:text-indigo-600 hover:border-indigo-100 transition-colors z-50"
+          >
+            {isCollapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
+          </button>
+
+          {/* Logo Area */}
+          <div className={`h-16 flex items-center border-b border-gray-100 ${isCollapsed ? 'justify-center px-0' : 'px-6'}`}>
+            <div className="flex items-center gap-2 text-indigo-600 font-bold text-2xl overflow-hidden whitespace-nowrap">
+              <LayoutDashboard className="w-8 h-8 flex-shrink-0" />
+              <span className={`transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0 hidden' : 'opacity-100'}`}>
+                Dashboard
+              </span>
             </div>
           </div>
 
-          <nav className="flex-1 px-4 space-y-2 py-6">
+          {/* Nav Items */}
+          <nav className="flex-1 px-3 space-y-2 py-6">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-sm font-medium ${
-                  pathname.startsWith(item.href)
+                title={isCollapsed ? item.label : ""} // Tooltip when collapsed
+                className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-colors text-sm font-medium whitespace-nowrap
+                  ${isCollapsed ? 'justify-center' : ''}
+                  ${pathname.startsWith(item.href)
                     ? 'bg-indigo-50 text-indigo-700' 
                     : 'text-gray-600 hover:bg-gray-100'
                 }`}
               >
-                <item.icon className="w-5 h-5" />
-                {item.label}
+                <item.icon className="w-5 h-5 flex-shrink-0" />
+                {!isCollapsed && <span>{item.label}</span>}
               </Link>
             ))}
           </nav>
 
-          <div className="p-4 border-t border-gray-200">
-            <button className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:text-gray-900 text-sm font-medium w-full hover:bg-gray-50 rounded-lg transition-colors">
-              <Settings className="w-5 h-5" /> Settings
+          {/* Sidebar Footer */}
+          <div className="p-3 border-t border-gray-200">
+            <button 
+              title={isCollapsed ? "Settings" : ""}
+              className={`flex items-center gap-3 px-3 py-3 text-gray-600 hover:text-gray-900 text-sm font-medium w-full hover:bg-gray-50 rounded-lg transition-colors whitespace-nowrap ${isCollapsed ? 'justify-center' : ''}`}
+            >
+              <Settings className="w-5 h-5 flex-shrink-0" /> 
+              {!isCollapsed && "Settings"}
             </button>
             <button 
               onClick={handleSignOut}
-              className="flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 text-sm font-medium w-full rounded-lg transition-colors mt-1"
+              title={isCollapsed ? "Logout" : ""}
+              className={`flex items-center gap-3 px-3 py-3 text-red-600 hover:bg-red-50 text-sm font-medium w-full rounded-lg transition-colors mt-1 whitespace-nowrap ${isCollapsed ? 'justify-center' : ''}`}
             >
-              <LogOut className="w-5 h-5" /> Logout
+              <LogOut className="w-5 h-5 flex-shrink-0" /> 
+              {!isCollapsed && "Logout"}
             </button>
           </div>
         </aside>

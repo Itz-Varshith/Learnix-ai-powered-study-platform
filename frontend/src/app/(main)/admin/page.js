@@ -17,7 +17,7 @@ import { onAuthStateChanged } from "firebase/auth";
 
 const API_BASE = "http://localhost:9000/api/courses";
 
-const ADMIN_EMAIL = "cse240001071@iiti.ac.in"; 
+const ADMIN_EMAIL = "me240003034@iiti.ac.in"; 
 
 export default function AdminPage() {
   const router = useRouter();
