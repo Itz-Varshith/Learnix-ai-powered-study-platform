@@ -9,6 +9,7 @@ import {
   WifiOff,
   Sparkles,
   Bot,
+  Code2,
 } from "lucide-react";
 import { io } from "socket.io-client";
 import { auth } from "@/lib/firebase";
@@ -273,13 +274,266 @@ export default function ChatRoom({ courseId, groupId }) {
   // Check if message is from AI (Bot_Account is the senderId used by backend)
   const isAI = (senderId) => senderId === "Bot_Account";
 
-  // Highlight @learnix mentions in message
-  const renderMessageContent = (content, isAiMessage) => {
-    if (isAiMessage) {
-      return content;
+  // Markdown renderer for AI messages
+  const renderMarkdown = (content) => {
+    const lines = content.split('\n');
+    const elements = [];
+    let inCodeBlock = false;
+    let codeBlockContent = [];
+    let codeBlockLang = '';
+    let listItems = [];
+    let listType = null;
+
+    const flushList = () => {
+      if (listItems.length > 0) {
+        const ListTag = listType === 'ol' ? 'ol' : 'ul';
+        elements.push(
+          <ListTag key={`list-${elements.length}`} className={`my-2 ${listType === 'ol' ? 'list-decimal' : 'list-disc'} list-inside space-y-1 text-slate-200`}>
+            {listItems.map((item, i) => (
+              <li key={i} className="leading-relaxed">{renderInline(item)}</li>
+            ))}
+          </ListTag>
+        );
+        listItems = [];
+        listType = null;
+      }
+    };
+
+    const renderInline = (text) => {
+      const parts = [];
+      let remaining = text;
+      let key = 0;
+
+      while (remaining.length > 0) {
+        // Math notation $...$
+        const mathMatch = remaining.match(/^\$([^$]+)\$/);
+        if (mathMatch) {
+          parts.push(
+            <span key={key++} className="font-mono text-violet-300 bg-violet-500/20 px-1 rounded">
+              {mathMatch[1]}
+            </span>
+          );
+          remaining = remaining.slice(mathMatch[0].length);
+          continue;
+        }
+
+        // Bold **...**
+        const boldMatch = remaining.match(/^\*\*([^*]+)\*\*/);
+        if (boldMatch) {
+          parts.push(<strong key={key++} className="font-semibold text-white">{boldMatch[1]}</strong>);
+          remaining = remaining.slice(boldMatch[0].length);
+          continue;
+        }
+
+        // Italic *...*
+        const italicMatch = remaining.match(/^\*([^*]+)\*/);
+        if (italicMatch) {
+          parts.push(<em key={key++} className="italic">{italicMatch[1]}</em>);
+          remaining = remaining.slice(italicMatch[0].length);
+          continue;
+        }
+
+        // Inline code `...`
+        const codeMatch = remaining.match(/^`([^`]+)`/);
+        if (codeMatch) {
+          parts.push(
+            <code key={key++} className="px-1.5 py-0.5 bg-slate-700 text-emerald-400 rounded text-[13px] font-mono">
+              {codeMatch[1]}
+            </code>
+          );
+          remaining = remaining.slice(codeMatch[0].length);
+          continue;
+        }
+
+        // @learnix mention
+        const mentionMatch = remaining.match(/^@learnix/i);
+        if (mentionMatch) {
+          parts.push(
+            <span key={key++} className="bg-violet-500/30 text-violet-300 px-1 py-0.5 rounded font-semibold">
+              {mentionMatch[0]}
+            </span>
+          );
+          remaining = remaining.slice(mentionMatch[0].length);
+          continue;
+        }
+
+        // Find next special char
+        const nextSpecial = remaining.search(/[\$\*`@]/);
+        if (nextSpecial === -1) {
+          parts.push(remaining);
+          break;
+        } else if (nextSpecial === 0) {
+          parts.push(remaining[0]);
+          remaining = remaining.slice(1);
+        } else {
+          parts.push(remaining.slice(0, nextSpecial));
+          remaining = remaining.slice(nextSpecial);
+        }
+      }
+
+      return parts;
+    };
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+
+      // Code block start/end
+      if (line.startsWith('```')) {
+        if (!inCodeBlock) {
+          flushList();
+          inCodeBlock = true;
+          codeBlockLang = line.slice(3).trim();
+          codeBlockContent = [];
+        } else {
+          elements.push(
+            <div key={`code-${elements.length}`} className="my-3 rounded-lg overflow-hidden bg-slate-950 border border-slate-700">
+              {codeBlockLang && (
+                <div className="px-3 py-1.5 bg-slate-800 text-xs text-slate-400 font-mono flex items-center gap-1.5 border-b border-slate-700">
+                  <Code2 size={11} />
+                  {codeBlockLang}
+                </div>
+              )}
+              <pre className="p-3 overflow-x-auto">
+                <code className="text-emerald-400 font-mono text-sm leading-relaxed">
+                  {codeBlockContent.join('\n')}
+                </code>
+              </pre>
+            </div>
+          );
+          inCodeBlock = false;
+          codeBlockLang = '';
+          codeBlockContent = [];
+        }
+        continue;
+      }
+
+      if (inCodeBlock) {
+        codeBlockContent.push(line);
+        continue;
+      }
+
+      // Headers
+      const h4Match = line.match(/^####\s+(.+)$/);
+      if (h4Match) {
+        flushList();
+        elements.push(
+          <h4 key={`h4-${elements.length}`} className="text-sm font-semibold text-white mt-3 mb-1.5">
+            {renderInline(h4Match[1])}
+          </h4>
+        );
+        continue;
+      }
+
+      const h3Match = line.match(/^###\s+(.+)$/);
+      if (h3Match) {
+        flushList();
+        elements.push(
+          <h3 key={`h3-${elements.length}`} className="text-base font-semibold text-white mt-4 mb-2">
+            {renderInline(h3Match[1])}
+          </h3>
+        );
+        continue;
+      }
+
+      const h2Match = line.match(/^##\s+(.+)$/);
+      if (h2Match) {
+        flushList();
+        elements.push(
+          <h2 key={`h2-${elements.length}`} className="text-lg font-bold text-white mt-4 mb-2">
+            {renderInline(h2Match[1])}
+          </h2>
+        );
+        continue;
+      }
+
+      const h1Match = line.match(/^#\s+(.+)$/);
+      if (h1Match) {
+        flushList();
+        elements.push(
+          <h1 key={`h1-${elements.length}`} className="text-xl font-bold text-white mt-4 mb-2">
+            {renderInline(h1Match[1])}
+          </h1>
+        );
+        continue;
+      }
+
+      // Horizontal rule
+      if (line.match(/^(\*\*\*|---|___)$/)) {
+        flushList();
+        elements.push(<hr key={`hr-${elements.length}`} className="my-3 border-slate-700" />);
+        continue;
+      }
+
+      // Ordered list
+      const olMatch = line.match(/^(\d+)\.\s+(.+)$/);
+      if (olMatch) {
+        if (listType !== 'ol') flushList();
+        listType = 'ol';
+        listItems.push(olMatch[2]);
+        continue;
+      }
+
+      // Unordered list
+      const ulMatch = line.match(/^[-*]\s+(.+)$/);
+      if (ulMatch) {
+        if (listType !== 'ul') flushList();
+        listType = 'ul';
+        listItems.push(ulMatch[1]);
+        continue;
+      }
+
+      // Letter list (A. B. C.)
+      const letterMatch = line.match(/^([A-Z])\.\s+(.+)$/);
+      if (letterMatch) {
+        flushList();
+        elements.push(
+          <div key={`letter-${elements.length}`} className="my-1.5">
+            <span className="font-semibold text-violet-300">{letterMatch[1]}. </span>
+            <span className="text-slate-200">{renderInline(letterMatch[2])}</span>
+          </div>
+        );
+        continue;
+      }
+
+      // Table row (simple)
+      if (line.startsWith('|') && line.endsWith('|')) {
+        flushList();
+        const cells = line.slice(1, -1).split('|').map(c => c.trim());
+        // Skip separator rows
+        if (cells.every(c => c.match(/^:?-+:?$/))) continue;
+        elements.push(
+          <div key={`table-${elements.length}`} className="flex gap-4 my-1 text-sm">
+            {cells.map((cell, ci) => (
+              <span key={ci} className={ci === 0 ? "font-mono text-violet-300 bg-violet-500/20 px-1.5 py-0.5 rounded" : "text-slate-300"}>
+                {renderInline(cell)}
+              </span>
+            ))}
+          </div>
+        );
+        continue;
+      }
+
+      // Empty line
+      if (line.trim() === '') {
+        flushList();
+        continue;
+      }
+
+      // Regular paragraph
+      flushList();
+      elements.push(
+        <p key={`p-${elements.length}`} className="my-1.5 leading-relaxed text-slate-200">
+          {renderInline(line)}
+        </p>
+      );
     }
 
-    // Highlight @learnix mentions
+    flushList();
+    return elements.length > 0 ? elements : <span>{content}</span>;
+  };
+
+  // Render user message with @learnix highlighting
+  const renderUserMessage = (content) => {
     const parts = content.split(/(@learnix)/gi);
     return parts.map((part, index) => {
       if (part.toLowerCase() === "@learnix") {
@@ -409,7 +663,7 @@ export default function ChatRoom({ courseId, groupId }) {
                       self
                         ? "bg-gradient-to-br from-indigo-600 to-violet-600 text-white rounded-tr-sm"
                         : ai
-                        ? "bg-gradient-to-br from-violet-500/20 to-indigo-500/20 text-slate-100 rounded-tl-sm border border-violet-500/30 backdrop-blur-sm"
+                        ? "bg-gradient-to-br from-violet-500/20 to-indigo-500/20 text-slate-100 rounded-tl-sm border border-violet-500/30 backdrop-blur-sm max-w-full"
                         : "bg-slate-800 text-slate-200 rounded-tl-sm border border-slate-700"
                     }`}
                   >
@@ -424,8 +678,8 @@ export default function ChatRoom({ courseId, groupId }) {
                         {msg.senderName}
                       </span>
                     )}
-                    <div className="whitespace-pre-wrap break-words">
-                      {renderMessageContent(msg.content, ai)}
+                    <div className="break-words">
+                      {ai ? renderMarkdown(msg.content) : renderUserMessage(msg.content)}
                     </div>
                   </div>
                 </div>

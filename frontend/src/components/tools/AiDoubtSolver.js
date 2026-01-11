@@ -9,79 +9,60 @@ import {
   Loader2,
   Bot,
   User,
-  Trash2,
   Menu,
   X,
   Clock,
-  ChevronRight,
-  Zap,
-  BookOpen,
-  Brain,
+  ChevronLeft,
   Search,
   Copy,
   Check,
   ArrowDown,
-  RefreshCw,
   AlertTriangle,
-  Code2,
-  GraduationCap,
-  Lightbulb,
+  RotateCcw,
 } from "lucide-react";
 import { auth } from "@/lib/firebase";
 
 const API_BASE = "http://localhost:9000";
 
-/**
- * AiDoubtSolver Component
- * Personal AI chat assistant for academic help
- * Features: multiple chat sessions, persistent history, markdown rendering, modern UI
- */
 export default function AiDoubtSolver() {
-  // Chat list state
   const [chats, setChats] = useState([]);
   const [selectedChatId, setSelectedChatId] = useState(null);
   const [loadingChats, setLoadingChats] = useState(true);
-
-  // Current chat messages state
   const [messages, setMessages] = useState([]);
   const [loadingMessages, setLoadingMessages] = useState(false);
-
-  // Input and sending state
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const [creatingChat, setCreatingChat] = useState(false);
-
-  // UI state
   const [error, setError] = useState(null);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showNewChatInput, setShowNewChatInput] = useState(false);
   const [newChatName, setNewChatName] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [copiedMessageId, setCopiedMessageId] = useState(null);
   const [showScrollButton, setShowScrollButton] = useState(false);
-  const [deletingChatId, setDeletingChatId] = useState(null);
 
-  // Refs
   const bottomRef = useRef(null);
   const inputRef = useRef(null);
   const newChatInputRef = useRef(null);
   const messagesContainerRef = useRef(null);
 
-  // Auto-scroll to bottom when new messages arrive
+  // Auto-collapse sidebar on mount
+  useEffect(() => {
+    setSidebarOpen(false);
+  }, []);
+
   useEffect(() => {
     if (!showScrollButton) {
       bottomRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages, showScrollButton]);
 
-  // Focus new chat input when shown
   useEffect(() => {
     if (showNewChatInput) {
       newChatInputRef.current?.focus();
     }
   }, [showNewChatInput]);
 
-  // Handle scroll position for scroll button
   const handleScroll = useCallback(() => {
     if (messagesContainerRef.current) {
       const { scrollTop, scrollHeight, clientHeight } = messagesContainerRef.current;
@@ -90,13 +71,11 @@ export default function AiDoubtSolver() {
     }
   }, []);
 
-  // Scroll to bottom function
   const scrollToBottom = () => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
     setShowScrollButton(false);
   };
 
-  // Copy message to clipboard
   const copyMessage = async (messageId, content) => {
     try {
       await navigator.clipboard.writeText(content);
@@ -107,31 +86,23 @@ export default function AiDoubtSolver() {
     }
   };
 
-  // Fetch all chats on mount
   const fetchChats = useCallback(async () => {
     try {
       setLoadingChats(true);
       setError(null);
-
       const user = auth.currentUser;
       if (!user) {
         setError("Please sign in to use AI Chat");
         setLoadingChats(false);
         return;
       }
-
       const token = await user.getIdToken();
       const response = await fetch(`${API_BASE}/api/courses/get-ai-chats`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
-
       const data = await response.json();
-
       if (data.success) {
         setChats(data.data || []);
-        // Auto-select first chat if exists
         if (data.data?.length > 0 && !selectedChatId) {
           setSelectedChatId(data.data[0].id);
         }
@@ -140,35 +111,25 @@ export default function AiDoubtSolver() {
       }
     } catch (err) {
       console.error("Error fetching chats:", err);
-      setError("Failed to load chats. Please try again.");
+      setError("Failed to load chats.");
     } finally {
       setLoadingChats(false);
     }
   }, [selectedChatId]);
 
-  // Fetch messages for selected chat
   const fetchMessages = useCallback(async (chatId) => {
     if (!chatId) return;
-
     try {
       setLoadingMessages(true);
       setError(null);
-
       const user = auth.currentUser;
       if (!user) return;
-
       const token = await user.getIdToken();
       const response = await fetch(
         `${API_BASE}/api/courses/fetch-ai-chat-messages/${chatId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
-
       const data = await response.json();
-
       if (data.success) {
         setMessages(data.data || []);
       } else {
@@ -176,18 +137,16 @@ export default function AiDoubtSolver() {
       }
     } catch (err) {
       console.error("Error fetching messages:", err);
-      setError("Failed to load messages. Please try again.");
+      setError("Failed to load messages.");
     } finally {
       setLoadingMessages(false);
     }
   }, []);
 
-  // Initial fetch
   useEffect(() => {
     fetchChats();
   }, [fetchChats]);
 
-  // Fetch messages when chat is selected
   useEffect(() => {
     if (selectedChatId) {
       fetchMessages(selectedChatId);
@@ -196,21 +155,17 @@ export default function AiDoubtSolver() {
     }
   }, [selectedChatId, fetchMessages]);
 
-  // Create new chat
   const createChat = async (e) => {
     e?.preventDefault();
     const chatName = newChatName.trim() || `Chat ${new Date().toLocaleDateString()}`;
-
     try {
       setCreatingChat(true);
       setError(null);
-
       const user = auth.currentUser;
       if (!user) {
-        setError("Please sign in to create a chat");
+        setError("Please sign in");
         return;
       }
-
       const token = await user.getIdToken();
       const response = await fetch(`${API_BASE}/api/courses/create-ai-chat`, {
         method: "POST",
@@ -220,9 +175,7 @@ export default function AiDoubtSolver() {
         },
         body: JSON.stringify({ chatName }),
       });
-
       const data = await response.json();
-
       if (data.success) {
         setChats((prev) => [data.data, ...prev]);
         setSelectedChatId(data.data.id);
@@ -234,20 +187,17 @@ export default function AiDoubtSolver() {
       }
     } catch (err) {
       console.error("Error creating chat:", err);
-      setError("Failed to create chat. Please try again.");
+      setError("Failed to create chat.");
     } finally {
       setCreatingChat(false);
     }
   };
 
-  // Send message
   const sendMessage = async (e) => {
     e.preventDefault();
-
     const trimmedInput = input.trim();
     if (!trimmedInput || sending || !selectedChatId) return;
 
-    // Optimistically add user message
     const tempUserMsg = {
       id: `temp-${Date.now()}`,
       message: trimmedInput,
@@ -263,11 +213,10 @@ export default function AiDoubtSolver() {
     try {
       const user = auth.currentUser;
       if (!user) {
-        setError("Please sign in to send messages");
+        setError("Please sign in");
         setSending(false);
         return;
       }
-
       const token = await user.getIdToken();
       const response = await fetch(
         `${API_BASE}/api/courses/send-ai-chat-message/${selectedChatId}`,
@@ -280,39 +229,27 @@ export default function AiDoubtSolver() {
           body: JSON.stringify({ message: trimmedInput }),
         }
       );
-
       const data = await response.json();
-
       if (data.success) {
-        // Replace temp message with real ones
         setMessages((prev) => {
           const filtered = prev.filter((m) => m.id !== tempUserMsg.id);
-          return [
-            ...filtered,
-            data.data.userMessage,
-            data.data.aiMessage,
-          ];
+          return [...filtered, data.data.userMessage, data.data.aiMessage];
         });
-
-        // Update chat in list (move to top)
         setChats((prev) => {
           const updated = prev.map((chat) =>
             chat.id === selectedChatId
               ? { ...chat, updatedAt: new Date().toISOString() }
               : chat
           );
-          return updated.sort(
-            (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
-          );
+          return updated.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
         });
       } else {
         setError(data.message || "Failed to send message");
-        // Remove optimistic message on error
         setMessages((prev) => prev.filter((m) => m.id !== tempUserMsg.id));
       }
     } catch (err) {
       console.error("Error sending message:", err);
-      setError("Failed to send message. Please try again.");
+      setError("Failed to send message.");
       setMessages((prev) => prev.filter((m) => m.id !== tempUserMsg.id));
     } finally {
       setSending(false);
@@ -320,516 +257,437 @@ export default function AiDoubtSolver() {
     }
   };
 
-  // Format time for display
   const formatTime = (dateString) => {
     const date = new Date(dateString);
     const now = new Date();
     const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
-
-    if (diffDays === 0) {
-      return date.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-    } else if (diffDays === 1) {
-      return "Yesterday";
-    } else if (diffDays < 7) {
-      return date.toLocaleDateString([], { weekday: "short" });
-    } else {
-      return date.toLocaleDateString([], { month: "short", day: "numeric" });
-    }
+    if (diffDays === 0) return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    if (diffDays === 1) return "Yesterday";
+    if (diffDays < 7) return date.toLocaleDateString([], { weekday: "short" });
+    return date.toLocaleDateString([], { month: "short", day: "numeric" });
   };
 
-  // Format message time
-  const formatMessageTime = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
+  // Enhanced markdown renderer
+  const renderMarkdown = (content) => {
+    const lines = content.split('\n');
+    const elements = [];
+    let inCodeBlock = false;
+    let codeBlockContent = [];
+    let codeBlockLang = '';
+    let listItems = [];
+    let listType = null;
 
-  // Render message content with basic formatting
-  const renderMessageContent = (content) => {
-    // Split by code blocks
-    const parts = content.split(/(```[\s\S]*?```)/g);
-    
-    return parts.map((part, index) => {
-      if (part.startsWith("```") && part.endsWith("```")) {
-        // Code block
-        const codeContent = part.slice(3, -3);
-        const firstLine = codeContent.split("\n")[0];
-        const hasLanguage = firstLine && !firstLine.includes(" ") && firstLine.length < 20;
-        const language = hasLanguage ? firstLine : "";
-        const code = hasLanguage ? codeContent.slice(firstLine.length + 1) : codeContent;
-        
-        return (
-          <div key={index} className="my-3 rounded-lg overflow-hidden bg-slate-950 border border-slate-700">
-            {language && (
-              <div className="px-3 py-1.5 bg-slate-800 text-xs text-slate-400 font-mono flex items-center gap-2">
-                <Code2 size={12} />
-                {language}
-              </div>
-            )}
-            <pre className="p-3 overflow-x-auto text-sm">
-              <code className="text-emerald-400 font-mono">{code.trim()}</code>
-            </pre>
+    const flushList = () => {
+      if (listItems.length > 0) {
+        const ListTag = listType === 'ol' ? 'ol' : 'ul';
+        elements.push(
+          <ListTag key={`list-${elements.length}`} className={`my-2 ${listType === 'ol' ? 'list-decimal' : 'list-disc'} list-inside space-y-1 text-slate-700`}>
+            {listItems.map((item, i) => (
+              <li key={i} className="leading-relaxed">{renderInlineMarkdown(item)}</li>
+            ))}
+          </ListTag>
+        );
+        listItems = [];
+        listType = null;
+      }
+    };
+
+    const renderInlineMarkdown = (text) => {
+      // Process inline elements: bold, italic, code, math
+      const parts = [];
+      let remaining = text;
+      let key = 0;
+
+      while (remaining.length > 0) {
+        // Math notation $...$
+        const mathMatch = remaining.match(/^\$([^$]+)\$/);
+        if (mathMatch) {
+          parts.push(
+            <span key={key++} className="font-mono text-indigo-600 bg-indigo-50 px-1 rounded">
+              {mathMatch[1]}
+            </span>
+          );
+          remaining = remaining.slice(mathMatch[0].length);
+          continue;
+        }
+
+        // Bold **...**
+        const boldMatch = remaining.match(/^\*\*([^*]+)\*\*/);
+        if (boldMatch) {
+          parts.push(<strong key={key++} className="font-semibold text-slate-900">{boldMatch[1]}</strong>);
+          remaining = remaining.slice(boldMatch[0].length);
+          continue;
+        }
+
+        // Italic *...*
+        const italicMatch = remaining.match(/^\*([^*]+)\*/);
+        if (italicMatch) {
+          parts.push(<em key={key++} className="italic">{italicMatch[1]}</em>);
+          remaining = remaining.slice(italicMatch[0].length);
+          continue;
+        }
+
+        // Inline code `...`
+        const codeMatch = remaining.match(/^`([^`]+)`/);
+        if (codeMatch) {
+          parts.push(
+            <code key={key++} className="px-1.5 py-0.5 bg-slate-100 text-slate-800 rounded text-[13px] font-mono">
+              {codeMatch[1]}
+            </code>
+          );
+          remaining = remaining.slice(codeMatch[0].length);
+          continue;
+        }
+
+        // Find next special char
+        const nextSpecial = remaining.search(/[\$\*`]/);
+        if (nextSpecial === -1) {
+          parts.push(remaining);
+          break;
+        } else if (nextSpecial === 0) {
+          parts.push(remaining[0]);
+          remaining = remaining.slice(1);
+        } else {
+          parts.push(remaining.slice(0, nextSpecial));
+          remaining = remaining.slice(nextSpecial);
+        }
+      }
+
+      return parts;
+    };
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+
+      // Code block start/end
+      if (line.startsWith('```')) {
+        if (!inCodeBlock) {
+          flushList();
+          inCodeBlock = true;
+          codeBlockLang = line.slice(3).trim();
+          codeBlockContent = [];
+        } else {
+          elements.push(
+            <div key={`code-${elements.length}`} className="my-3 rounded-lg overflow-hidden bg-slate-900 border border-slate-200">
+              {codeBlockLang && (
+                <div className="px-3 py-1.5 bg-slate-800 text-xs text-slate-400 font-mono border-b border-slate-700">
+                  {codeBlockLang}
+                </div>
+              )}
+              <pre className="p-4 overflow-x-auto">
+                <code className="text-emerald-400 font-mono text-sm leading-relaxed">
+                  {codeBlockContent.join('\n')}
+                </code>
+              </pre>
+            </div>
+          );
+          inCodeBlock = false;
+          codeBlockLang = '';
+          codeBlockContent = [];
+        }
+        continue;
+      }
+
+      if (inCodeBlock) {
+        codeBlockContent.push(line);
+        continue;
+      }
+
+      // Headers
+      const h4Match = line.match(/^####\s+(.+)$/);
+      if (h4Match) {
+        flushList();
+        elements.push(
+          <h4 key={`h4-${elements.length}`} className="text-base font-semibold text-slate-800 mt-4 mb-2">
+            {renderInlineMarkdown(h4Match[1])}
+          </h4>
+        );
+        continue;
+      }
+
+      const h3Match = line.match(/^###\s+(.+)$/);
+      if (h3Match) {
+        flushList();
+        elements.push(
+          <h3 key={`h3-${elements.length}`} className="text-lg font-semibold text-slate-800 mt-5 mb-2">
+            {renderInlineMarkdown(h3Match[1])}
+          </h3>
+        );
+        continue;
+      }
+
+      const h2Match = line.match(/^##\s+(.+)$/);
+      if (h2Match) {
+        flushList();
+        elements.push(
+          <h2 key={`h2-${elements.length}`} className="text-xl font-bold text-slate-900 mt-6 mb-3">
+            {renderInlineMarkdown(h2Match[1])}
+          </h2>
+        );
+        continue;
+      }
+
+      const h1Match = line.match(/^#\s+(.+)$/);
+      if (h1Match) {
+        flushList();
+        elements.push(
+          <h1 key={`h1-${elements.length}`} className="text-2xl font-bold text-slate-900 mt-6 mb-3">
+            {renderInlineMarkdown(h1Match[1])}
+          </h1>
+        );
+        continue;
+      }
+
+      // Ordered list
+      const olMatch = line.match(/^(\d+)\.\s+(.+)$/);
+      if (olMatch) {
+        if (listType !== 'ol') flushList();
+        listType = 'ol';
+        listItems.push(olMatch[2]);
+        continue;
+      }
+
+      // Unordered list
+      const ulMatch = line.match(/^[-*]\s+(.+)$/);
+      if (ulMatch) {
+        if (listType !== 'ul') flushList();
+        listType = 'ul';
+        listItems.push(ulMatch[1]);
+        continue;
+      }
+
+      // Letter list (A. B. C.)
+      const letterMatch = line.match(/^([A-Z])\.\s+(.+)$/);
+      if (letterMatch) {
+        flushList();
+        elements.push(
+          <div key={`letter-${elements.length}`} className="my-2">
+            <span className="font-semibold text-slate-800">{letterMatch[1]}. </span>
+            <span className="text-slate-700">{renderInlineMarkdown(letterMatch[2])}</span>
           </div>
         );
+        continue;
       }
-      
-      // Regular text - handle inline formatting
-      return (
-        <span key={index} className="whitespace-pre-wrap">
-          {part.split(/(\*\*.*?\*\*|\*.*?\*|`.*?`)/g).map((segment, i) => {
-            if (segment.startsWith("**") && segment.endsWith("**")) {
-              return <strong key={i} className="font-bold">{segment.slice(2, -2)}</strong>;
-            }
-            if (segment.startsWith("*") && segment.endsWith("*") && !segment.startsWith("**")) {
-              return <em key={i} className="italic">{segment.slice(1, -1)}</em>;
-            }
-            if (segment.startsWith("`") && segment.endsWith("`")) {
-              return (
-                <code key={i} className="px-1.5 py-0.5 bg-slate-700 rounded text-amber-400 font-mono text-[0.85em]">
-                  {segment.slice(1, -1)}
-                </code>
-              );
-            }
-            return segment;
-          })}
-        </span>
+
+      // Empty line
+      if (line.trim() === '') {
+        flushList();
+        continue;
+      }
+
+      // Regular paragraph
+      flushList();
+      elements.push(
+        <p key={`p-${elements.length}`} className="my-2 leading-relaxed text-slate-700">
+          {renderInlineMarkdown(line)}
+        </p>
       );
-    });
+    }
+
+    flushList();
+    return elements;
   };
 
-  // Filter chats by search query
   const filteredChats = chats.filter((chat) =>
     chat.chatName.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Selected chat data
   const selectedChat = chats.find((c) => c.id === selectedChatId);
 
-  // Loading state for entire component
   if (loadingChats && chats.length === 0) {
     return (
-      <div className="flex h-[calc(100vh-140px)] bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950 rounded-2xl border border-slate-800 shadow-2xl overflow-hidden">
+      <div className="flex h-full bg-white overflow-hidden">
         <div className="flex-1 flex items-center justify-center">
-          <div className="text-center">
-            <div className="relative">
-              <div className="absolute inset-0 bg-indigo-500/20 blur-xl rounded-full"></div>
-              <Loader2 className="w-12 h-12 text-indigo-400 animate-spin mx-auto mb-4 relative" />
-            </div>
-            <p className="text-slate-400 font-medium">Loading your chats...</p>
-            <p className="text-slate-600 text-sm mt-1">Preparing your AI assistant</p>
-          </div>
+          <Loader2 className="w-6 h-6 text-slate-400 animate-spin" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="flex h-[calc(100vh-140px)] bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950 rounded-2xl border border-slate-800 shadow-2xl overflow-hidden">
-      {/* Sidebar - Chat List */}
-      <div
-        className={`${
-          sidebarOpen ? "w-80" : "w-0"
-        } transition-all duration-300 ease-out bg-slate-900/80 backdrop-blur-xl border-r border-slate-800 flex flex-col overflow-hidden`}
-      >
-        {/* Sidebar Header */}
-        <div className="p-4 border-b border-slate-800 bg-gradient-to-r from-indigo-600/20 to-violet-600/20">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 bg-gradient-to-br from-indigo-500 to-violet-500 rounded-xl shadow-lg shadow-indigo-500/25">
-                <Brain className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <span className="font-bold text-white text-lg block">AI Chats</span>
-                <span className="text-xs text-slate-400">{chats.length} conversations</span>
-              </div>
-            </div>
-            <button
-              onClick={() => setSidebarOpen(false)}
-              className="p-2 hover:bg-slate-800 rounded-lg transition-colors lg:hidden"
-            >
-              <X className="w-5 h-5 text-slate-400" />
+    <div className="flex h-full bg-white overflow-hidden">
+      {/* Sidebar */}
+      <div className={`${sidebarOpen ? "w-60" : "w-0"} transition-all duration-200 bg-slate-50 border-r border-slate-100 flex flex-col overflow-hidden`}>
+        <div className="p-3 border-b border-slate-100">
+          <div className="flex items-center justify-between mb-3">
+            <span className="font-medium text-slate-700 text-sm">History</span>
+            <button onClick={() => setSidebarOpen(false)} className="p-1 hover:bg-slate-200 rounded">
+              <ChevronLeft className="w-4 h-4 text-slate-400" />
             </button>
           </div>
 
-          {/* Search */}
-          <div className="relative mb-3">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+          <div className="relative mb-2">
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search chats..."
-              className="w-full pl-9 pr-3 py-2 text-sm bg-slate-800/50 rounded-lg border border-slate-700 placeholder-slate-500 text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500"
+              placeholder="Search..."
+              className="w-full pl-8 pr-3 py-1.5 text-xs bg-white rounded-lg border border-slate-200 placeholder-slate-400 focus:outline-none focus:border-slate-300"
             />
           </div>
 
-          {/* New Chat Button / Input */}
           {showNewChatInput ? (
-            <form onSubmit={createChat} className="flex gap-2">
+            <form onSubmit={createChat} className="flex gap-1.5">
               <input
                 ref={newChatInputRef}
                 type="text"
                 value={newChatName}
                 onChange={(e) => setNewChatName(e.target.value)}
-                placeholder="Chat name..."
-                className="flex-1 px-3 py-2.5 text-sm bg-slate-800 rounded-lg border border-slate-700 placeholder-slate-500 text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                placeholder="Name..."
+                className="flex-1 px-2.5 py-1.5 text-xs bg-white rounded-lg border border-slate-200 placeholder-slate-400 focus:outline-none focus:border-slate-300"
                 disabled={creatingChat}
               />
-              <button
-                type="submit"
-                disabled={creatingChat}
-                className="p-2.5 bg-indigo-600 hover:bg-indigo-500 rounded-lg transition-colors disabled:opacity-50 shadow-lg shadow-indigo-500/25"
-              >
-                {creatingChat ? (
-                  <Loader2 className="w-5 h-5 text-white animate-spin" />
-                ) : (
-                  <Plus className="w-5 h-5 text-white" />
-                )}
+              <button type="submit" disabled={creatingChat} className="p-1.5 bg-slate-900 hover:bg-slate-800 rounded-lg disabled:opacity-50">
+                {creatingChat ? <Loader2 className="w-3.5 h-3.5 text-white animate-spin" /> : <Plus className="w-3.5 h-3.5 text-white" />}
               </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setShowNewChatInput(false);
-                  setNewChatName("");
-                }}
-                className="p-2.5 bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors"
-              >
-                <X className="w-5 h-5 text-slate-400" />
+              <button type="button" onClick={() => { setShowNewChatInput(false); setNewChatName(""); }} className="p-1.5 bg-slate-200 hover:bg-slate-300 rounded-lg">
+                <X className="w-3.5 h-3.5 text-slate-500" />
               </button>
             </form>
           ) : (
-            <button
-              onClick={() => setShowNewChatInput(true)}
-              className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white rounded-xl transition-all font-medium text-sm shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40"
-            >
-              <Plus className="w-4 h-4" />
-              New Chat
+            <button onClick={() => setShowNewChatInput(true)} className="w-full flex items-center justify-center gap-1.5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-medium">
+              <Plus className="w-3.5 h-3.5" /> New Chat
             </button>
           )}
         </div>
 
-        {/* Chat List */}
-        <div className="flex-1 overflow-y-auto custom-scrollbar">
+        <div className="flex-1 overflow-y-auto">
           {filteredChats.length === 0 ? (
-            <div className="p-6 text-center">
-              <div className="p-4 bg-slate-800/50 rounded-2xl inline-block mb-3">
-                <MessageSquare className="w-10 h-10 text-slate-600" />
-              </div>
-              <p className="text-slate-400 text-sm font-medium mb-1">
-                {searchQuery ? "No chats found" : "No chats yet"}
-              </p>
-              <p className="text-slate-600 text-xs">
-                {searchQuery ? "Try a different search" : "Create a new chat to get started"}
-              </p>
-            </div>
+            <div className="p-4 text-center text-slate-400 text-xs">No chats</div>
           ) : (
-            <div className="py-2">
+            <div className="py-1">
               {filteredChats.map((chat) => (
-                <div
+                <button
                   key={chat.id}
-                  className="group relative"
+                  onClick={() => setSelectedChatId(chat.id)}
+                  className={`w-full text-left px-3 py-2.5 transition-colors text-xs ${
+                    selectedChatId === chat.id ? "bg-slate-100" : "hover:bg-slate-100/50"
+                  }`}
                 >
-                  <button
-                    onClick={() => setSelectedChatId(chat.id)}
-                    className={`w-full text-left px-4 py-3.5 transition-all ${
-                      selectedChatId === chat.id
-                        ? "bg-indigo-500/20 border-l-2 border-indigo-500"
-                        : "border-l-2 border-transparent hover:bg-slate-800/50"
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div
-                        className={`p-2 rounded-lg transition-colors ${
-                          selectedChatId === chat.id
-                            ? "bg-indigo-500/30 text-indigo-400"
-                            : "bg-slate-800 text-slate-500 group-hover:text-slate-400"
-                        }`}
-                      >
-                        <MessageSquare className="w-4 h-4" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p
-                          className={`font-medium text-sm truncate transition-colors ${
-                            selectedChatId === chat.id
-                              ? "text-indigo-200"
-                              : "text-slate-300 group-hover:text-slate-200"
-                          }`}
-                        >
-                          {chat.chatName}
-                        </p>
-                        <p className="text-xs text-slate-600 flex items-center gap-1 mt-0.5">
-                          <Clock className="w-3 h-3" />
-                          {formatTime(chat.updatedAt || chat.createdAt)}
-                        </p>
-                      </div>
-                      <ChevronRight
-                        className={`w-4 h-4 transition-all ${
-                          selectedChatId === chat.id
-                            ? "text-indigo-400 translate-x-0.5"
-                            : "text-slate-700 group-hover:text-slate-500"
-                        }`}
-                      />
-                    </div>
-                  </button>
-                </div>
+                  <p className={`font-medium truncate ${selectedChatId === chat.id ? "text-slate-900" : "text-slate-600"}`}>
+                    {chat.chatName}
+                  </p>
+                  <p className="text-[10px] text-slate-400 mt-0.5">{formatTime(chat.updatedAt || chat.createdAt)}</p>
+                </button>
               ))}
             </div>
           )}
         </div>
-
-        {/* Sidebar Footer */}
-        <div className="p-4 border-t border-slate-800 bg-slate-900/50">
-          <div className="flex items-center gap-2 text-xs text-slate-500">
-            <Zap className="w-3 h-3 text-amber-500" />
-            <span>Powered by AI</span>
-          </div>
-        </div>
       </div>
 
-      {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col min-w-0 bg-gradient-to-b from-slate-900/50 to-transparent">
-        {/* Chat Header */}
-        <div className="p-4 border-b border-slate-800 bg-slate-900/80 backdrop-blur-xl flex items-center gap-3">
-          {!sidebarOpen && (
-            <button
-              onClick={() => setSidebarOpen(true)}
-              className="p-2 hover:bg-slate-800 rounded-lg transition-colors"
-            >
-              <Menu className="w-5 h-5 text-slate-400" />
-            </button>
-          )}
-          <div className="p-2.5 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl shadow-lg shadow-emerald-500/25">
-            <Sparkles className="w-5 h-5 text-white" />
-          </div>
+      {/* Main Area */}
+      <div className="flex-1 flex flex-col min-w-0 bg-white">
+        {/* Header */}
+        <div className="h-14 px-4 border-b border-slate-100 flex items-center gap-3 shrink-0">
+          <button onClick={() => setSidebarOpen(true)} className={`p-2 hover:bg-slate-100 rounded-lg transition-colors ${sidebarOpen ? 'hidden' : ''}`}>
+            <Menu className="w-5 h-5 text-slate-500" />
+          </button>
           <div className="flex-1 min-w-0">
-            <h2 className="font-bold text-slate-100 truncate flex items-center gap-2">
-              {selectedChat?.chatName || "AI Doubt Solver"}
-              {selectedChat && (
-                <span className="text-xs font-normal text-slate-500">
-                  • {messages.length} messages
-                </span>
-              )}
-            </h2>
-            <p className="text-xs text-slate-500">
-              Your personal AI tutor for academic excellence
-            </p>
+            <h1 className="font-semibold text-slate-800 truncate">{selectedChat?.chatName || "AI Doubt Solver"}</h1>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="flex items-center gap-1.5 text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1.5 rounded-full font-medium">
-              <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
-              Online
-            </span>
-          </div>
+          <button
+            onClick={() => { setShowNewChatInput(true); setSidebarOpen(true); }}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
+          >
+            <Plus className="w-4 h-4" /> New
+          </button>
         </div>
 
-        {/* Messages Area */}
-        <div 
-          ref={messagesContainerRef}
-          onScroll={handleScroll}
-          className="flex-1 overflow-y-auto p-6 relative custom-scrollbar"
-        >
+        {/* Messages */}
+        <div ref={messagesContainerRef} onScroll={handleScroll} className="flex-1 overflow-y-auto relative">
           {!selectedChatId ? (
-            // No chat selected - Welcome screen
-            <div className="h-full flex flex-col items-center justify-center text-center px-6">
-              <div className="relative mb-8">
-                <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/30 to-violet-500/30 blur-3xl rounded-full"></div>
-                <div className="relative p-6 bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl border border-slate-700 shadow-2xl">
-                  <Bot className="w-16 h-16 text-indigo-400" />
-                </div>
+            <div className="h-full flex flex-col items-center justify-center text-center px-4">
+              <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mb-4">
+                <Bot className="w-6 h-6 text-slate-500" />
               </div>
-              <h3 className="text-3xl font-bold text-white mb-3 bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">
-                Welcome to Learnix AI
-              </h3>
-              <p className="text-slate-400 max-w-lg mb-10 text-lg">
-                Your intelligent study companion is ready to help you excel in your academics.
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-3xl w-full">
-                {[
-                  {
-                    icon: BookOpen,
-                    title: "Explain Concepts",
-                    desc: "Get clear explanations for complex topics",
-                    color: "from-blue-500 to-cyan-500",
-                    shadow: "shadow-blue-500/20",
-                  },
-                  {
-                    icon: Lightbulb,
-                    title: "Problem Solving",
-                    desc: "Step-by-step solutions to tough problems",
-                    color: "from-amber-500 to-orange-500",
-                    shadow: "shadow-amber-500/20",
-                  },
-                  {
-                    icon: GraduationCap,
-                    title: "Exam Prep",
-                    desc: "Practice questions and revision help",
-                    color: "from-emerald-500 to-teal-500",
-                    shadow: "shadow-emerald-500/20",
-                  },
-                ].map((feature, i) => (
-                  <div
-                    key={i}
-                    className={`p-5 bg-slate-800/50 rounded-2xl border border-slate-700 text-left hover:border-slate-600 transition-all hover:bg-slate-800/70 group cursor-default`}
-                  >
-                    <div className={`p-3 bg-gradient-to-br ${feature.color} rounded-xl w-fit mb-3 shadow-lg ${feature.shadow} group-hover:scale-110 transition-transform`}>
-                      <feature.icon className="w-6 h-6 text-white" />
-                    </div>
-                    <p className="font-semibold text-slate-200 mb-1">
-                      {feature.title}
-                    </p>
-                    <p className="text-sm text-slate-500">
-                      {feature.desc}
-                    </p>
-                  </div>
-                ))}
-              </div>
+              <h2 className="text-lg font-semibold text-slate-800 mb-1">How can I help you?</h2>
+              <p className="text-slate-500 text-sm mb-6 max-w-sm">Ask any academic question and get instant explanations.</p>
               <button
-                onClick={() => setShowNewChatInput(true)}
-                className="mt-10 px-8 py-4 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-2xl font-semibold hover:shadow-2xl hover:shadow-indigo-500/30 transition-all flex items-center gap-3 text-lg group"
+                onClick={() => { setSidebarOpen(true); setShowNewChatInput(true); }}
+                className="px-4 py-2 bg-slate-900 text-white rounded-lg text-sm font-medium hover:bg-slate-800 transition-colors"
               >
-                <Plus className="w-6 h-6 group-hover:rotate-90 transition-transform" />
-                Start New Conversation
+                Start a conversation
               </button>
             </div>
           ) : loadingMessages ? (
-            // Loading messages
             <div className="h-full flex items-center justify-center">
-              <div className="text-center">
-                <div className="relative">
-                  <div className="absolute inset-0 bg-indigo-500/20 blur-xl rounded-full"></div>
-                  <Loader2 className="w-10 h-10 text-indigo-400 animate-spin mx-auto mb-4 relative" />
-                </div>
-                <p className="text-slate-400 text-sm">Loading conversation...</p>
-              </div>
+              <Loader2 className="w-5 h-5 text-slate-400 animate-spin" />
             </div>
           ) : messages.length === 0 ? (
-            // Empty chat
             <div className="h-full flex flex-col items-center justify-center text-center">
-              <div className="p-5 bg-gradient-to-br from-indigo-500/20 to-violet-500/20 rounded-3xl mb-5 border border-indigo-500/30">
-                <Sparkles className="w-12 h-12 text-indigo-400" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-200 mb-2">
-                Start the conversation
-              </h3>
-              <p className="text-slate-500 text-sm max-w-sm mb-6">
-                Ask any question about your studies. I'm here to help you understand and learn better.
-              </p>
-              <div className="flex flex-wrap gap-2 justify-center max-w-md">
-                {["Explain quantum physics", "Help with calculus", "Essay writing tips"].map((suggestion, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setInput(suggestion)}
-                    className="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-full text-sm text-slate-300 border border-slate-700 hover:border-slate-600 transition-all"
-                  >
-                    {suggestion}
-                  </button>
-                ))}
-              </div>
+              <Sparkles className="w-8 h-8 text-slate-300 mb-3" />
+              <p className="text-slate-500 text-sm">Send a message to start</p>
             </div>
           ) : (
-            // Message list
-            <div className="space-y-6">
-              {messages.map((msg, index) => {
+            <div className="max-w-3xl mx-auto px-4 py-6">
+              {messages.map((msg) => {
                 const isUser = msg.isSentByUser;
                 const isTemp = msg.id.startsWith("temp-");
 
                 return (
-                  <div
-                    key={msg.id}
-                    className={`flex ${
-                      isUser ? "justify-end" : "justify-start"
-                    } animate-in fade-in slide-in-from-bottom-2 duration-300`}
-                    style={{ animationDelay: `${index * 50}ms` }}
-                  >
-                    <div
-                      className={`flex items-start gap-3 max-w-[85%] ${
-                        isUser ? "flex-row-reverse" : "flex-row"
-                      }`}
-                    >
-                      {/* Avatar */}
-                      <div
-                        className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 shadow-lg ${
-                          isUser
-                            ? "bg-gradient-to-br from-indigo-500 to-violet-500 shadow-indigo-500/25"
-                            : "bg-gradient-to-br from-emerald-500 to-teal-500 shadow-emerald-500/25"
-                        }`}
-                      >
+                  <div key={msg.id} className={`mb-6 ${isTemp ? "opacity-60" : ""}`}>
+                    {/* Avatar + Name row */}
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className={`w-7 h-7 rounded-full flex items-center justify-center ${isUser ? "bg-slate-200" : "bg-emerald-100"}`}>
+                        {isUser ? <User className="w-4 h-4 text-slate-600" /> : <Sparkles className="w-4 h-4 text-emerald-600" />}
+                      </div>
+                      <span className={`text-sm font-medium ${isUser ? "text-slate-700" : "text-emerald-700"}`}>
+                        {isUser ? "You" : "Learnix AI"}
+                      </span>
+                    </div>
+
+                    {/* Message content */}
+                    <div className="pl-9 group relative">
+                      <div className={`text-[15px] leading-relaxed ${isUser ? "text-slate-800" : "text-slate-700"}`}>
                         {isUser ? (
-                          <User className="w-4 h-4 text-white" />
+                          <p className="whitespace-pre-wrap">{msg.message}</p>
                         ) : (
-                          <Sparkles className="w-4 h-4 text-white" />
+                          <div className="prose-sm max-w-none">{renderMarkdown(msg.message)}</div>
                         )}
                       </div>
 
-                      {/* Message Bubble */}
-                      <div className="group relative">
-                        <div
-                          className={`px-4 py-3 rounded-2xl text-sm shadow-lg ${
-                            isUser
-                              ? "bg-gradient-to-br from-indigo-600 to-violet-600 text-white rounded-tr-sm"
-                              : "bg-slate-800 text-slate-200 rounded-tl-sm border border-slate-700"
-                          } ${isTemp ? "opacity-70" : ""}`}
-                        >
-                          {!isUser && (
-                            <span className="block text-[10px] font-bold text-emerald-400 mb-2 flex items-center gap-1">
-                              <Sparkles className="w-3 h-3" />
-                              Learnix AI
-                            </span>
-                          )}
-                          <div className="leading-relaxed break-words">
-                            {renderMessageContent(msg.message)}
-                          </div>
-                          {isTemp && (
-                            <div className="mt-2 flex items-center gap-1 text-white/70 text-xs">
-                              <Loader2 className="w-3 h-3 animate-spin" />
-                              Sending...
-                            </div>
-                          )}
+                      {isTemp && (
+                        <div className="mt-2 flex items-center gap-1 text-slate-400 text-xs">
+                          <Loader2 className="w-3 h-3 animate-spin" /> Thinking...
                         </div>
-                        
-                        {/* Message actions */}
-                        {!isTemp && (
-                          <div className={`absolute top-0 ${isUser ? 'left-0 -translate-x-full pr-2' : 'right-0 translate-x-full pl-2'} opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1`}>
-                            <button
-                              onClick={() => copyMessage(msg.id, msg.message)}
-                              className="p-1.5 bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors border border-slate-700"
-                              title="Copy message"
-                            >
-                              {copiedMessageId === msg.id ? (
-                                <Check className="w-3.5 h-3.5 text-emerald-400" />
-                              ) : (
-                                <Copy className="w-3.5 h-3.5 text-slate-400" />
-                              )}
-                            </button>
-                          </div>
-                        )}
-                        
-                        {/* Timestamp */}
-                        <span className={`block text-[10px] text-slate-600 mt-1.5 ${isUser ? 'text-right' : 'text-left'}`}>
-                          {formatMessageTime(msg.createdAt)}
-                        </span>
-                      </div>
+                      )}
+
+                      {/* Actions */}
+                      {!isTemp && !isUser && (
+                        <div className="mt-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button
+                            onClick={() => copyMessage(msg.id, msg.message)}
+                            className="p-1.5 hover:bg-slate-100 rounded-md transition-colors"
+                            title="Copy"
+                          >
+                            {copiedMessageId === msg.id ? (
+                              <Check className="w-4 h-4 text-emerald-500" />
+                            ) : (
+                              <Copy className="w-4 h-4 text-slate-400" />
+                            )}
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 );
               })}
 
-              {/* AI Typing Indicator */}
+              {/* AI Typing */}
               {sending && (
-                <div className="flex items-start gap-3 animate-in fade-in duration-300">
-                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center shadow-lg shadow-emerald-500/25">
-                    <Sparkles className="w-4 h-4 text-white" />
+                <div className="mb-6">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center">
+                      <Sparkles className="w-4 h-4 text-emerald-600" />
+                    </div>
+                    <span className="text-sm font-medium text-emerald-700">Learnix AI</span>
                   </div>
-                  <div className="px-5 py-4 bg-slate-800 rounded-2xl rounded-tl-sm border border-slate-700 shadow-lg">
+                  <div className="pl-9">
                     <div className="flex items-center gap-1.5">
-                      <div className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-                      <div className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-                      <div className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce"></div>
+                      <div className="w-2 h-2 bg-slate-300 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                      <div className="w-2 h-2 bg-slate-300 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                      <div className="w-2 h-2 bg-slate-300 rounded-full animate-bounce"></div>
                     </div>
                   </div>
                 </div>
@@ -839,44 +697,34 @@ export default function AiDoubtSolver() {
             </div>
           )}
 
-          {/* Scroll to bottom button */}
           {showScrollButton && selectedChatId && messages.length > 0 && (
             <button
               onClick={scrollToBottom}
-              className="absolute bottom-4 right-4 p-3 bg-indigo-600 hover:bg-indigo-500 rounded-full shadow-lg shadow-indigo-500/30 transition-all animate-in fade-in zoom-in duration-200"
+              className="absolute bottom-4 right-4 p-2.5 bg-white border border-slate-200 rounded-full shadow-lg hover:shadow-xl transition-all z-10"
             >
-              <ArrowDown className="w-5 h-5 text-white" />
+              <ArrowDown className="w-4 h-4 text-slate-500" />
             </button>
           )}
         </div>
 
-        {/* Error Banner */}
+        {/* Error */}
         {error && (
-          <div className="mx-4 mb-2 p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-sm flex items-center gap-3">
-            <AlertTriangle className="w-5 h-5 shrink-0" />
+          <div className="mx-4 mb-2 px-3 py-2 bg-red-50 border border-red-100 rounded-lg text-red-600 text-xs flex items-center gap-2">
+            <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
             <span className="flex-1">{error}</span>
-            <button
-              onClick={() => setError(null)}
-              className="p-1.5 hover:bg-red-500/20 rounded-lg transition-colors"
-            >
-              <X className="w-4 h-4" />
-            </button>
+            <button onClick={() => setError(null)}><X className="w-3.5 h-3.5" /></button>
           </div>
         )}
 
-        {/* Input Area */}
-        <div className="p-4 bg-slate-900/80 backdrop-blur-xl border-t border-slate-800">
-          <form onSubmit={sendMessage} className="flex gap-3">
-            <div className="relative flex-1">
+        {/* Input */}
+        <div className="p-4 border-t border-slate-100 bg-white">
+          <div className="max-w-3xl mx-auto">
+            <form onSubmit={sendMessage} className="relative">
               <input
                 ref={inputRef}
                 type="text"
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-5 py-4 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all pr-12"
-                placeholder={
-                  selectedChatId
-                    ? "Ask anything about your studies..."
-                    : "Select or create a chat to start"
-                }
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 pr-12 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-200 focus:border-slate-300 disabled:opacity-50 transition-all"
+                placeholder={selectedChatId ? "Message Learnix AI..." : "Start a new chat to begin"}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 disabled={!selectedChatId || sending}
@@ -888,50 +736,18 @@ export default function AiDoubtSolver() {
                   }
                 }}
               />
-              {input && (
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-600">
-                  {input.length}/2000
-                </span>
-              )}
-            </div>
-            <button
-              type="submit"
-              className="px-6 py-4 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-xl font-medium hover:shadow-lg hover:shadow-indigo-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none flex items-center gap-2 group"
-              disabled={!input.trim() || !selectedChatId || sending}
-            >
-              {sending ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
-              ) : (
-                <>
-                  <Send className="w-5 h-5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                  <span className="hidden sm:inline">Send</span>
-                </>
-              )}
-            </button>
-          </form>
-          <p className="text-xs text-slate-600 mt-3 text-center flex items-center justify-center gap-2">
-            <Zap className="w-3 h-3 text-amber-500" />
-            AI responses are for educational purposes. Always verify important information.
-          </p>
+              <button
+                type="submit"
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                disabled={!input.trim() || !selectedChatId || sending}
+              >
+                {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+              </button>
+            </form>
+            <p className="text-center text-[11px] text-slate-400 mt-2">AI can make mistakes. Verify important information.</p>
+          </div>
         </div>
       </div>
-
-      {/* Custom scrollbar styles */}
-      <style jsx global>{`
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: transparent;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: rgb(51 65 85 / 0.5);
-          border-radius: 3px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: rgb(71 85 105 / 0.7);
-        }
-      `}</style>
     </div>
   );
 }
