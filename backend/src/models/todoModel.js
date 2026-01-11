@@ -1,11 +1,14 @@
-// backend/src/models/todoModel.js
 import { db } from "../config/firebase.js";
 const userTasks = (uid) => db.collection("users").doc(uid).collection("tasks");
 
 export const TodoModel = {
   findAll: async (uid) => {
     const snapshot = await userTasks(uid).orderBy("createdAt", "desc").get();
-    return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    
+    return snapshot.docs
+      .map((doc) => ({ id: doc.id, ...doc.data() }))
+      // FILTER: Only return tasks that are NOT marked as deleted
+      .filter((task) => !task.isDeleted); 
   },
 
   create: async (uid, taskData) => {
@@ -13,7 +16,8 @@ export const TodoModel = {
       ...taskData,
       createdAt: new Date().toISOString(),
       completed: false,
-      completedAt: null // Initialize as null
+      completedAt: null,
+      isDeleted: false // Initialize as not deleted
     });
     return { id: docRef.id, ...taskData };
   },
@@ -30,7 +34,8 @@ export const TodoModel = {
   },
 
   delete: async (uid, taskId) => {
-    await userTasks(uid).doc(taskId).delete();
+    await userTasks(uid).doc(taskId).update({ isDeleted: true });
+    
     return true;
   },
 };
