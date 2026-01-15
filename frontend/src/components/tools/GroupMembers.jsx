@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { auth } from "@/lib/firebase";
 
-const API_BASE = "http://localhost:9000/api/courses";
+const API_BASE = `${process.env.NEXT_PUBLIC_API_URL}/api/courses`;
 
 const GroupMembers = ({ groupId }) => {
   // State

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import {
   Sparkles,
   Send,
@@ -22,7 +22,52 @@ import {
 } from "lucide-react";
 import { auth } from "@/lib/firebase";
 
-const API_BASE = "http://localhost:9000";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL;
+
+// Animated text component for flowing AI responses
+function AnimatedMessage({ content, renderMarkdown, isNew }) {
+  const [displayedContent, setDisplayedContent] = useState(isNew ? "" : content);
+  const [isAnimating, setIsAnimating] = useState(isNew);
+
+  useEffect(() => {
+    if (!isNew || !content) {
+      setDisplayedContent(content);
+      setIsAnimating(false);
+      return;
+    }
+
+    let currentIndex = 0;
+    const words = content.split(" ");
+    const totalWords = words.length;
+    
+    // Faster animation for longer messages
+    const baseDelay = totalWords > 100 ? 15 : totalWords > 50 ? 25 : 35;
+    
+    const animateText = () => {
+      if (currentIndex < totalWords) {
+        const wordsToAdd = totalWords > 200 ? 3 : totalWords > 100 ? 2 : 1;
+        currentIndex = Math.min(currentIndex + wordsToAdd, totalWords);
+        setDisplayedContent(words.slice(0, currentIndex).join(" "));
+        setTimeout(animateText, baseDelay);
+      } else {
+        setIsAnimating(false);
+      }
+    };
+
+    animateText();
+  }, [content, isNew]);
+
+  return (
+    <div className={`transition-opacity duration-300 ${isAnimating ? "animate-pulse-subtle" : ""}`}>
+      <div className="prose-sm max-w-none">
+        {renderMarkdown(displayedContent)}
+      </div>
+      {isAnimating && (
+        <span className="inline-block w-2 h-4 bg-emerald-500 ml-1 animate-blink rounded-sm" />
+      )}
+    </div>
+  );
+}
 
 export default function AiDoubtSolver() {
   const [chats, setChats] = useState([]);
@@ -40,6 +85,7 @@ export default function AiDoubtSolver() {
   const [searchQuery, setSearchQuery] = useState("");
   const [copiedMessageId, setCopiedMessageId] = useState(null);
   const [showScrollButton, setShowScrollButton] = useState(false);
+  const [newMessageIds, setNewMessageIds] = useState(new Set());
 
   const bottomRef = useRef(null);
   const inputRef = useRef(null);
@@ -231,6 +277,17 @@ export default function AiDoubtSolver() {
       );
       const data = await response.json();
       if (data.success) {
+        // Mark AI message as new for animation
+        setNewMessageIds((prev) => new Set([...prev, data.data.aiMessage.id]));
+        // Clear the "new" flag after animation completes
+        setTimeout(() => {
+          setNewMessageIds((prev) => {
+            const next = new Set(prev);
+            next.delete(data.data.aiMessage.id);
+            return next;
+          });
+        }, 5000);
+        
         setMessages((prev) => {
           const filtered = prev.filter((m) => m.id !== tempUserMsg.id);
           return [...filtered, data.data.userMessage, data.data.aiMessage];
@@ -643,7 +700,11 @@ export default function AiDoubtSolver() {
                         {isUser ? (
                           <p className="whitespace-pre-wrap">{msg.message}</p>
                         ) : (
-                          <div className="prose-sm max-w-none">{renderMarkdown(msg.message)}</div>
+                          <AnimatedMessage 
+                            content={msg.message} 
+                            renderMarkdown={renderMarkdown} 
+                            isNew={newMessageIds.has(msg.id)} 
+                          />
                         )}
                       </div>
 

@@ -729,7 +729,7 @@ const summarizeFile = async (req, res) => {
         data: null,
       });
     }
-    const response = await fetch("http://localhost:8000/summarize", {
+    const response = await fetch(`${process.env.ML_SERVICE_URL}/summarize`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -854,7 +854,7 @@ const generateFlashcards = async (req, res) => {
       });
     }
 
-    const response = await fetch("http://localhost:8000/flashcards", {
+    const response = await fetch(`${process.env.ML_SERVICE_URL}/flashcards`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -988,7 +988,7 @@ const generateQuiz = async (req, res) => {
       });
     }
 
-    const response = await fetch("http://localhost:8000/quiz", {
+    const response = await fetch(`${process.env.ML_SERVICE_URL}/quiz`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -1137,7 +1137,7 @@ const replyTaggedMessage = async (req, res) => {
       memory =
         "This is the start of a conversation with the user, and the user is asking for academic assistance";
     }
-    const response = await fetch("http://localhost:8000/mention", {
+    const response = await fetch(`${process.env.ML_SERVICE_URL}/mention`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -1196,10 +1196,10 @@ const replyTaggedMessage = async (req, res) => {
   }
 };
 
-const createAIChat = async (req,res) => {
+const createAIChat = async (req, res) => {
   try {
-    const {uid} = req.user;
-    const {chatName} = req.body;
+    const { uid } = req.user;
+    const { chatName } = req.body;
     if (!uid || !chatName) {
       return res.status(400).json({
         success: false,
@@ -1233,11 +1233,11 @@ const createAIChat = async (req,res) => {
       error: error.message,
     });
   }
-}
+};
 
-const getAIChats = async (req,res) => {
+const getAIChats = async (req, res) => {
   try {
-    const {uid} = req.user;
+    const { uid } = req.user;
     if (!uid) {
       return res.status(400).json({
         success: false,
@@ -1272,12 +1272,12 @@ const getAIChats = async (req,res) => {
       error: error.message,
     });
   }
-}
+};
 
-const fetchAIChatMessages = async (req,res) => {
+const fetchAIChatMessages = async (req, res) => {
   try {
-    const {chatId} = req.params;
-    if(!chatId) {
+    const { chatId } = req.params;
+    if (!chatId) {
       return res.status(400).json({
         success: false,
         message: "Chat ID is required",
@@ -1311,13 +1311,13 @@ const fetchAIChatMessages = async (req,res) => {
       error: error.message,
     });
   }
-}
+};
 
-const sendAIChatMessage = async (req,res) => {
+const sendAIChatMessage = async (req, res) => {
   try {
-    const {chatId} = req.params;
-    const {message} = req.body;
-    if(!chatId || !message) {
+    const { chatId } = req.params;
+    const { message } = req.body;
+    if (!chatId || !message) {
       return res.status(400).json({
         success: false,
         message: "All fields are required",
@@ -1353,16 +1353,19 @@ const sendAIChatMessage = async (req,res) => {
         data: null,
       });
     }
-    const fetchAIResponse = await fetch("http://localhost:8000/chatbot",{
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        user_prompt: message,
-        memory: chat.chatContext,
-      }),
-    })
+    const fetchAIResponse = await fetch(
+      `${process.env.ML_SERVICE_URL}/chatbot`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_prompt: message,
+          memory: chat.chatContext,
+        }),
+      }
+    );
     const responseData = await fetchAIResponse.json();
     const reply = responseData.response;
     const updatedContext = responseData.summary;
@@ -1404,7 +1407,7 @@ const sendAIChatMessage = async (req,res) => {
       error: error.message,
     });
   }
-}
+};
 
 export {
   getEnrolledCourses,

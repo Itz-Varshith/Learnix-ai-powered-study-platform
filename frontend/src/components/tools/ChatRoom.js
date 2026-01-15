@@ -14,8 +14,8 @@ import {
 import { io } from "socket.io-client";
 import { auth } from "@/lib/firebase";
 
-const API_BASE = "http://localhost:9000";
-const SOCKET_URL = "http://localhost:9000";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL;
+const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL;
 
 // AI mention pattern
 const AI_MENTION_PATTERN = /@learnix/i;

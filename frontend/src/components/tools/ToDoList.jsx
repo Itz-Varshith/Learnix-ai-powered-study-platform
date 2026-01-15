@@ -18,7 +18,7 @@ const TodoList = () => {
   const [deadline, setDeadline] = useState('');
 
   // POINTING TO YOUR NEW MODULAR BACKEND PORT
-  const API_URL = 'http://localhost:9000/api/todos';
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/api/todos`;
 
   // --- 1. Fetch Logic ---
   const fetchTodos = async (uid) => {

@@ -16,21 +16,25 @@ export default function SignInPage() {
   const handleGoogleLogin = async () => {
     setIsLoading(true);
     setError("");
-    
+
     try {
+      // Sign out first to ensure fresh session
+      await signOut(auth);
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
-
+      console.log(user);
       if (!user.email.endsWith("@iiti.ac.in")) {
         await signOut(auth);
-        setError("Access Restricted: Please use your college email (@iiti.ac.in)");
+        setError(
+          "Access Restricted: Please use your college email (@iiti.ac.in)"
+        );
         setIsLoading(false);
         return;
       }
 
-      const token = await user.getIdToken();
-
-      const res = await fetch("http://localhost:9000/auth/login", {
+      const token = await user.getIdToken(true);
+      console.log(token);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -195,7 +199,10 @@ export default function SignInPage() {
           >
             <FeaturePill icon={<Shield className="w-4 h-4" />} label="Secure" />
             <FeaturePill icon={<Zap className="w-4 h-4" />} label="Fast" />
-            <FeaturePill icon={<Sparkles className="w-4 h-4" />} label="AI Powered" />
+            <FeaturePill
+              icon={<Sparkles className="w-4 h-4" />}
+              label="AI Powered"
+            />
           </motion.div>
 
           {/* Footer text */}

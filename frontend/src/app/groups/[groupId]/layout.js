@@ -10,7 +10,7 @@ import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase'; 
 import Navbar from '@/components/ui/navbar'; 
 
-const API_BASE = "http://localhost:9000/api/courses";
+const API_BASE = `${process.env.NEXT_PUBLIC_API_URL}/api/courses`;
 
 export default function GroupLayout({ children }) {
   const params = useParams();

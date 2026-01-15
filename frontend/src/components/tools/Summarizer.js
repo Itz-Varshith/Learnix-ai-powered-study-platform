@@ -19,7 +19,7 @@ import { auth } from "@/lib/firebase";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-const API_BASE = "http://localhost:9000/api/courses";
+const API_BASE = `${process.env.NEXT_PUBLIC_API_URL}/api/courses`;
 
 // Format date helper
 const formatDate = (dateString) => {

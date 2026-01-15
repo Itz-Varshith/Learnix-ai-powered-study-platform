@@ -35,7 +35,7 @@ export default function Profile({ user }) {
 
     const fetchStats = async () => {
       try {
-        const res = await fetch(`http://localhost:9000/api/stats/${user.uid}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/stats/${user.uid}`);
         if (!res.ok) throw new Error("Failed to fetch");
         
         const data = await res.json();

@@ -15,7 +15,7 @@ import {
 import { auth } from "@/lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 
-const API_BASE = "http://localhost:9000/api/courses";
+const API_BASE = `${process.env.NEXT_PUBLIC_API_URL}/api/courses`;
 
 const ADMIN_EMAIL = "me240003034@iiti.ac.in"; 
 

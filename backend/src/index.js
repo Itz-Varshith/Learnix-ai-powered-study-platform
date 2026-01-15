@@ -18,7 +18,8 @@ import chatRoutes from "./routes/chatRoutes.js";
 import { initializeSocketHandlers } from "./controllers/chatController.js";
 
 const app = express();
-const PORT = 9000;
+const PORT = process.env.PORT || 9000;
+const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:3000";
 
 // Create HTTP server for Socket.IO
 const httpServer = createServer(app);
@@ -26,14 +27,14 @@ const httpServer = createServer(app);
 // Initialize Socket.IO with CORS
 const io = new Server(httpServer, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: FRONTEND_URL,
     credentials: true,
   },
 });
 
 // Global Middleware
 app.use(express.json());
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(cors({ origin: FRONTEND_URL, credentials: true }));
 
 // Use Routes
 app.use("/auth", authRoutes); // Endpoints starting with /auth

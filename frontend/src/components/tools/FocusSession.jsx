@@ -36,7 +36,7 @@ const FocusSession = () => {
 
   const containerRef = useRef(null);
   const hasProcessedCompletionRef = useRef(false);
-  const API_URL = 'http://localhost:9000/api/focus';
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/api/focus`;
 
   /* ---------------- AUTH ---------------- */
 
