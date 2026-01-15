@@ -33,7 +33,7 @@ export default function SignInPage() {
       }
 
       const token = await user.getIdToken(true);
-      // console.log(token);
+      console.log(token);
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
         method: "POST",
         headers: {

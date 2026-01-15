@@ -126,7 +126,7 @@ export default function Profile({ user }) {
         />
         <StatCard 
           icon={<CheckCircle className="w-6 h-6 text-emerald-500" />}
-          label="Tasks Done today"
+          label="Tasks Done"
           value={tasksCompletedToday}
           unit="tasks"
           color="emerald"
