@@ -1,4 +1,4 @@
-import { PrismaClient } from "../../generated/prisma/client.ts";
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 const getEnrolledCourses = async (req, res) => {
