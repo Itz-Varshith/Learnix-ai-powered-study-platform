@@ -35,6 +35,10 @@ const io = new Server(httpServer, {
 // Global Middleware
 app.use(express.json());
 app.use(cors({ origin: [FRONTEND_URL], credentials: true }));
+app.use((req, res, next) => {
+  console.log("INCOMING:", req.method, req.url);
+  next();
+});
 app.get("/", (req,res)=>{
   res.send("Learnix API is running");
 })
