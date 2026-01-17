@@ -1,0 +1,209 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String              @id
+  name             String
+  email            String              @unique
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+  courses          Course[]            @relation("CourseUsers")
+  CourseEnrollment CourseEnrollment[]
+  senderRelation   StudyGroupRequest[] @relation("senderRelation")
+  recieverRelation StudyGroupRequest[] @relation("recieverRelation")
+  studyGroupHeads  StudyGroupHead[]
+  chatMessages     ChatMessage[]
+  fileSummaries    fileSummary[]
+  fileFlashcards   fileFlashcards[]
+  fileQuizzes      fileQuiz[]
+  aichats          AIChat[]
+}
+
+enum CourseType {
+  Course
+  Study_Group
+}
+
+enum courseCategoryEnum {
+  Open
+  Invite_Only
+}
+
+model Course {
+  id                  String               @id @default(uuid())
+  courseCode          String               @unique
+  courseName          String
+  courseDescription   String
+  department          String
+  memberCount         Int                  @default(0)
+  courseCategory      courseCategoryEnum   @default(Open)
+  courseType          CourseType           @default(Course)
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  users               User[]               @relation("CourseUsers")
+  CourseEnrollment    CourseEnrollment[]
+  fileMetaData        fileMetaData[]
+  StudyGroupRequest   StudyGroupRequest[]
+  studyGroupHeads     StudyGroupHead[]
+  chatMessages        ChatMessage[]
+  fileSummaries       fileSummary[]
+  fileFlashcards      fileFlashcards[]
+  fileQuizzes         fileQuiz[]
+  groupChatAIContexts groupChatAIContext[]
+}
+
+model CourseEnrollment {
+  userId   String
+  courseId String
+  user     User   @relation(fields: [userId], references: [id])
+  course   Course @relation(fields: [courseId], references: [id])
+
+  @@id([userId, courseId])
+}
+
+model fileMetaData {
+  id             String   @id @default(uuid())
+  storedLink     String
+  fileName       String
+  fileType       String
+  fileSize       Int
+  uploadedAt     DateTime @default(now())
+  uploadedByName String   @default("Unknown User")
+  courseId       String
+  course         Course   @relation(fields: [courseId], references: [id])
+}
+
+enum StudyGroupRequestStatus {
+  Pending
+  Accepted
+  Rejected
+}
+
+model StudyGroupRequest {
+  id             String                  @id @default(uuid())
+  senderName     String
+  senderId       String
+  sender         User                    @relation("senderRelation", fields: [senderId], references: [id])
+  recieverId     String
+  reciever       User                    @relation("recieverRelation", fields: [recieverId], references: [id])
+  status         StudyGroupRequestStatus @default(Pending)
+  message        String?
+  studyGroupId   String
+  studyGroupID   Course                  @relation(fields: [studyGroupId], references: [id])
+  studyGroupName String
+  studyGroupCode String
+  createdAt      DateTime                @default(now())
+  updatedAt      DateTime                @updatedAt
+}
+
+model StudyGroupHead {
+  id           String   @id @default(uuid())
+  userId       String
+  userID       User     @relation(fields: [userId], references: [id])
+  studyGroupId String
+  studyGroup   Course   @relation(fields: [studyGroupId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+// Chat message model - immutable (append-only, no edits/deletes)
+model ChatMessage {
+  id         String   @id @default(uuid())
+  courseId   String
+  course     Course   @relation(fields: [courseId], references: [id])
+  senderId   String
+  sender     User     @relation(fields: [senderId], references: [id])
+  senderName String // Snapshot of sender name at time of message
+  content    String
+  createdAt  DateTime @default(now())
+
+  @@index([courseId, createdAt(sort: Desc)])
+}
+
+model fileSummary {
+  id          String   @id @default(uuid())
+  fileURL     String
+  fileName    String   @default("Unknown File")
+  summary     String
+  createdById String
+  courseId    String
+  courseID    Course   @relation(fields: [courseId], references: [id])
+  createdBy   User     @relation(fields: [createdById], references: [id])
+  createdAt   DateTime @default(now())
+
+  @@index([createdById, courseId])
+}
+
+model fileFlashcards {
+  id          String   @id @default(uuid())
+  fileURL     String
+  fileName    String   @default("Unknown File")
+  flashcards  Json // Array of {question, answer} objects
+  createdById String
+  courseId    String
+  course      Course   @relation(fields: [courseId], references: [id])
+  createdBy   User     @relation(fields: [createdById], references: [id])
+  createdAt   DateTime @default(now())
+
+  @@index([createdById, courseId])
+}
+
+model fileQuiz {
+  id          String   @id @default(uuid())
+  fileURL     String
+  fileName    String   @default("Unknown File")
+  questions   Json // Array of {question, options: {A, B, C, D}, answer} objects
+  createdById String
+  courseId    String
+  course      Course   @relation(fields: [courseId], references: [id])
+  createdBy   User     @relation(fields: [createdById], references: [id])
+  createdAt   DateTime @default(now())
+
+  @@index([createdById, courseId])
+}
+
+model groupChatAIContext {
+  courseId String   @id
+  courseID Course   @relation(fields: [courseId], references: [id])
+  memory   String
+  updateAt DateTime @default(now()) @updatedAt
+
+  @@index([courseId])
+}
+
+model AIChat {
+  id             String          @id @default(uuid())
+  userId         String
+  userID         User            @relation(fields: [userId], references: [id])
+  chatName       String          @default("New Chat")
+  chatContext    String          @default("This is the start of a conversation with the user, and the user is asking for academic assistance")
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  aichatMessages AIChatMessage[]
+
+  @@index([userId])
+}
+
+model AIChatMessage {
+  id           String   @id @default(uuid())
+  chatId       String
+  chatID       AIChat   @relation(fields: [chatId], references: [id])
+  message      String
+  isSentByUser Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([chatId])
+}

@@ -1,0 +1,2913 @@
+{
+	"tldrawFileFormatVersion": 1,
+	"schema": {
+		"schemaVersion": 2,
+		"sequences": {
+			"com.tldraw.store": 5,
+			"com.tldraw.asset": 1,
+			"com.tldraw.camera": 1,
+			"com.tldraw.document": 2,
+			"com.tldraw.instance": 25,
+			"com.tldraw.instance_page_state": 5,
+			"com.tldraw.page": 1,
+			"com.tldraw.instance_presence": 6,
+			"com.tldraw.pointer": 1,
+			"com.tldraw.shape": 4,
+			"com.tldraw.asset.bookmark": 2,
+			"com.tldraw.asset.image": 5,
+			"com.tldraw.asset.video": 5,
+			"com.tldraw.shape.group": 0,
+			"com.tldraw.shape.text": 4,
+			"com.tldraw.shape.bookmark": 2,
+			"com.tldraw.shape.draw": 3,
+			"com.tldraw.shape.geo": 11,
+			"com.tldraw.shape.note": 10,
+			"com.tldraw.shape.line": 5,
+			"com.tldraw.shape.frame": 1,
+			"com.tldraw.shape.arrow": 8,
+			"com.tldraw.shape.highlight": 2,
+			"com.tldraw.shape.embed": 4,
+			"com.tldraw.shape.image": 5,
+			"com.tldraw.shape.video": 4,
+			"com.tldraw.binding.arrow": 1
+		}
+	},
+	"records": [
+		{
+			"x": 462.0470959943799,
+			"y": 1434.639247070384,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:bC0Fb5K7J_su_yC3JJjsY",
+			"type": "arrow",
+			"props": {
+				"kind": "arc",
+				"elbowMidPoint": 0.5,
+				"dash": "draw",
+				"size": "m",
+				"fill": "none",
+				"color": "black",
+				"labelColor": "black",
+				"bend": 0,
+				"start": {
+					"x": 0,
+					"y": 0
+				},
+				"end": {
+					"x": 53.098663330078125,
+					"y": 97.22076416015625
+				},
+				"arrowheadStart": "none",
+				"arrowheadEnd": "arrow",
+				"richText": {
+					"type": "doc",
+					"content": [
+						{
+							"type": "paragraph"
+						}
+					]
+				},
+				"labelPosition": 0.5,
+				"font": "draw",
+				"scale": 1
+			},
+			"parentId": "page:page",
+			"index": "aH9o7a4V",
+			"typeName": "shape"
+		},
+		{
+			"x": 247.25926208496094,
+			"y": 202.38815307617188,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:MzYrvM8RzhvOBqfCIhpxj",
+			"type": "arrow",
+			"props": {
+				"kind": "arc",
+				"elbowMidPoint": 0.5,
+				"dash": "draw",
+				"size": "m",
+				"fill": "none",
+				"color": "black",
+				"labelColor": "black",
+				"bend": 0,
+				"start": {
+					"x": 0,
+					"y": 0
+				},
+				"end": {
+					"x": -0.8309478759765625,
+					"y": 115.197265625
+				},
+				"arrowheadStart": "none",
+				"arrowheadEnd": "arrow",
+				"richText": {
+					"type": "doc",
+					"content": [
+						{
+							"type": "paragraph"
+						}
+					]
+				},
+				"labelPosition": 0.5,
+				"font": "draw",
+				"scale": 1
+			},
+			"parentId": "page:page",
+			"index": "a3P9Apzl",
+			"typeName": "shape"
+		},
+		{
+			"x": 0,
+			"y": 0,
+			"lastActivityTimestamp": 0,
+			"meta": {},
+			"id": "pointer:pointer",
+			"typeName": "pointer"
+		},
+		{
+			"x": 461.98036821214555,
+			"y": 1535.7180011276196,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:n4WBSKvi0WX9ivviMbO-P",
+			"type": "geo",
+			"props": {
+				"w": 206.08920288085938,
+				"h": 63.998714814834784,
+				"geo": "rectangle",
+				"dash": "draw",
+				"growY": 0,
+				"url": "",
+				"scale": 1,
+				"color": "black",
+				"labelColor": "black",
+				"fill": "none",
+				"size": "m",
+				"font": "draw",
+				"align": "middle",
+				"verticalAlign": "middle",
+				"richText": {
+					"type": "doc",
+					"attrs": {
+						"dir": "auto"
+					},
+					"content": [
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "Chat endpoint "
+								}
+							]
+						}
+					]
+				}
+			},
+			"parentId": "page:page",
+			"index": "aGwEGTSV",
+			"typeName": "shape"
+		},
+		{
+			"x": 300.2934150010069,
+			"y": 2013.6334566824178,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:OC0VPM6sBm8jKYONUEeEh",
+			"type": "geo",
+			"props": {
+				"w": 515.9971008300781,
+				"h": 364.3401916874993,
+				"geo": "rectangle",
+				"dash": "draw",
+				"growY": 0,
+				"url": "",
+				"scale": 1,
+				"color": "black",
+				"labelColor": "black",
+				"fill": "none",
+				"size": "m",
+				"font": "draw",
+				"align": "middle",
+				"verticalAlign": "middle",
+				"richText": {
+					"type": "doc",
+					"attrs": {
+						"dir": "auto"
+					},
+					"content": [
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "2) Send message endpoint"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "Users sends in a message string and also it will contain another variable namely isAIRequired so its basically like tagging gemini in the message to answer the question. and this will be forwarded to the AI model if isAIRequired is true else the message is directly written to database and end of discussion."
+								}
+							]
+						}
+					]
+				}
+			},
+			"parentId": "page:page",
+			"index": "aKwPyHYV",
+			"typeName": "shape"
+		},
+		{
+			"meta": {},
+			"id": "binding:Bj-kLdTVVdRaDkbJ6pQGr",
+			"type": "arrow",
+			"fromId": "shape:CL_tVyOoNGjqXM4rW0PW9",
+			"toId": "shape:eCboSU56zlnOVr84Svf21",
+			"props": {
+				"isPrecise": false,
+				"isExact": false,
+				"normalizedAnchor": {
+					"x": 0.5,
+					"y": 0.4999999999999997
+				},
+				"snap": "center",
+				"terminal": "start"
+			},
+			"typeName": "binding"
+		},
+		{
+			"x": 52.90534589140043,
+			"y": 1828.3552118582338,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:2NZk2fIy-_eMnM5H5QflY",
+			"type": "geo",
+			"props": {
+				"w": 403.994873046875,
+				"h": 112.20120239257812,
+				"geo": "rectangle",
+				"dash": "draw",
+				"growY": 68.31587219238281,
+				"url": "",
+				"scale": 1,
+				"color": "black",
+				"labelColor": "black",
+				"fill": "none",
+				"size": "m",
+				"font": "draw",
+				"align": "middle",
+				"verticalAlign": "middle",
+				"richText": {
+					"type": "doc",
+					"attrs": {
+						"dir": "auto"
+					},
+					"content": [
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "Make sure to use websocket based connections for live real time updates so that the users have a smooth experience and servers are saved"
+								}
+							]
+						}
+					]
+				}
+			},
+			"parentId": "page:page",
+			"index": "aOXH0KXV",
+			"typeName": "shape"
+		},
+		{
+			"meta": {},
+			"id": "binding:TkwRO3Bc9OMCFcsGrfti4",
+			"type": "arrow",
+			"fromId": "shape:FSXA02f_d0xcf7t4NMZ4g",
+			"toId": "shape:dydwuAn70y-CJq2jJQeTX",
+			"props": {
+				"isPrecise": true,
+				"isExact": false,
+				"normalizedAnchor": {
+					"x": 0.5486350192283215,
+					"y": 0.2915124817162957
+				},
+				"snap": "none",
+				"terminal": "end"
+			},
+			"typeName": "binding"
+		},
+		{
+			"x": 710.9448381041602,
+			"y": 1296.8668162615654,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:cm-Ra0C8hHTAiwlXyp9Re",
+			"type": "geo",
+			"props": {
+				"w": 362.99761962890625,
+				"h": 153.39743041992188,
+				"geo": "rectangle",
+				"dash": "draw",
+				"growY": 27.119644165039062,
+				"url": "",
+				"scale": 1,
+				"color": "black",
+				"labelColor": "black",
+				"fill": "none",
+				"size": "m",
+				"font": "draw",
+				"align": "middle",
+				"verticalAlign": "middle",
+				"richText": {
+					"type": "doc",
+					"attrs": {
+						"dir": "auto"
+					},
+					"content": [
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "Course overview"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "This provides a overview of the course taken from the official college's document on the details."
+								}
+							]
+						}
+					]
+				}
+			},
+			"parentId": "page:page",
+			"index": "aQ3rYcIV",
+			"typeName": "shape"
+		},
+		{
+			"meta": {},
+			"id": "binding:veaHprNnZ5bCgsDzpQTId",
+			"type": "arrow",
+			"fromId": "shape:PcGKmPhtonTIQTzmgMxpm",
+			"toId": "shape:jI9gvwwZxN-p88xNAkO47",
+			"props": {
+				"isPrecise": false,
+				"isExact": false,
+				"normalizedAnchor": {
+					"x": 0.5,
+					"y": 0.5
+				},
+				"snap": "center",
+				"terminal": "start"
+			},
+			"typeName": "binding"
+		},
+		{
+			"meta": {},
+			"id": "binding:o3m_1tioE-qs2vsxD_cxz",
+			"type": "arrow",
+			"fromId": "shape:y_8SBKrUVbJbSw4EZoHmE",
+			"toId": "shape:eCboSU56zlnOVr84Svf21",
+			"props": {
+				"isPrecise": true,
+				"isExact": false,
+				"normalizedAnchor": {
+					"x": 0.4048081098112777,
+					"y": 0.8431647658013423
+				},
+				"snap": "none",
+				"terminal": "end"
+			},
+			"typeName": "binding"
+		},
+		{
+			"meta": {},
+			"id": "binding:I567hpVmRMfMRD9f5p1O_",
+			"type": "arrow",
+			"fromId": "shape:98_SK3WEKkQAoZkOYaR-C",
+			"toId": "shape:jI9gvwwZxN-p88xNAkO47",
+			"props": {
+				"isPrecise": true,
+				"isExact": false,
+				"normalizedAnchor": {
+					"x": 0.482826933128428,
+					"y": 0.9341845791249753
+				},
+				"snap": "none",
+				"terminal": "start"
+			},
+			"typeName": "binding"
+		},
+		{
+			"meta": {},
+			"id": "binding:TTxD7uEshXrc58P7Uufw-",
+			"type": "arrow",
+			"fromId": "shape:YjVdG29e-l6IzlQCYN4XV",
+			"toId": "shape:OC0VPM6sBm8jKYONUEeEh",
+			"props": {
+				"isPrecise": true,
+				"isExact": false,
+				"normalizedAnchor": {
+					"x": 0.42578079351861847,
+					"y": 0.11306918730238799
+				},
+				"snap": "none",
+				"terminal": "end"
+			},
+			"typeName": "binding"
+		},
+		{
+			"x": 1124.826535413532,
+			"y": -222.1185097899748,
+			"z": 0.4074802839312701,
+			"meta": {},
+			"id": "camera:page:page",
+			"typeName": "camera"
+		},
+		{
+			"meta": {},
+			"id": "binding:e9ZPRqtZl5XmU6HxCduAF",
+			"type": "arrow",
+			"fromId": "shape:LSbGV2fYoNHpR4GUcBEab",
+			"toId": "shape:jM3faMJoi3_w0jlVuTajl",
+			"props": {
+				"isPrecise": true,
+				"isExact": false,
+				"normalizedAnchor": {
+					"x": 0.04341394629632271,
+					"y": 0.7134592774669647
+				},
+				"snap": "none",
+				"terminal": "end"
+			},
+			"typeName": "binding"
+		},
+		{
+			"meta": {},
+			"id": "binding:5cwBslzg_pV6iJdLXM6Pc",
+			"type": "arrow",
+			"fromId": "shape:7zyT82ToaVECVhwLDAcKc",
+			"toId": "shape:z7f3_KEUdO3HzayADYpR7",
+			"props": {
+				"isPrecise": true,
+				"isExact": false,
+				"normalizedAnchor": {
+					"x": 0.40997659640089495,
+					"y": 0.004066357868752101
+				},
+				"snap": "none",
+				"terminal": "end"
+			},
+			"typeName": "binding"
+		},
+		{
+			"x": 96.94739617725952,
+			"y": 1346.9477312284012,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:PcGKmPhtonTIQTzmgMxpm",
+			"type": "arrow",
+			"props": {
+				"kind": "arc",
+				"elbowMidPoint": 0.5,
+				"dash": "draw",
+				"size": "m",
+				"fill": "none",
+				"color": "black",
+				"labelColor": "black",
+				"bend": 0,
+				"start": {
+					"x": 0,
+					"y": 0
+				},
+				"end": {
+					"x": -185.83941650390625,
+					"y": 62.016693115234375
+				},
+				"arrowheadStart": "none",
+				"arrowheadEnd": "arrow",
+				"richText": {
+					"type": "doc",
+					"content": [
+						{
+							"type": "paragraph"
+						}
+					]
+				},
+				"labelPosition": 0.5,
+				"font": "draw",
+				"scale": 1
+			},
+			"parentId": "page:page",
+			"index": "aWsamKUG",
+			"typeName": "shape"
+		},
+		{
+			"meta": {},
+			"id": "binding:gQe-uhjepm2BjndXm-Zcj",
+			"type": "arrow",
+			"fromId": "shape:DHD_zsk3ABPgLQYK1PtqX",
+			"toId": "shape:cm-Ra0C8hHTAiwlXyp9Re",
+			"props": {
+				"isPrecise": false,
+				"isExact": false,
+				"normalizedAnchor": {
+					"x": 0.5,
+					"y": 0.5
+				},
+				"snap": "center",
+				"terminal": "start"
+			},
+			"typeName": "binding"
+		},
+		{
+			"meta": {},
+			"id": "binding:XjFU7chiY78s3G7EtirW_",
+			"type": "arrow",
+			"fromId": "shape:WZ5etK1wcufFC3pP58XM2",
+			"toId": "shape:jI9gvwwZxN-p88xNAkO47",
+			"props": {
+				"isPrecise": false,
+				"isExact": false,
+				"normalizedAnchor": {
+					"x": 0.5,
+					"y": 0.5
+				},
+				"snap": "center",
+				"terminal": "start"
+			},
+			"typeName": "binding"
+		},
+		{
+			"x": -420.99730681046157,
+			"y": 282.4165155398299,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:kmg66gJubtWf53_HTUy9X",
+			"type": "geo",
+			"props": {
+				"w": 450.99603271484375,
+				"h": 227.55062866210938,
+				"geo": "rectangle",
+				"dash": "draw",
+				"growY": 0,
+				"url": "",
+				"scale": 1,
+				"color": "black",
+				"labelColor": "black",
+				"fill": "none",
+				"size": "m",
+				"font": "draw",
+				"align": "middle",
+				"verticalAlign": "middle",
+				"richText": {
+					"type": "doc",
+					"attrs": {
+						"dir": "auto"
+					},
+					"content": [
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "Use two endpoints one for credentials based auth and the other for Oauth using firebase."
+								}
+							]
+						}
+					]
+				}
+			},
+			"parentId": "page:page",
+			"index": "aDDWrUNG",
+			"typeName": "shape"
+		},
+		{
+			"x": 1113.7432824074658,
+			"y": 1528.314692238128,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:_s6ndUbaDMLhbDswbGxTk",
+			"type": "geo",
+			"props": {
+				"w": 391.9988098144531,
+				"h": 244.02914428710938,
+				"geo": "rectangle",
+				"dash": "draw",
+				"growY": 85.0050048828125,
+				"url": "",
+				"scale": 1,
+				"color": "black",
+				"labelColor": "black",
+				"fill": "none",
+				"size": "m",
+				"font": "draw",
+				"align": "middle",
+				"verticalAlign": "middle",
+				"richText": {
+					"type": "doc",
+					"attrs": {
+						"dir": "auto"
+					},
+					"content": [
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "AI endpoint"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "2) We need a course overview generated from the model which is taken from the official college document on the details related to each course."
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "We can discuss on displaying cleanly formatted text with styling so that the UX is clean."
+								}
+							]
+						}
+					]
+				}
+			},
+			"parentId": "page:page",
+			"index": "aRS6Uvpl",
+			"typeName": "shape"
+		},
+		{
+			"meta": {},
+			"id": "binding:mqfUVjD1r1WUV38uFRTrt",
+			"type": "arrow",
+			"fromId": "shape:OyMzr9baUGhNSH_NSPtH4",
+			"toId": "shape:9g2AR33KEeKWvMEwXyeBZ",
+			"props": {
+				"isPrecise": true,
+				"isExact": false,
+				"normalizedAnchor": {
+					"x": 0.028950865291225186,
+					"y": 0.1201882414526492
+				},
+				"snap": "none",
+				"terminal": "end"
+			},
+			"typeName": "binding"
+		},
+		{
+			"meta": {},
+			"id": "binding:DvAiipGnHnyQjn5fDBLxd",
+			"type": "arrow",
+			"fromId": "shape:y_8SBKrUVbJbSw4EZoHmE",
+			"toId": "shape:z7f3_KEUdO3HzayADYpR7",
+			"props": {
+				"isPrecise": false,
+				"isExact": false,
+				"normalizedAnchor": {
+					"x": 0.5,
+					"y": 0.5
+				},
+				"snap": "center",
+				"terminal": "start"
+			},
+			"typeName": "binding"
+		},
+		{
+			"meta": {},
+			"id": "binding:dmgobZjPXVBcfyWUIDNzE",
+			"type": "arrow",
+			"fromId": "shape:uIQty1dhk4hwOr30TPzrl",
+			"toId": "shape:n4WBSKvi0WX9ivviMbO-P",
+			"props": {
+				"isPrecise": false,
+				"isExact": false,
+				"normalizedAnchor": {
+					"x": 0.5,
+					"y": 0.5
+				},
+				"snap": "center",
+				"terminal": "start"
+			},
+			"typeName": "binding"
+		},
+		{
+			"meta": {},
+			"id": "binding:k4aZuzY31y7jNdgzpHL9I",
+			"type": "arrow",
+			"fromId": "shape:uIQty1dhk4hwOr30TPzrl",
+			"toId": "shape:2NZk2fIy-_eMnM5H5QflY",
+			"props": {
+				"isPrecise": true,
+				"isExact": false,
+				"normalizedAnchor": {
+					"x": 0.8821461341684389,
+					"y": 0.32313583884156205
+				},
+				"snap": "none",
+				"terminal": "end"
+			},
+			"typeName": "binding"
+		},
+		{
+			"x": 137.82008361816406,
+			"y": 318.3344421386719,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:fQgBn2AKn1L58Rmr06FTV",
+			"type": "geo",
+			"props": {
+				"w": 233.990234375,
+				"h": 152.64840698242188,
+				"geo": "rectangle",
+				"dash": "draw",
+				"growY": 0,
+				"url": "",
+				"scale": 1,
+				"color": "black",
+				"labelColor": "black",
+				"fill": "none",
+				"size": "m",
+				"font": "draw",
+				"align": "middle",
+				"verticalAlign": "middle",
+				"richText": {
+					"type": "doc",
+					"attrs": {
+						"dir": "auto"
+					},
+					"content": [
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "Authentication "
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "(Oauth, credentials)"
+								}
+							]
+						}
+					]
+				}
+			},
+			"parentId": "page:page",
+			"index": "a2aDrboV",
+			"typeName": "shape"
+		},
+		{
+			"meta": {},
+			"id": "binding:GpneNv3OP1mZxqofxgVTO",
+			"type": "arrow",
+			"fromId": "shape:YjVdG29e-l6IzlQCYN4XV",
+			"toId": "shape:n4WBSKvi0WX9ivviMbO-P",
+			"props": {
+				"isPrecise": true,
+				"isExact": false,
+				"normalizedAnchor": {
+					"x": 0.4475323989979476,
+					"y": 0.6583891096442361
+				},
+				"snap": "none",
+				"terminal": "start"
+			},
+			"typeName": "binding"
+		},
+		{
+			"editingShapeId": null,
+			"croppingShapeId": null,
+			"selectedShapeIds": [
+				"shape:z7f3_KEUdO3HzayADYpR7"
+			],
+			"hoveredShapeId": "shape:z7f3_KEUdO3HzayADYpR7",
+			"erasingShapeIds": [],
+			"hintingShapeIds": [],
+			"focusedGroupId": null,
+			"meta": {},
+			"id": "instance_page_state:page:page",
+			"pageId": "page:page",
+			"typeName": "instance_page_state"
+		},
+		{
+			"meta": {},
+			"id": "binding:t4AwArKE9Qe8gHf8-jGRG",
+			"type": "arrow",
+			"fromId": "shape:tvVD41TFAzFO8hJCFdhdh",
+			"toId": "shape:cm-Ra0C8hHTAiwlXyp9Re",
+			"props": {
+				"isPrecise": true,
+				"isExact": false,
+				"normalizedAnchor": {
+					"x": 0.09340775866692064,
+					"y": 0.3808941852775996
+				},
+				"snap": "none",
+				"terminal": "end"
+			},
+			"typeName": "binding"
+		},
+		{
+			"x": 561.4231195818816,
+			"y": 1370.271021583831,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:tvVD41TFAzFO8hJCFdhdh",
+			"type": "arrow",
+			"props": {
+				"kind": "arc",
+				"elbowMidPoint": 0.5,
+				"dash": "draw",
+				"size": "m",
+				"fill": "none",
+				"color": "black",
+				"labelColor": "black",
+				"bend": 0,
+				"start": {
+					"x": 0,
+					"y": 0
+				},
+				"end": {
+					"x": 148.22447204589844,
+					"y": -4.64630126953125
+				},
+				"arrowheadStart": "none",
+				"arrowheadEnd": "arrow",
+				"richText": {
+					"type": "doc",
+					"content": [
+						{
+							"type": "paragraph"
+						}
+					]
+				},
+				"labelPosition": 0.5,
+				"font": "draw",
+				"scale": 1
+			},
+			"parentId": "page:page",
+			"index": "aQwi96Zl",
+			"typeName": "shape"
+		},
+		{
+			"x": -303.7402852227194,
+			"y": -235.76645229231454,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:1IlNjaMRakPjOh4-jhNeF",
+			"type": "geo",
+			"props": {
+				"w": 525.9918823242188,
+				"h": 237.88479614257812,
+				"geo": "rectangle",
+				"dash": "draw",
+				"growY": 0,
+				"url": "",
+				"scale": 1,
+				"color": "black",
+				"labelColor": "black",
+				"fill": "none",
+				"size": "m",
+				"font": "draw",
+				"align": "middle",
+				"verticalAlign": "middle",
+				"richText": {
+					"type": "doc",
+					"attrs": {
+						"dir": "auto"
+					},
+					"content": [
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "Common endpoint response strucutre try to maintain for easier debugging"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "data, message, success, error(null if response is a success)"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "And for the backend part please use proper HTTP codes in the responses."
+								}
+							]
+						}
+					]
+				}
+			},
+			"parentId": "page:page",
+			"index": "aFLE1wfV",
+			"typeName": "shape"
+		},
+		{
+			"meta": {},
+			"id": "binding:IlD920j2E-p_-Xjhmlzn2",
+			"type": "arrow",
+			"fromId": "shape:bC0Fb5K7J_su_yC3JJjsY",
+			"toId": "shape:n4WBSKvi0WX9ivviMbO-P",
+			"props": {
+				"isPrecise": true,
+				"isExact": false,
+				"normalizedAnchor": {
+					"x": 0.11279222942345715,
+					"y": 0.0874734680684109
+				},
+				"snap": "none",
+				"terminal": "end"
+			},
+			"typeName": "binding"
+		},
+		{
+			"meta": {},
+			"id": "binding:xUdKRKA5P8TlmZNGtk7mE",
+			"type": "arrow",
+			"fromId": "shape:tvVD41TFAzFO8hJCFdhdh",
+			"toId": "shape:jI9gvwwZxN-p88xNAkO47",
+			"props": {
+				"isPrecise": false,
+				"isExact": false,
+				"normalizedAnchor": {
+					"x": 0.5,
+					"y": 0.5
+				},
+				"snap": "center",
+				"terminal": "start"
+			},
+			"typeName": "binding"
+		},
+		{
+			"x": 295.9457092285156,
+			"y": 813.0870481819599,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:y_8SBKrUVbJbSw4EZoHmE",
+			"type": "arrow",
+			"props": {
+				"kind": "arc",
+				"elbowMidPoint": 0.5,
+				"dash": "draw",
+				"size": "m",
+				"fill": "none",
+				"color": "black",
+				"labelColor": "black",
+				"bend": 0,
+				"start": {
+					"x": 0,
+					"y": 0
+				},
+				"end": {
+					"x": 11.902435302734375,
+					"y": 114.4482421875
+				},
+				"arrowheadStart": "none",
+				"arrowheadEnd": "arrow",
+				"richText": {
+					"type": "doc",
+					"content": [
+						{
+							"type": "paragraph"
+						}
+					]
+				},
+				"labelPosition": 0.5,
+				"font": "draw",
+				"scale": 1
+			},
+			"parentId": "page:page",
+			"index": "a915k09V",
+			"typeName": "shape"
+		},
+		{
+			"x": 317.35135203009975,
+			"y": 1004.0526196282871,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:CL_tVyOoNGjqXM4rW0PW9",
+			"type": "arrow",
+			"props": {
+				"kind": "arc",
+				"elbowMidPoint": 0.5,
+				"dash": "draw",
+				"size": "m",
+				"fill": "none",
+				"color": "black",
+				"labelColor": "black",
+				"bend": 0,
+				"start": {
+					"x": 0,
+					"y": 0
+				},
+				"end": {
+					"x": 93.54586791992188,
+					"y": 253.7664031982423
+				},
+				"arrowheadStart": "none",
+				"arrowheadEnd": "arrow",
+				"richText": {
+					"type": "doc",
+					"content": [
+						{
+							"type": "paragraph"
+						}
+					]
+				},
+				"labelPosition": 0.5,
+				"font": "draw",
+				"scale": 1
+			},
+			"parentId": "page:page",
+			"index": "aBW4Xs6V",
+			"typeName": "shape"
+		},
+		{
+			"x": 337.66258614358503,
+			"y": 2439.3583777079466,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:dydwuAn70y-CJq2jJQeTX",
+			"type": "geo",
+			"props": {
+				"w": 402.9883728027344,
+				"h": 331.6647033691406,
+				"geo": "rectangle",
+				"dash": "draw",
+				"growY": 27.072845458984375,
+				"url": "",
+				"scale": 1,
+				"color": "black",
+				"labelColor": "black",
+				"fill": "none",
+				"size": "m",
+				"font": "draw",
+				"align": "middle",
+				"verticalAlign": "middle",
+				"richText": {
+					"type": "doc",
+					"attrs": {
+						"dir": "auto"
+					},
+					"content": [
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "AI endpoint"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "1) Takes in a message with a tag from the user sent from the node JS backend to the model and the response is then forwarded to the frontend and written to the DB as well, "
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "So take in message and return a string resposne.(Markdown and decorative text styles can be thought of later)"
+								}
+							]
+						}
+					]
+				}
+			},
+			"parentId": "page:page",
+			"index": "aMNaLVAV",
+			"typeName": "shape"
+		},
+		{
+			"x": 58.77485972052938,
+			"y": 1169.2822644036778,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:jI9gvwwZxN-p88xNAkO47",
+			"type": "geo",
+			"props": {
+				"w": 540.9957275390625,
+				"h": 210.32308959960938,
+				"geo": "rectangle",
+				"dash": "draw",
+				"growY": 118.7110595703125,
+				"url": "",
+				"scale": 1,
+				"color": "black",
+				"labelColor": "black",
+				"fill": "none",
+				"size": "m",
+				"font": "draw",
+				"align": "middle",
+				"verticalAlign": "middle",
+				"richText": {
+					"type": "doc",
+					"attrs": {
+						"dir": "auto"
+					},
+					"content": [
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "Course page"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "Contains a sub navbar like in google classroom to show the sub parts of page"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "Chat(one per course)"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "Course Overview"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "Course materials"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "Course Flashcards"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "Course practice papers"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "Can also have direct AI chat option as well."
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "(This one is pretty intuitive right!)"
+								}
+							]
+						}
+					]
+				}
+			},
+			"parentId": "page:page",
+			"index": "aAGOk70V",
+			"typeName": "shape"
+		},
+		{
+			"x": 569.0186797213761,
+			"y": 1324.5121817720367,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:WZ5etK1wcufFC3pP58XM2",
+			"type": "arrow",
+			"props": {
+				"kind": "arc",
+				"elbowMidPoint": 0.5,
+				"dash": "draw",
+				"size": "m",
+				"fill": "none",
+				"color": "black",
+				"labelColor": "black",
+				"bend": 0,
+				"start": {
+					"x": 0,
+					"y": 0
+				},
+				"end": {
+					"x": 113.76950073242188,
+					"y": -143.9644317626953
+				},
+				"arrowheadStart": "none",
+				"arrowheadEnd": "arrow",
+				"richText": {
+					"type": "doc",
+					"content": [
+						{
+							"type": "paragraph"
+						}
+					]
+				},
+				"labelPosition": 0.5,
+				"font": "draw",
+				"scale": 1
+			},
+			"parentId": "page:page",
+			"index": "aUUjG9fG",
+			"typeName": "shape"
+		},
+		{
+			"meta": {},
+			"id": "binding:BkB_USvRyvod9wYQrle9Z",
+			"type": "arrow",
+			"fromId": "shape:DHD_zsk3ABPgLQYK1PtqX",
+			"toId": "shape:_s6ndUbaDMLhbDswbGxTk",
+			"props": {
+				"isPrecise": true,
+				"isExact": false,
+				"normalizedAnchor": {
+					"x": 0.16364020664351503,
+					"y": 0.08531958405506915
+				},
+				"snap": "none",
+				"terminal": "end"
+			},
+			"typeName": "binding"
+		},
+		{
+			"x": -64.73188466423625,
+			"y": 1537.4968906627564,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:B6EX7wjGfs6V4fF2OxqFu",
+			"type": "geo",
+			"props": {
+				"w": 491.9932861328125,
+				"h": 192.1944274902344,
+				"geo": "rectangle",
+				"dash": "draw",
+				"growY": 47.72946166992185,
+				"url": "",
+				"scale": 1,
+				"color": "black",
+				"labelColor": "black",
+				"fill": "none",
+				"size": "m",
+				"font": "draw",
+				"align": "middle",
+				"verticalAlign": "middle",
+				"richText": {
+					"type": "doc",
+					"attrs": {
+						"dir": "auto"
+					},
+					"content": [
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "Endpoint for the list all course page"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "Single endpoint "
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "Takes in user ID from the frontend returns  a list of courses along with data related to them, more discussion of the details of the course model in the DB section."
+								}
+							]
+						}
+					]
+				}
+			},
+			"parentId": "page:page",
+			"index": "aCUU5ctt",
+			"typeName": "shape"
+		},
+		{
+			"x": 78.64733123779297,
+			"y": 934.2765013069599,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:eCboSU56zlnOVr84Svf21",
+			"type": "geo",
+			"props": {
+				"w": 488.9971923828125,
+				"h": 200.5858154296874,
+				"geo": "rectangle",
+				"dash": "draw",
+				"growY": 0,
+				"url": "",
+				"scale": 1,
+				"color": "black",
+				"labelColor": "black",
+				"fill": "none",
+				"size": "m",
+				"font": "draw",
+				"align": "middle",
+				"verticalAlign": "middle",
+				"richText": {
+					"type": "doc",
+					"attrs": {
+						"dir": "auto"
+					},
+					"content": [
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "The all courses listing page will show all the registered courses and user can click on them to see a seperate page for them.(basically using [id] kindoff routing on next Js)"
+								}
+							]
+						}
+					]
+				}
+			},
+			"parentId": "page:page",
+			"index": "a8rS46LV",
+			"typeName": "shape"
+		},
+		{
+			"x": 184.2946014536986,
+			"y": 399.4161188113143,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:Cd37yjFgEdeYpPBOqp1Vd",
+			"type": "arrow",
+			"props": {
+				"kind": "arc",
+				"elbowMidPoint": 0.5,
+				"dash": "draw",
+				"size": "m",
+				"fill": "none",
+				"color": "black",
+				"labelColor": "black",
+				"bend": 0,
+				"start": {
+					"x": 0,
+					"y": 0
+				},
+				"end": {
+					"x": -152.13348388671875,
+					"y": -5.395294189453125
+				},
+				"arrowheadStart": "none",
+				"arrowheadEnd": "arrow",
+				"richText": {
+					"type": "doc",
+					"content": [
+						{
+							"type": "paragraph"
+						}
+					]
+				},
+				"labelPosition": 0.5,
+				"font": "draw",
+				"scale": 1
+			},
+			"parentId": "page:page",
+			"index": "aEBEN91V",
+			"typeName": "shape"
+		},
+		{
+			"meta": {},
+			"id": "binding:07MM2LrGOKqQUaoWZnu9C",
+			"type": "arrow",
+			"fromId": "shape:bC0Fb5K7J_su_yC3JJjsY",
+			"toId": "shape:jI9gvwwZxN-p88xNAkO47",
+			"props": {
+				"isPrecise": false,
+				"isExact": false,
+				"normalizedAnchor": {
+					"x": 0.5,
+					"y": 0.5
+				},
+				"snap": "center",
+				"terminal": "start"
+			},
+			"typeName": "binding"
+		},
+		{
+			"x": 524.2510566025694,
+			"y": 1581.5061323483094,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:OyMzr9baUGhNSH_NSPtH4",
+			"type": "arrow",
+			"props": {
+				"kind": "arc",
+				"elbowMidPoint": 0.5,
+				"dash": "draw",
+				"size": "m",
+				"fill": "none",
+				"color": "black",
+				"labelColor": "black",
+				"bend": 0,
+				"start": {
+					"x": 0,
+					"y": 0
+				},
+				"end": {
+					"x": 94.29489135742188,
+					"y": 70.25595092773438
+				},
+				"arrowheadStart": "none",
+				"arrowheadEnd": "arrow",
+				"richText": {
+					"type": "doc",
+					"content": [
+						{
+							"type": "paragraph"
+						}
+					]
+				},
+				"labelPosition": 0.5,
+				"font": "draw",
+				"scale": 1
+			},
+			"parentId": "page:page",
+			"index": "aJuDAEGV",
+			"typeName": "shape"
+		},
+		{
+			"x": 88.466552734375,
+			"y": 97.52503967285156,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:KAJO6A_85ublCrLlD-RY2",
+			"type": "geo",
+			"props": {
+				"w": 335.48004150390625,
+				"h": 141.41305541992188,
+				"geo": "rectangle",
+				"dash": "draw",
+				"growY": 0,
+				"url": "",
+				"scale": 1,
+				"color": "black",
+				"labelColor": "black",
+				"fill": "none",
+				"size": "m",
+				"font": "draw",
+				"align": "middle",
+				"verticalAlign": "middle",
+				"richText": {
+					"type": "doc",
+					"attrs": {
+						"dir": "auto"
+					},
+					"content": [
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "Main Webpage entry point"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "(Simple Landing page)"
+								}
+							]
+						}
+					]
+				}
+			},
+			"parentId": "page:page",
+			"index": "a1CgIW2V",
+			"typeName": "shape"
+		},
+		{
+			"x": 74.07130432128906,
+			"y": 541.2972793080501,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:z7f3_KEUdO3HzayADYpR7",
+			"type": "geo",
+			"props": {
+				"w": 432.99609375,
+				"h": 179.61318969726562,
+				"geo": "rectangle",
+				"dash": "draw",
+				"growY": 119.717529296875,
+				"url": "",
+				"scale": 1,
+				"color": "black",
+				"labelColor": "black",
+				"fill": "none",
+				"size": "m",
+				"font": "draw",
+				"align": "middle",
+				"verticalAlign": "middle",
+				"richText": {
+					"type": "doc",
+					"attrs": {
+						"dir": "auto"
+					},
+					"content": [
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "Home page"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "Contents: Sidebar, lisitng of all courses and a dedicated page to search all the courses and add them selves to a particular course."
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "These are all the entries on the sidebar"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "List of All"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "Search Courses"
+								}
+							]
+						}
+					]
+				}
+			},
+			"parentId": "page:page",
+			"index": "a4owPteV",
+			"typeName": "shape"
+		},
+		{
+			"meta": {},
+			"id": "binding:SInaKyowtXKAQApRbenho",
+			"type": "arrow",
+			"fromId": "shape:OyMzr9baUGhNSH_NSPtH4",
+			"toId": "shape:n4WBSKvi0WX9ivviMbO-P",
+			"props": {
+				"isPrecise": true,
+				"isExact": false,
+				"normalizedAnchor": {
+					"x": 0.30215405523414385,
+					"y": 0.715453917366419
+				},
+				"snap": "none",
+				"terminal": "start"
+			},
+			"typeName": "binding"
+		},
+		{
+			"meta": {},
+			"id": "binding:f8YnWUR2zkK5tgddkamlP",
+			"type": "arrow",
+			"fromId": "shape:05a-55SIFJzupL1RpkEai",
+			"toId": "shape:jM3faMJoi3_w0jlVuTajl",
+			"props": {
+				"isPrecise": true,
+				"isExact": false,
+				"normalizedAnchor": {
+					"x": 0.5874196548219299,
+					"y": 0.2602916582128051
+				},
+				"snap": "none",
+				"terminal": "end"
+			},
+			"typeName": "binding"
+		},
+		{
+			"x": 646.2423095703125,
+			"y": 527.2531706184833,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:XaMktB9-EtqXsx5FkMHsN",
+			"type": "geo",
+			"props": {
+				"w": 347.9937744140625,
+				"h": 223.8054962158203,
+				"geo": "rectangle",
+				"dash": "draw",
+				"growY": 105.22865295410156,
+				"url": "",
+				"scale": 1,
+				"color": "black",
+				"labelColor": "black",
+				"fill": "none",
+				"size": "m",
+				"font": "draw",
+				"align": "middle",
+				"verticalAlign": "middle",
+				"richText": {
+					"type": "doc",
+					"attrs": {
+						"dir": "auto"
+					},
+					"content": [
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "Search bar simply displays all the courses with the matching course name(we will use a pgtrgm based similarity search for quick lookups), if they click on a course we can easily lookup if the user is registered or not and then allow them to register."
+								}
+							]
+						}
+					]
+				}
+			},
+			"parentId": "page:page",
+			"index": "a7UVRoyG",
+			"typeName": "shape"
+		},
+		{
+			"x": -838.6853542010451,
+			"y": 1188.2747867965454,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:jDpv11SIFDxy_onH_dEwB",
+			"type": "text",
+			"props": {
+				"color": "black",
+				"size": "xl",
+				"w": 128.77471539952012,
+				"font": "sans",
+				"textAlign": "start",
+				"autoSize": true,
+				"scale": 7.768125355299184,
+				"richText": {
+					"type": "doc",
+					"attrs": {
+						"dir": "auto"
+					},
+					"content": [
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "{"
+								}
+							]
+						}
+					]
+				}
+			},
+			"parentId": "page:page",
+			"index": "aZq2IvfV",
+			"typeName": "shape"
+		},
+		{
+			"x": 1004.8442774187956,
+			"y": 1430.9417979510185,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:DHD_zsk3ABPgLQYK1PtqX",
+			"type": "arrow",
+			"props": {
+				"kind": "arc",
+				"elbowMidPoint": 0.5,
+				"dash": "draw",
+				"size": "m",
+				"fill": "none",
+				"color": "black",
+				"labelColor": "black",
+				"bend": 0,
+				"start": {
+					"x": 0,
+					"y": 0
+				},
+				"end": {
+					"x": 138.4871826171875,
+					"y": 93.47564697265625
+				},
+				"arrowheadStart": "none",
+				"arrowheadEnd": "arrow",
+				"richText": {
+					"type": "doc",
+					"content": [
+						{
+							"type": "paragraph"
+						}
+					]
+				},
+				"labelPosition": 0.5,
+				"font": "draw",
+				"scale": 1
+			},
+			"parentId": "page:page",
+			"index": "aSUDV01l",
+			"typeName": "shape"
+		},
+		{
+			"meta": {},
+			"id": "binding:mS1s6nQr7HeMnOREGyw5g",
+			"type": "arrow",
+			"fromId": "shape:WZ5etK1wcufFC3pP58XM2",
+			"toId": "shape:q1rI3W71judxFVUk7qVka",
+			"props": {
+				"isPrecise": true,
+				"isExact": false,
+				"normalizedAnchor": {
+					"x": 0.05514744760918656,
+					"y": 0.47747460319750207
+				},
+				"snap": "none",
+				"terminal": "end"
+			},
+			"typeName": "binding"
+		},
+		{
+			"x": 523.2211804653674,
+			"y": 1581.237804087673,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:uIQty1dhk4hwOr30TPzrl",
+			"type": "arrow",
+			"props": {
+				"kind": "arc",
+				"elbowMidPoint": 0.5,
+				"dash": "draw",
+				"size": "m",
+				"fill": "none",
+				"color": "black",
+				"labelColor": "black",
+				"bend": 0,
+				"start": {
+					"x": 0,
+					"y": 0
+				},
+				"end": {
+					"x": -119.92550659179693,
+					"y": 244.02911376953125
+				},
+				"arrowheadStart": "none",
+				"arrowheadEnd": "arrow",
+				"richText": {
+					"type": "doc",
+					"content": [
+						{
+							"type": "paragraph"
+						}
+					]
+				},
+				"labelPosition": 0.5,
+				"font": "draw",
+				"scale": 1
+			},
+			"parentId": "page:page",
+			"index": "aPMzy3cG",
+			"typeName": "shape"
+		},
+		{
+			"meta": {},
+			"id": "binding:oW2wJLxF4J01smsbutoLB",
+			"type": "arrow",
+			"fromId": "shape:Cd37yjFgEdeYpPBOqp1Vd",
+			"toId": "shape:kmg66gJubtWf53_HTUy9X",
+			"props": {
+				"isPrecise": true,
+				"isExact": false,
+				"normalizedAnchor": {
+					"x": 0.807455662075232,
+					"y": 0.5167925342850732
+				},
+				"snap": "none",
+				"terminal": "end"
+			},
+			"typeName": "binding"
+		},
+		{
+			"x": -338.17601773146976,
+			"y": 1513.0434026922596,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:05a-55SIFJzupL1RpkEai",
+			"type": "arrow",
+			"props": {
+				"kind": "arc",
+				"elbowMidPoint": 0.5,
+				"dash": "draw",
+				"size": "m",
+				"fill": "none",
+				"color": "black",
+				"labelColor": "black",
+				"bend": 0,
+				"start": {
+					"x": 0,
+					"y": 0
+				},
+				"end": {
+					"x": -18.8074951171875,
+					"y": 38.797027587890625
+				},
+				"arrowheadStart": "none",
+				"arrowheadEnd": "arrow",
+				"richText": {
+					"type": "doc",
+					"content": [
+						{
+							"type": "paragraph"
+						}
+					]
+				},
+				"labelPosition": 0.5,
+				"font": "draw",
+				"scale": 1
+			},
+			"parentId": "page:page",
+			"index": "aYtloOfV",
+			"typeName": "shape"
+		},
+		{
+			"meta": {},
+			"id": "binding:9bpaLGGCOtZAaL8vgsBxS",
+			"type": "arrow",
+			"fromId": "shape:MzYrvM8RzhvOBqfCIhpxj",
+			"toId": "shape:fQgBn2AKn1L58Rmr06FTV",
+			"props": {
+				"isPrecise": true,
+				"isExact": false,
+				"normalizedAnchor": {
+					"x": 0.5001753095218936,
+					"y": 0.0834165170093541
+				},
+				"snap": "none",
+				"terminal": "end"
+			},
+			"typeName": "binding"
+		},
+		{
+			"meta": {},
+			"id": "binding:KqtgSBmCdrV0H7W94Fkcm",
+			"type": "arrow",
+			"fromId": "shape:PcGKmPhtonTIQTzmgMxpm",
+			"toId": "shape:Z5JEL7Ipo0KUdrqJtXq01",
+			"props": {
+				"isPrecise": true,
+				"isExact": false,
+				"normalizedAnchor": {
+					"x": 0.9415815282683813,
+					"y": 0.5026440771125908
+				},
+				"snap": "none",
+				"terminal": "end"
+			},
+			"typeName": "binding"
+		},
+		{
+			"meta": {},
+			"id": "binding:QtEpKXXEQ9bbQfsh32uJZ",
+			"type": "arrow",
+			"fromId": "shape:ixzBmOkkYdW7dOIypEvFt",
+			"toId": "shape:z7f3_KEUdO3HzayADYpR7",
+			"props": {
+				"isPrecise": false,
+				"isExact": false,
+				"normalizedAnchor": {
+					"x": 0.5,
+					"y": 0.5
+				},
+				"snap": "center",
+				"terminal": "start"
+			},
+			"typeName": "binding"
+		},
+		{
+			"x": 459.2325744628906,
+			"y": 687.2513243050067,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:ixzBmOkkYdW7dOIypEvFt",
+			"type": "arrow",
+			"props": {
+				"kind": "arc",
+				"elbowMidPoint": 0.5,
+				"dash": "draw",
+				"size": "m",
+				"fill": "none",
+				"color": "black",
+				"labelColor": "black",
+				"bend": 0,
+				"start": {
+					"x": 0,
+					"y": 0
+				},
+				"end": {
+					"x": 184.17752075195312,
+					"y": 3.59295654296875
+				},
+				"arrowheadStart": "none",
+				"arrowheadEnd": "arrow",
+				"richText": {
+					"type": "doc",
+					"content": [
+						{
+							"type": "paragraph"
+						}
+					]
+				},
+				"labelPosition": 0.5,
+				"font": "draw",
+				"scale": 1
+			},
+			"parentId": "page:page",
+			"index": "a6ELF9HV",
+			"typeName": "shape"
+		},
+		{
+			"x": 618.6278571396788,
+			"y": 1622.7023603756531,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:9g2AR33KEeKWvMEwXyeBZ",
+			"type": "geo",
+			"props": {
+				"w": 436.9986572265625,
+				"h": 329.0341491699219,
+				"geo": "rectangle",
+				"dash": "draw",
+				"growY": 29.703399658203125,
+				"url": "",
+				"scale": 1,
+				"color": "black",
+				"labelColor": "black",
+				"fill": "none",
+				"size": "m",
+				"font": "draw",
+				"align": "middle",
+				"verticalAlign": "middle",
+				"richText": {
+					"type": "doc",
+					"attrs": {
+						"dir": "auto"
+					},
+					"content": [
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "1)Takes in course ID(to recognize which chat to load)"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "Paginates the responses and limits the number of messages to take from the backend to take the latest 50 and load others only when user scrolls to the top of the loaded 50, also try to implement deboncing so that the server does not get hammered by users who try to scroll too fast."
+								}
+							]
+						}
+					]
+				}
+			},
+			"parentId": "page:page",
+			"index": "aI0q43MV",
+			"typeName": "shape"
+		},
+		{
+			"x": 554.2119635849913,
+			"y": 1577.854057992934,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:YjVdG29e-l6IzlQCYN4XV",
+			"type": "arrow",
+			"props": {
+				"kind": "arc",
+				"elbowMidPoint": 0.5,
+				"dash": "draw",
+				"size": "m",
+				"fill": "none",
+				"color": "black",
+				"labelColor": "black",
+				"bend": 0,
+				"start": {
+					"x": 0,
+					"y": 0
+				},
+				"end": {
+					"x": -34.536956787109375,
+					"y": 435.0297660827637
+				},
+				"arrowheadStart": "none",
+				"arrowheadEnd": "arrow",
+				"richText": {
+					"type": "doc",
+					"content": [
+						{
+							"type": "paragraph"
+						}
+					]
+				},
+				"labelPosition": 0.5,
+				"font": "draw",
+				"scale": 1
+			},
+			"parentId": "page:page",
+			"index": "aLn2QRiV",
+			"typeName": "shape"
+		},
+		{
+			"meta": {},
+			"id": "binding:-9pk_XtzJbYlBjz6bPF7A",
+			"type": "arrow",
+			"fromId": "shape:05a-55SIFJzupL1RpkEai",
+			"toId": "shape:Z5JEL7Ipo0KUdrqJtXq01",
+			"props": {
+				"isPrecise": false,
+				"isExact": false,
+				"normalizedAnchor": {
+					"x": 0.5,
+					"y": 0.5
+				},
+				"snap": "center",
+				"terminal": "start"
+			},
+			"typeName": "binding"
+		},
+		{
+			"x": 239.02001953125,
+			"y": 443.9478300007552,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:7zyT82ToaVECVhwLDAcKc",
+			"type": "arrow",
+			"props": {
+				"kind": "arc",
+				"elbowMidPoint": 0.5,
+				"dash": "draw",
+				"size": "m",
+				"fill": "none",
+				"color": "black",
+				"labelColor": "black",
+				"bend": 0,
+				"start": {
+					"x": 0,
+					"y": 0
+				},
+				"end": {
+					"x": 18.643646240234375,
+					"y": 112.20118713378906
+				},
+				"arrowheadStart": "none",
+				"arrowheadEnd": "arrow",
+				"richText": {
+					"type": "doc",
+					"content": [
+						{
+							"type": "paragraph"
+						}
+					]
+				},
+				"labelPosition": 0.5,
+				"font": "draw",
+				"scale": 1
+			},
+			"parentId": "page:page",
+			"index": "a5NI3ywV",
+			"typeName": "shape"
+		},
+		{
+			"meta": {},
+			"id": "binding:RXAqVXHnqMyUEtObvb4cA",
+			"type": "arrow",
+			"fromId": "shape:98_SK3WEKkQAoZkOYaR-C",
+			"toId": "shape:B6EX7wjGfs6V4fF2OxqFu",
+			"props": {
+				"isPrecise": true,
+				"isExact": false,
+				"normalizedAnchor": {
+					"x": 0.401177403294577,
+					"y": 0.04195078086265203
+				},
+				"snap": "none",
+				"terminal": "end"
+			},
+			"typeName": "binding"
+		},
+		{
+			"meta": {},
+			"id": "page:page",
+			"name": "Page 1",
+			"index": "a1",
+			"typeName": "page"
+		},
+		{
+			"gridSize": 10,
+			"name": "",
+			"meta": {},
+			"id": "document:document",
+			"typeName": "document"
+		},
+		{
+			"followingUserId": null,
+			"opacityForNextShape": 1,
+			"stylesForNextShape": {},
+			"brush": null,
+			"scribbles": [],
+			"cursor": {
+				"type": "default",
+				"rotation": 0
+			},
+			"isFocusMode": false,
+			"exportBackground": true,
+			"isDebugMode": false,
+			"isToolLocked": false,
+			"screenBounds": {
+				"x": 0,
+				"y": 0,
+				"w": 1188,
+				"h": 465.6000061035156
+			},
+			"insets": [
+				false,
+				false,
+				true,
+				false
+			],
+			"zoomBrush": null,
+			"isGridMode": false,
+			"isPenMode": false,
+			"chatMessage": "",
+			"isChatting": false,
+			"highlightedUserIds": [],
+			"isFocused": true,
+			"devicePixelRatio": 1.25,
+			"isCoarsePointer": false,
+			"isHoveringCanvas": true,
+			"openMenus": [],
+			"isChangingStyle": false,
+			"isReadonly": false,
+			"meta": {},
+			"duplicateProps": null,
+			"id": "instance:instance",
+			"currentPageId": "page:page",
+			"typeName": "instance"
+		},
+		{
+			"meta": {},
+			"id": "binding:Z02_5j02T5PtDiQ7Wzvn4",
+			"type": "arrow",
+			"fromId": "shape:Cd37yjFgEdeYpPBOqp1Vd",
+			"toId": "shape:fQgBn2AKn1L58Rmr06FTV",
+			"props": {
+				"isPrecise": true,
+				"isExact": false,
+				"normalizedAnchor": {
+					"x": 0.198617339564065,
+					"y": 0.5311662157206745
+				},
+				"snap": "none",
+				"terminal": "start"
+			},
+			"typeName": "binding"
+		},
+		{
+			"meta": {},
+			"id": "binding:FdVLVP4h5qWp9CpBm_esc",
+			"type": "arrow",
+			"fromId": "shape:MzYrvM8RzhvOBqfCIhpxj",
+			"toId": "shape:KAJO6A_85ublCrLlD-RY2",
+			"props": {
+				"isPrecise": false,
+				"isExact": false,
+				"normalizedAnchor": {
+					"x": 0.5,
+					"y": 0.5
+				},
+				"snap": "center",
+				"terminal": "start"
+			},
+			"typeName": "binding"
+		},
+		{
+			"meta": {},
+			"id": "binding:z7B9lk_bgxzPbHmZ01oWi",
+			"type": "arrow",
+			"fromId": "shape:FSXA02f_d0xcf7t4NMZ4g",
+			"toId": "shape:OC0VPM6sBm8jKYONUEeEh",
+			"props": {
+				"isPrecise": false,
+				"isExact": false,
+				"normalizedAnchor": {
+					"x": 0.5,
+					"y": 0.5000000000000003
+				},
+				"snap": "center",
+				"terminal": "start"
+			},
+			"typeName": "binding"
+		},
+		{
+			"x": -518.748885255846,
+			"y": 1289.2730180936355,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:Z5JEL7Ipo0KUdrqJtXq01",
+			"type": "geo",
+			"props": {
+				"w": 423.9961242675781,
+				"h": 254.51541137695312,
+				"geo": "rectangle",
+				"dash": "draw",
+				"growY": 0,
+				"url": "",
+				"scale": 1,
+				"color": "black",
+				"labelColor": "black",
+				"fill": "none",
+				"size": "m",
+				"font": "draw",
+				"align": "middle",
+				"verticalAlign": "middle",
+				"richText": {
+					"type": "doc",
+					"attrs": {
+						"dir": "auto"
+					},
+					"content": [
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "Course flashcards endpoint"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "Data generated by the model and all the mateirals will be used by the model to generate the flashcards."
+								}
+							]
+						}
+					]
+				}
+			},
+			"parentId": "page:page",
+			"index": "aVo5upNV",
+			"typeName": "shape"
+		},
+		{
+			"x": 536.9844550400694,
+			"y": 2360.8631994852904,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:FSXA02f_d0xcf7t4NMZ4g",
+			"type": "arrow",
+			"props": {
+				"kind": "arc",
+				"elbowMidPoint": 0.5,
+				"dash": "draw",
+				"size": "m",
+				"fill": "none",
+				"color": "black",
+				"labelColor": "black",
+				"bend": 0,
+				"start": {
+					"x": 0,
+					"y": 0
+				},
+				"end": {
+					"x": 6.659271240234375,
+					"y": 115.197265625
+				},
+				"arrowheadStart": "none",
+				"arrowheadEnd": "arrow",
+				"richText": {
+					"type": "doc",
+					"content": [
+						{
+							"type": "paragraph"
+						}
+					]
+				},
+				"labelPosition": 0.5,
+				"font": "draw",
+				"scale": 1
+			},
+			"parentId": "page:page",
+			"index": "aNjNUuvl",
+			"typeName": "shape"
+		},
+		{
+			"x": -1058.7002994564048,
+			"y": 1560.3020429998614,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:LSbGV2fYoNHpR4GUcBEab",
+			"type": "arrow",
+			"props": {
+				"kind": "arc",
+				"elbowMidPoint": 0.5,
+				"dash": "draw",
+				"size": "m",
+				"fill": "none",
+				"color": "black",
+				"labelColor": "black",
+				"bend": 0,
+				"start": {
+					"x": 0,
+					"y": 0
+				},
+				"end": {
+					"x": 416.37442779541016,
+					"y": 191.59754943847656
+				},
+				"arrowheadStart": "none",
+				"arrowheadEnd": "arrow",
+				"richText": {
+					"type": "doc",
+					"content": [
+						{
+							"type": "paragraph"
+						}
+					]
+				},
+				"labelPosition": 0.5,
+				"font": "draw",
+				"scale": 1
+			},
+			"parentId": "page:page",
+			"index": "aXzEmn47",
+			"typeName": "shape"
+		},
+		{
+			"meta": {},
+			"id": "binding:cKW13J10be3yvE6OJE43T",
+			"type": "arrow",
+			"fromId": "shape:7zyT82ToaVECVhwLDAcKc",
+			"toId": "shape:fQgBn2AKn1L58Rmr06FTV",
+			"props": {
+				"isPrecise": false,
+				"isExact": false,
+				"normalizedAnchor": {
+					"x": 0.5,
+					"y": 0.5
+				},
+				"snap": "center",
+				"terminal": "start"
+			},
+			"typeName": "binding"
+		},
+		{
+			"x": -640.0319747627198,
+			"y": 1578.0093829644,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:jM3faMJoi3_w0jlVuTajl",
+			"type": "geo",
+			"props": {
+				"w": 412.9948425292969,
+				"h": 244.77813720703125,
+				"geo": "rectangle",
+				"dash": "draw",
+				"growY": 54.552581787109375,
+				"url": "",
+				"scale": 1,
+				"color": "black",
+				"labelColor": "black",
+				"fill": "none",
+				"size": "m",
+				"font": "draw",
+				"align": "middle",
+				"verticalAlign": "middle",
+				"richText": {
+					"type": "doc",
+					"attrs": {
+						"dir": "auto"
+					},
+					"content": [
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "AI endpoint"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "3) Genrate flashcards, this endpoint generates flash cards based on all the course materials uploaded by the students."
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "4) Similar to the above one we will also have to generate the mock papers using pyq data."
+								}
+							]
+						}
+					]
+				}
+			},
+			"parentId": "page:page",
+			"index": "aXtPPEHV",
+			"typeName": "shape"
+		},
+		{
+			"meta": {},
+			"id": "binding:oh5icxAEu5vALRG7rMfD3",
+			"type": "arrow",
+			"fromId": "shape:CL_tVyOoNGjqXM4rW0PW9",
+			"toId": "shape:jI9gvwwZxN-p88xNAkO47",
+			"props": {
+				"isPrecise": true,
+				"isExact": false,
+				"normalizedAnchor": {
+					"x": 0.46667824054836277,
+					"y": 0.22719924804120567
+				},
+				"snap": "none",
+				"terminal": "end"
+			},
+			"typeName": "binding"
+		},
+		{
+			"x": 341.03670259590695,
+			"y": 1447.4972031537934,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:98_SK3WEKkQAoZkOYaR-C",
+			"type": "arrow",
+			"props": {
+				"kind": "arc",
+				"elbowMidPoint": 0.5,
+				"dash": "draw",
+				"size": "m",
+				"fill": "none",
+				"color": "black",
+				"labelColor": "black",
+				"bend": 0,
+				"start": {
+					"x": 0,
+					"y": 0
+				},
+				"end": {
+					"x": -18.807464599609375,
+					"y": 111.45216369628906
+				},
+				"arrowheadStart": "none",
+				"arrowheadEnd": "arrow",
+				"richText": {
+					"type": "doc",
+					"content": [
+						{
+							"type": "paragraph"
+						}
+					]
+				},
+				"labelPosition": 0.5,
+				"font": "draw",
+				"scale": 1
+			},
+			"parentId": "page:page",
+			"index": "aCqVg288",
+			"typeName": "shape"
+		},
+		{
+			"x": 689.9505950045792,
+			"y": 990.4365334642364,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:q1rI3W71judxFVUk7qVka",
+			"type": "geo",
+			"props": {
+				"w": 508.4834594726563,
+				"h": 299.3307189941406,
+				"geo": "rectangle",
+				"dash": "draw",
+				"growY": 0,
+				"url": "",
+				"scale": 1,
+				"color": "black",
+				"labelColor": "black",
+				"fill": "none",
+				"size": "m",
+				"font": "draw",
+				"align": "middle",
+				"verticalAlign": "middle",
+				"richText": {
+					"type": "doc",
+					"attrs": {
+						"dir": "auto"
+					},
+					"content": [
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "Course materials page"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "Just a simple Node JS backend function to send all the files sent from the course to the frontend, and user will have a feature to upload as well "
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "So its basically 2 endpoints one post and one get."
+								}
+							]
+						}
+					]
+				}
+			},
+			"parentId": "page:page",
+			"index": "aToU7mGG",
+			"typeName": "shape"
+		},
+		{
+			"x": -1184.149843610898,
+			"y": 1330.6564943227138,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:xSU2hM8os5-M3XNtuFxUg",
+			"type": "geo",
+			"props": {
+				"w": 311.9938659667969,
+				"h": 228.29965209960938,
+				"geo": "rectangle",
+				"dash": "draw",
+				"growY": 0,
+				"url": "",
+				"scale": 1,
+				"color": "black",
+				"labelColor": "black",
+				"fill": "none",
+				"size": "m",
+				"font": "draw",
+				"align": "middle",
+				"verticalAlign": "middle",
+				"richText": {
+					"type": "doc",
+					"attrs": {
+						"dir": "auto"
+					},
+					"content": [
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "Similar to the flashcards we will also have the practice papers where we show the pyqs and also some AI generated ones."
+								}
+							]
+						}
+					]
+				}
+			},
+			"parentId": "page:page",
+			"index": "aa5TR8cV",
+			"typeName": "shape"
+		}
+	]
+}
