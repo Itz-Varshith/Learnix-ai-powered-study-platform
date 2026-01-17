@@ -4,7 +4,15 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import { 
-  Library, MessageSquare, Layers, FileText, BrainCircuit, ChevronLeft, Loader2, LogOut 
+  Library, 
+  MessageSquare, 
+  Layers, 
+  FileText, 
+  BrainCircuit, 
+  ChevronLeft, 
+  ChevronRight,
+  Loader2, 
+  LogOut 
 } from 'lucide-react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase'; 
@@ -21,6 +29,9 @@ export default function CourseLayout({ children }) {
   const [loading, setLoading] = useState(true);
   const [courseDetails, setCourseDetails] = useState(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
+  // --- New State for Sidebar Collapse ---
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   // Listen for User
   useEffect(() => {
@@ -105,43 +116,63 @@ export default function CourseLayout({ children }) {
     <div className="min-h-screen bg-gray-50 flex font-sans text-gray-900">
       
       {/* --- Course Sidebar --- */}
-      <aside className="hidden md:flex flex-col w-64 bg-white border-r border-gray-200 h-screen sticky top-0 z-20">
-        <div className="p-6 border-b">
+      <aside 
+        className={`hidden md:flex flex-col bg-white border-r border-gray-200 h-screen sticky top-0 z-20 transition-all duration-300 ease-in-out relative
+        ${isCollapsed ? 'w-20' : 'w-64'}`}
+      >
+        {/* Collapse Toggle Button */}
+        <button 
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          className="absolute -right-3 top-9 bg-white border border-gray-200 text-gray-500 rounded-full p-1.5 shadow-sm hover:text-indigo-600 hover:border-indigo-100 transition-colors z-50"
+        >
+          {isCollapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
+        </button>
+
+        {/* Header Section */}
+        <div className={`p-6 border-b border-gray-100 ${isCollapsed ? 'px-3' : ''}`}>
           <button 
             onClick={() => router.push('/dashboard')} 
-            className="flex items-center gap-2 text-gray-500 hover:text-indigo-600 text-sm mb-4 transition-colors"
+            title={isCollapsed ? "Back to Dashboard" : ""}
+            className={`flex items-center gap-2 text-gray-500 hover:text-indigo-600 text-sm mb-4 transition-colors ${isCollapsed ? 'justify-center' : ''}`}
           >
-            <ChevronLeft size={16} /> Back to Dashboard
+            <ChevronLeft size={16} className="flex-shrink-0" /> 
+            {!isCollapsed && "Back to Dashboard"}
           </button>
           
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 bg-indigo-100 rounded-lg flex items-center justify-center text-indigo-600 font-bold uppercase">
+          <div className={`flex items-center gap-3 ${isCollapsed ? 'justify-center' : ''}`}>
+            <div className="h-10 w-10 bg-indigo-100 rounded-lg flex items-center justify-center text-indigo-600 font-bold uppercase flex-shrink-0">
               {courseDetails?.courseCode?.substring(0, 2) || courseId?.substring(0, 2) || 'CS'}
             </div>
-            <div>
-              <h2 className="font-bold text-gray-900 leading-tight line-clamp-2">
-                {courseDetails?.courseName || 'Loading...'}
-              </h2>
-              <p className="text-xs text-gray-500">
-                {courseDetails?.courseCode || 'Course Workspace'}
-              </p>
-            </div>
+            {!isCollapsed && (
+              <div className="min-w-0">
+                <h2 className="font-bold text-gray-900 leading-tight line-clamp-2 text-sm">
+                  {courseDetails?.courseName || 'Loading...'}
+                </h2>
+                <p className="text-xs text-gray-500">
+                  {courseDetails?.courseCode || 'Course Workspace'}
+                </p>
+              </div>
+            )}
           </div>
         </div>
 
+        {/* Navigation Items */}
         <nav className="flex-1 p-4 space-y-1">
           {navItems.map((item) => (
             <Link 
               key={item.href} 
-              href={item.href} 
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+              href={item.href}
+              title={isCollapsed ? item.label : ""}
+              className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
+                isCollapsed ? 'justify-center' : ''
+              } ${
                 isActive(item.href, item.exact) 
                   ? 'bg-indigo-50 text-indigo-700' 
                   : 'text-gray-600 hover:bg-gray-100'
               }`}
             >
-              <item.icon size={20} />
-              {item.label}
+              <item.icon size={20} className="flex-shrink-0" />
+              {!isCollapsed && <span>{item.label}</span>}
             </Link>
           ))}
         </nav>
