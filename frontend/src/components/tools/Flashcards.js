@@ -14,6 +14,8 @@ import {
   FileUp,
   RotateCcw,
   Hash,
+  Sparkles,
+  BrainCircuit
 } from "lucide-react";
 import { auth } from "@/lib/firebase";
 
@@ -42,11 +44,11 @@ const FlashCard = ({ card, index, flipped, onFlip }) => {
   return (
     <div
       onClick={() => onFlip(index)}
-      className="h-56 cursor-pointer group"
+      className="h-64 cursor-pointer group perspective-1000"
       style={{ perspective: "1000px" }}
     >
       <div
-        className={`relative w-full h-full transition-transform duration-500`}
+        className={`relative w-full h-full transition-all duration-500 transform-style-3d`}
         style={{
           transformStyle: "preserve-3d",
           transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
@@ -54,33 +56,42 @@ const FlashCard = ({ card, index, flipped, onFlip }) => {
       >
         {/* Front - Question */}
         <div
-          className="absolute w-full h-full bg-white border-2 border-indigo-100 rounded-2xl p-6 flex flex-col items-center justify-center text-center shadow-sm group-hover:border-indigo-300 group-hover:shadow-md transition-all"
+          className="absolute w-full h-full bg-white border border-gray-200 rounded-2xl p-8 flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md hover:border-indigo-300 transition-all"
           style={{ backfaceVisibility: "hidden" }}
         >
-          <span className="absolute top-4 left-4 text-xs font-bold text-indigo-400 bg-indigo-50 px-2 py-1 rounded-full">
-            Q{index + 1}
-          </span>
-          <p className="font-semibold text-gray-800 leading-relaxed">
+          <div className="absolute top-4 left-4 flex items-center gap-2">
+            <span className="text-xs font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100">
+              Question {index + 1}
+            </span>
+          </div>
+          
+          <p className="font-semibold text-gray-800 text-lg leading-relaxed px-2">
             {card.question}
           </p>
-          <span className="absolute bottom-4 text-xs text-gray-400 flex items-center gap-1">
+          
+          <span className="absolute bottom-6 text-xs font-medium text-gray-400 flex items-center gap-1.5 opacity-60 group-hover:opacity-100 transition-opacity">
             <RotateCcw size={12} />
-            Click to reveal answer
+            Tap to flip
           </span>
         </div>
 
         {/* Back - Answer */}
         <div
-          className="absolute w-full h-full bg-gradient-to-br from-indigo-600 to-violet-600 rounded-2xl p-6 flex flex-col items-center justify-center text-center shadow-lg"
+          className="absolute w-full h-full bg-gradient-to-br from-indigo-600 to-violet-600 rounded-2xl p-8 flex flex-col items-center justify-center text-center shadow-xl shadow-indigo-200"
           style={{
             backfaceVisibility: "hidden",
             transform: "rotateY(180deg)",
           }}
         >
-          <span className="absolute top-4 left-4 text-xs font-bold text-indigo-200 bg-indigo-500/30 px-2 py-1 rounded-full">
-            A{index + 1}
-          </span>
-          <p className="font-medium text-white leading-relaxed">{card.answer}</p>
+          <div className="absolute top-4 left-4">
+            <span className="text-xs font-bold text-white/90 bg-white/20 backdrop-blur-sm px-2.5 py-1 rounded-full border border-white/10">
+              Answer
+            </span>
+          </div>
+          
+          <p className="font-medium text-white text-lg leading-relaxed px-2 drop-shadow-sm">
+            {card.answer}
+          </p>
         </div>
       </div>
     </div>
@@ -277,42 +288,42 @@ export default function Flashcards({ courseId }) {
     }
   };
 
-    return (
-    <div className="w-full mx-auto animate-in fade-in duration-500">
+  return (
+    <div className="w-full mx-auto animate-in fade-in duration-500 font-sans">
       {/* Header Section */}
-      <div className="text-center mb-8">
-        <div className="inline-flex items-center justify-center p-3 bg-gradient-to-br from-amber-100 to-orange-100 text-orange-600 rounded-2xl mb-4 ring-4 ring-orange-50 shadow-sm">
-          <Layers size={28} />
+      <div className="text-center mb-10">
+        <div className="inline-flex items-center justify-center p-3.5 bg-gradient-to-br from-indigo-50 to-violet-50 text-indigo-600 rounded-2xl mb-4 border border-indigo-100 shadow-sm">
+          <BrainCircuit size={32} />
         </div>
-        <h2 className="text-3xl font-bold text-gray-900">AI Flashcard Generator</h2>
-        <p className="text-gray-500 mt-2 max-w-lg mx-auto">
-          Upload PDF documents and generate smart flashcards for effective study sessions.
+        <h2 className="text-3xl font-bold text-gray-900 tracking-tight">AI Flashcard Generator</h2>
+        <p className="text-gray-500 mt-3 max-w-lg mx-auto text-sm leading-relaxed">
+          Upload your study materials and let our AI create the perfect revision deck for you in seconds.
         </p>
       </div>
 
       {/* Tabs */}
       <div className="flex justify-center mb-8">
-        <div className="inline-flex bg-gray-100 p-1.5 rounded-2xl">
+        <div className="inline-flex bg-gray-50/80 p-1.5 rounded-2xl border border-gray-100">
           <button
             onClick={() => setActiveTab("generate")}
-            className={`flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 ${
+            className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 ${
               activeTab === "generate"
-                ? "bg-white text-orange-600 shadow-md"
-                : "text-gray-600 hover:text-gray-900"
+                ? "bg-white text-indigo-600 shadow-sm border border-gray-100/50"
+                : "text-gray-500 hover:text-gray-700 hover:bg-gray-100/50"
             }`}
           >
-            <FileUp size={18} />
-            Generate Flashcards
+            <Sparkles size={16} />
+            Generate
           </button>
           <button
             onClick={() => setActiveTab("history")}
-            className={`flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 ${
+            className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 ${
               activeTab === "history"
-                ? "bg-white text-orange-600 shadow-md"
-                : "text-gray-600 hover:text-gray-900"
+                ? "bg-white text-indigo-600 shadow-sm border border-gray-100/50"
+                : "text-gray-500 hover:text-gray-700 hover:bg-gray-100/50"
             }`}
           >
-            <History size={18} />
+            <History size={16} />
             History
           </button>
         </div>
@@ -320,128 +331,132 @@ export default function Flashcards({ courseId }) {
 
       {/* Error message */}
       {error && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center justify-between animate-in slide-in-from-top-2">
-          <span className="text-red-700 text-sm font-medium">{error}</span>
+        <div className="mb-6 p-4 bg-red-50 border border-red-100 rounded-xl flex items-center justify-between animate-in slide-in-from-top-2 shadow-sm">
+          <div className="flex items-center gap-3">
+             <div className="p-1.5 bg-red-100 text-red-600 rounded-full"><X size={14} /></div>
+             <span className="text-red-700 text-sm font-medium">{error}</span>
+          </div>
           <button
             onClick={() => setError(null)}
-            className="p-1 text-red-500 hover:text-red-700 hover:bg-red-100 rounded-lg transition-colors"
+            className="text-red-400 hover:text-red-700 text-sm font-medium transition-colors"
           >
-            <X size={18} />
+            Dismiss
           </button>
         </div>
       )}
 
       {activeTab === "generate" ? (
-        <div className="space-y-6">
+        <div className="space-y-8">
           {/* --- UPLOAD SECTION --- */}
           <div
             onDragEnter={handleDrag}
             onDragLeave={handleDrag}
             onDragOver={handleDrag}
             onDrop={handleDrop}
-            className={`bg-white rounded-2xl border-2 shadow-sm overflow-hidden transition-all duration-300 ${
+            className={`bg-white rounded-2xl border border-dashed shadow-sm overflow-hidden transition-all duration-300 ${
               dragActive
-                ? "border-orange-500 ring-4 ring-orange-100"
-                : "border-gray-200 hover:border-orange-200"
+                ? "border-indigo-500 ring-4 ring-indigo-50 bg-indigo-50/30"
+                : "border-gray-300 hover:border-indigo-300 hover:shadow-md"
             }`}
           >
-            <div className="p-4 border-b bg-gradient-to-r from-gray-50 to-white flex justify-between items-center">
-              <span className="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-2">
-                <Upload size={14} />
-                Upload PDF
+            {/* Context Header for Upload Box */}
+            <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
+              <span className="text-xs font-bold text-indigo-500 uppercase tracking-wider flex items-center gap-2">
+                <FileUp size={14} />
+                Source Material
               </span>
               {file && (
                 <button
                   onClick={handleClear}
-                  className="text-xs text-red-500 hover:text-red-700 flex items-center gap-1 font-medium transition-colors"
+                  className="text-xs text-gray-400 hover:text-red-500 flex items-center gap-1.5 font-medium transition-colors bg-white px-2 py-1 rounded border border-gray-200"
                 >
-                  <X size={12} /> Clear
+                  Clear File <X size={12} />
                 </button>
               )}
             </div>
 
             <div className="p-8">
               {file ? (
-                <div className="space-y-5 animate-in fade-in duration-300">
+                <div className="space-y-6 animate-in fade-in duration-300">
                   {/* File Info Row */}
-                  <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 bg-red-50 rounded-xl flex items-center justify-center shadow-sm">
-                      <FileText size={28} className="text-red-500" />
+                  <div className="flex items-center gap-5 p-4 bg-gradient-to-r from-indigo-50/50 to-white border border-indigo-100 rounded-xl">
+                    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm border border-indigo-50">
+                      <FileText size={24} className="text-indigo-600" />
                     </div>
-                    <div className="flex-1">
-                      <h3 className="text-base font-semibold text-gray-900 break-all">
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-sm font-bold text-gray-900 truncate">
                         {file.name}
                       </h3>
-                      <p className="text-sm text-gray-500">
-                        {(file.size / 1024 / 1024).toFixed(2)} MB
+                      <p className="text-xs text-gray-500 mt-1 flex items-center gap-2">
+                        <span>PDF Document</span>
+                        <span className="w-1 h-1 rounded-full bg-gray-300"></span>
+                        <span>{(file.size / 1024 / 1024).toFixed(2)} MB</span>
                       </p>
                     </div>
                   </div>
 
-                  {/* Number of Cards Input */}
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-3 flex-1">
-                      <div className="flex items-center gap-2 text-gray-500">
-                        <Hash size={18} />
-                        <span className="text-sm font-medium">Number of flashcards:</span>
+                  {/* Settings Row */}
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2 text-gray-600">
+                        <div className="p-1.5 bg-gray-100 rounded-lg">
+                           <Hash size={16} />
+                        </div>
+                        <span className="text-sm font-medium">Card Count</span>
                       </div>
-                      <input
-                        type="number"
-                        min="5"
-                        max="30"
-                        value={nCards}
-                        onChange={(e) => setNCards(Math.min(30, Math.max(5, parseInt(e.target.value) || 10)))}
-                        className="w-20 px-3 py-2 border border-gray-200 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                      />
-                      <span className="text-xs text-gray-400">(5-30)</span>
+                      <div className="relative">
+                        <input
+                          type="number"
+                          min="5"
+                          max="30"
+                          value={nCards}
+                          onChange={(e) => setNCards(Math.min(30, Math.max(5, parseInt(e.target.value) || 10)))}
+                          className="w-20 pl-3 pr-8 py-2 border border-gray-200 rounded-lg text-sm text-center font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
+                        />
+                        <div className="absolute right-2 top-1/2 -translate-y-1/2 flex flex-col -space-y-1 opacity-40 pointer-events-none">
+                            <span className="text-[8px] leading-3">▲</span>
+                            <span className="text-[8px] leading-3">▼</span>
+                        </div>
+                      </div>
+                      <span className="text-xs text-gray-400 font-medium">5-30 cards</span>
                     </div>
-                  </div>
 
-                  {/* Generate Button */}
-                  <div className="flex justify-end">
                     <button
                       onClick={handleGenerate}
                       disabled={loading}
-                      className="bg-gradient-to-r from-orange-500 to-amber-500 text-white px-8 py-3 rounded-xl font-semibold hover:from-orange-600 hover:to-amber-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 transition-all shadow-md hover:shadow-lg active:scale-95"
+                      className="bg-gradient-to-r from-indigo-600 to-violet-600 text-white px-8 py-2.5 rounded-xl font-semibold hover:shadow-lg hover:shadow-indigo-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-all active:scale-95"
                     >
                       {loading ? (
-                        <Loader2 className="animate-spin" size={20} />
+                        <Loader2 className="animate-spin" size={18} />
                       ) : (
-                        <Layers size={20} />
+                        <Sparkles size={18} />
                       )}
-                      {loading ? "Generating..." : "Generate Flashcards"}
+                      {loading ? "Analyzing..." : "Generate Deck"}
                     </button>
                   </div>
                 </div>
               ) : (
                 <div
                   onClick={openFileDialog}
-                  className="cursor-pointer py-12 flex flex-col items-center justify-center text-center group"
+                  className="cursor-pointer py-8 flex flex-col items-center justify-center text-center group"
                 >
                   <div
-                    className={`p-6 rounded-2xl mb-5 transition-all duration-300 ${
+                    className={`w-16 h-16 rounded-full mb-4 flex items-center justify-center transition-all duration-300 ${
                       dragActive
-                        ? "bg-orange-100 scale-110"
-                        : "bg-gradient-to-br from-orange-50 to-amber-50 group-hover:scale-110"
+                        ? "bg-indigo-100 text-indigo-600 scale-110"
+                        : "bg-gray-50 text-gray-400 group-hover:bg-indigo-50 group-hover:text-indigo-600 group-hover:scale-105"
                     }`}
                   >
-                    <Upload
-                      size={48}
-                      className={`transition-colors ${
-                        dragActive
-                          ? "text-orange-600"
-                          : "text-orange-400 group-hover:text-orange-600"
-                      }`}
-                    />
+                    <Upload size={28} />
                   </div>
-                  <p className="text-lg font-semibold text-gray-800 mb-2">
-                    {dragActive ? "Drop your PDF here" : "Drag & drop your PDF"}
+                  <p className="text-lg font-semibold text-gray-900 mb-1">
+                    {dragActive ? "Drop PDF now" : "Upload Course Material"}
                   </p>
-                  <p className="text-gray-500 text-sm mb-4">
-                    or click to browse files
+                  <p className="text-gray-500 text-sm mb-4 max-w-xs mx-auto">
+                    Drag and drop your PDF lecture notes or click to browse.
                   </p>
-                  <span className="px-4 py-2 bg-gray-100 text-gray-600 text-xs font-medium rounded-full">
-                    .PDF only • Max 10MB
+                  <span className="inline-flex items-center px-3 py-1 bg-gray-50 border border-gray-100 text-gray-500 text-xs font-medium rounded-full">
+                    PDF Only • Max 10MB
                   </span>
                 </div>
               )}
@@ -458,22 +473,20 @@ export default function Flashcards({ courseId }) {
 
           {/* --- LOADING STATE --- */}
           {loading && (
-            <div className="bg-white rounded-2xl border-2 border-orange-100 shadow-lg shadow-orange-50 p-16 animate-in fade-in duration-300">
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-xl shadow-indigo-100/50 p-12 animate-in fade-in duration-500">
               <div className="flex flex-col items-center justify-center space-y-6">
-                <div className="relative w-24 h-24">
-                  <div className="absolute top-0 left-0 w-full h-full border-4 border-orange-100 rounded-full"></div>
-                  <div className="absolute top-0 left-0 w-full h-full border-4 border-orange-500 rounded-full border-t-transparent animate-spin"></div>
-                  <Layers
-                    size={28}
-                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-orange-600"
-                  />
+                <div className="relative">
+                  <div className="absolute inset-0 bg-indigo-100 rounded-full animate-ping opacity-25"></div>
+                  <div className="relative p-4 bg-white rounded-full border border-indigo-50 shadow-sm">
+                    <Loader2 size={32} className="text-indigo-600 animate-spin" />
+                  </div>
                 </div>
-                <div className="text-center">
-                  <p className="text-lg text-orange-600 font-semibold animate-pulse">
-                    Generating flashcards...
-                  </p>
-                  <p className="text-sm text-gray-400 mt-2">
-                    Our AI is creating {nCards} flashcards from your document
+                <div className="text-center space-y-1">
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    Generating Flashcards
+                  </h3>
+                  <p className="text-sm text-gray-500">
+                    Analyzing content and creating {nCards} cards...
                   </p>
                 </div>
               </div>
@@ -482,52 +495,52 @@ export default function Flashcards({ courseId }) {
 
           {/* --- OUTPUT SECTION --- */}
           {flashcards.length > 0 && !loading && (
-            <div className="bg-white rounded-2xl border-2 border-orange-100 shadow-lg shadow-orange-50 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-xl shadow-gray-200/50 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
               {/* Header */}
-              <div className="p-6 border-b border-orange-100 bg-gradient-to-r from-orange-50 via-amber-50 to-yellow-50">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="p-3 bg-white rounded-xl shadow-sm">
-                      <Layers size={24} className="text-orange-600" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-gray-900">
-                        Generated Flashcards
-                      </h3>
-                      <p className="text-sm text-gray-500 mt-0.5">
-                        {flashcards.length} cards created from {file?.name}
-                      </p>
-                    </div>
+              <div className="p-5 border-b border-gray-100 bg-gray-50/50 flex flex-wrap items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-white rounded-xl shadow-sm border border-gray-200 flex items-center justify-center">
+                    <Layers size={20} className="text-indigo-600" />
                   </div>
-                  <div className="flex items-center gap-2 bg-white rounded-lg p-1 border border-gray-200">
-                    <button
-                      onClick={() => setViewMode("grid")}
-                      className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
-                        viewMode === "grid"
-                          ? "bg-orange-100 text-orange-700"
-                          : "text-gray-500 hover:text-gray-700"
-                      }`}
-                    >
-                      Grid
-                    </button>
-                    <button
-                      onClick={() => setViewMode("single")}
-                      className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
-                        viewMode === "single"
-                          ? "bg-orange-100 text-orange-700"
-                          : "text-gray-500 hover:text-gray-700"
-                      }`}
-                    >
-                      Study
-                    </button>
+                  <div>
+                    <h3 className="text-base font-bold text-gray-900">
+                      Generated Deck
+                    </h3>
+                    <p className="text-xs text-gray-500">
+                      {flashcards.length} cards • {file?.name}
+                    </p>
                   </div>
+                </div>
+                
+                <div className="flex items-center gap-1 bg-white p-1 rounded-lg border border-gray-200 shadow-sm">
+                  <button
+                    onClick={() => setViewMode("grid")}
+                    className={`px-4 py-1.5 rounded-md text-xs font-semibold transition-all ${
+                      viewMode === "grid"
+                        ? "bg-indigo-50 text-indigo-700 shadow-sm"
+                        : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
+                    }`}
+                  >
+                    Grid View
+                  </button>
+                  <div className="w-px h-4 bg-gray-200 mx-1"></div>
+                  <button
+                    onClick={() => setViewMode("single")}
+                    className={`px-4 py-1.5 rounded-md text-xs font-semibold transition-all ${
+                      viewMode === "single"
+                        ? "bg-indigo-50 text-indigo-700 shadow-sm"
+                        : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
+                    }`}
+                  >
+                    Focus Mode
+                  </button>
                 </div>
               </div>
 
               {/* Flashcards Content */}
-              <div className="p-6">
+              <div className="p-8 bg-slate-50/50">
                 {viewMode === "grid" ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {flashcards.map((card, index) => (
                       <FlashCard
                         key={index}
@@ -539,8 +552,8 @@ export default function Flashcards({ courseId }) {
                     ))}
                   </div>
                 ) : (
-                  <div className="flex flex-col items-center">
-                    <div className="w-full max-w-lg">
+                  <div className="flex flex-col items-center py-4">
+                    <div className="w-full max-w-xl mx-auto">
                       <FlashCard
                         card={flashcards[currentCardIndex]}
                         index={currentCardIndex}
@@ -548,21 +561,33 @@ export default function Flashcards({ courseId }) {
                         onFlip={toggleFlip}
                       />
                     </div>
-                    <div className="flex items-center gap-4 mt-6">
+                    
+                    {/* Controls */}
+                    <div className="flex items-center gap-6 mt-8">
                       <button
                         onClick={prevCard}
                         disabled={currentCardIndex === 0}
-                        className="p-3 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                        className="p-4 rounded-full bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 hover:text-indigo-600 hover:border-indigo-200 disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-sm"
                       >
                         <ChevronLeft size={24} />
                       </button>
-                      <span className="text-sm font-medium text-gray-600">
-                        {currentCardIndex + 1} / {flashcards.length}
-                      </span>
+                      
+                      <div className="flex flex-col items-center">
+                        <span className="text-lg font-bold text-gray-900">
+                          {currentCardIndex + 1} <span className="text-gray-400 text-sm font-normal">/ {flashcards.length}</span>
+                        </span>
+                        <div className="w-32 h-1 bg-gray-100 rounded-full mt-2 overflow-hidden">
+                           <div 
+                              className="h-full bg-indigo-500 rounded-full transition-all duration-300" 
+                              style={{ width: `${((currentCardIndex + 1) / flashcards.length) * 100}%` }}
+                           ></div>
+                        </div>
+                      </div>
+                      
                       <button
                         onClick={nextCard}
                         disabled={currentCardIndex === flashcards.length - 1}
-                        className="p-3 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                        className="p-4 rounded-full bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 hover:text-indigo-600 hover:border-indigo-200 disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-sm"
                       >
                         <ChevronRight size={24} />
                       </button>
@@ -572,122 +597,109 @@ export default function Flashcards({ courseId }) {
               </div>
             </div>
           )}
-
-          {/* --- EMPTY STATE --- */}
-          {flashcards.length === 0 && !loading && !file && (
-            <div className="bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 p-12 text-center">
-              <div className="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Layers size={40} className="text-gray-300" />
-              </div>
-              <p className="text-lg font-medium text-gray-600">
-                Your flashcards will appear here
-              </p>
-              <p className="text-sm text-gray-400 mt-1">
-                Upload a PDF document to get started
-              </p>
-            </div>
-          )}
         </div>
       ) : (
         /* History Tab */
         <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-          <div className="p-5 border-b bg-gradient-to-r from-gray-50 to-white">
-            <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-              <History size={20} className="text-orange-600" />
-              Flashcards History
+          <div className="px-6 py-5 border-b border-gray-100 bg-gray-50/50 flex items-center justify-between">
+            <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
+              <History size={18} className="text-indigo-600" />
+              Generated Collections
             </h3>
-            <p className="text-sm text-gray-500 mt-1">
-              View your previously generated flashcards
-            </p>
+            <span className="text-xs font-medium bg-white px-2.5 py-1 rounded-full border border-gray-200 text-gray-500">
+               {historyItems.length} items
+            </span>
           </div>
 
           {historyLoading ? (
             <div className="p-16 flex flex-col items-center justify-center">
-              <Loader2 className="animate-spin text-orange-600 mb-4" size={40} />
-              <span className="text-gray-600 font-medium">Loading history...</span>
+              <Loader2 className="animate-spin text-indigo-600 mb-4" size={32} />
+              <span className="text-gray-500 text-sm font-medium">Retrieving history...</span>
             </div>
           ) : historyItems.length === 0 ? (
-            <div className="p-16 flex flex-col items-center justify-center text-center">
-              <div className="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center mb-4">
-                <History size={40} className="text-gray-300" />
+            <div className="p-20 flex flex-col items-center justify-center text-center">
+              <div className="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center mb-4 border border-gray-100">
+                <History size={32} className="text-gray-300" />
               </div>
-              <p className="text-lg font-semibold text-gray-800 mb-2">
-                No flashcards yet
+              <p className="text-base font-semibold text-gray-900 mb-1">
+                No flashcards found
               </p>
-              <p className="text-gray-500 text-sm max-w-sm">
-                Generate flashcards from a PDF document to see your history here.
+              <p className="text-gray-500 text-sm max-w-xs mb-6">
+                Your generated flashcard collections will appear here safely.
               </p>
               <button
                 onClick={() => setActiveTab("generate")}
-                className="mt-6 px-5 py-2.5 bg-orange-500 text-white rounded-xl font-semibold hover:bg-orange-600 transition-all flex items-center gap-2"
+                className="px-5 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-all shadow-sm"
               >
-                <FileUp size={18} />
-                Generate your first flashcards
+                Create New Deck
               </button>
             </div>
           ) : (
             <div className="divide-y divide-gray-100">
               {historyItems.map((item, index) => (
-                <div key={item.id || index} className="transition-all duration-300">
+                <div key={item.id || index} className="group transition-all duration-300 hover:bg-gray-50/50">
                   {/* History Item Header */}
                   <div
                     onClick={() =>
                       setExpandedItem(expandedItem === index ? null : index)
                     }
-                    className="p-5 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors"
+                    className="p-5 flex items-center justify-between cursor-pointer"
                   >
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center">
-                        <Layers size={24} className="text-orange-500" />
+                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center border transition-colors ${expandedItem === index ? "bg-indigo-600 border-indigo-600 text-white" : "bg-white border-gray-200 text-indigo-600 group-hover:border-indigo-200"}`}>
+                        <Layers size={22} />
                       </div>
                       <div>
-                        <h4 className="font-semibold text-gray-900">
+                        <h4 className={`font-bold text-sm ${expandedItem === index ? "text-indigo-700" : "text-gray-900"}`}>
                           {item.fileName || "Unknown File"}
                         </h4>
-                        <div className="flex items-center gap-3 mt-1 text-sm text-gray-500">
+                        <div className="flex items-center gap-3 mt-1 text-xs text-gray-500">
                           <span className="flex items-center gap-1">
-                            <Clock size={14} />
+                            <Clock size={12} />
                             {formatDate(item.createdAt)}
                           </span>
-                          <span className="text-orange-600 font-medium">
+                          <span className="w-1 h-1 rounded-full bg-gray-300"></span>
+                          <span className="font-medium text-gray-700">
                             {item.flashcards?.length || 0} cards
                           </span>
                         </div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2">
                       <a
                         href={item.fileURL}
                         download
                         onClick={(e) => e.stopPropagation()}
-                        className="p-2.5 text-gray-500 hover:text-orange-600 hover:bg-orange-50 rounded-xl transition-colors"
-                        title="Download PDF"
+                        className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                        title="Download Source PDF"
                       >
-                        <Download size={20} />
+                        <Download size={18} />
                       </a>
-                      <ChevronRight
-                        size={20}
-                        className={`text-gray-400 transition-transform duration-300 ${
-                          expandedItem === index ? "rotate-90" : ""
-                        }`}
-                      />
+                      <div className={`p-2 rounded-lg transition-all ${expandedItem === index ? "bg-indigo-50 text-indigo-600" : "text-gray-400"}`}>
+                         <ChevronRight
+                            size={18}
+                            className={`transition-transform duration-300 ${
+                              expandedItem === index ? "rotate-90" : ""
+                            }`}
+                          />
+                      </div>
                     </div>
                   </div>
 
                   {/* Expanded Flashcards */}
                   {expandedItem === index && (
-                    <div className="px-5 pb-5 animate-in slide-in-from-top-2 duration-300">
-                      <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-xl p-6 border border-orange-100">
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div className="px-5 pb-6 animate-in slide-in-from-top-2 duration-300">
+                      <div className="bg-gray-50 rounded-xl p-6 border border-gray-200/60 shadow-inner">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                           {item.flashcards?.map((card, cardIndex) => (
                             <div
                               key={cardIndex}
                               onClick={() => toggleHistoryFlip(item.id, cardIndex)}
-                              className="h-44 cursor-pointer"
+                              className="h-48 cursor-pointer perspective-1000"
                               style={{ perspective: "1000px" }}
                             >
                               <div
-                                className="relative w-full h-full transition-transform duration-500"
+                                className="relative w-full h-full transition-transform duration-500 transform-style-3d"
                                 style={{
                                   transformStyle: "preserve-3d",
                                   transform: historyFlippedCards[`${item.id}-${cardIndex}`]
@@ -697,44 +709,45 @@ export default function Flashcards({ courseId }) {
                               >
                                 {/* Front */}
                                 <div
-                                  className="absolute w-full h-full bg-white border border-orange-200 rounded-xl p-4 flex flex-col items-center justify-center text-center shadow-sm"
+                                  className="absolute w-full h-full bg-white border border-gray-200 rounded-xl p-5 flex flex-col items-center justify-center text-center shadow-sm hover:border-indigo-300 transition-colors"
                                   style={{ backfaceVisibility: "hidden" }}
                                 >
-                                  <span className="absolute top-2 left-2 text-xs font-bold text-orange-400">
+                                  <span className="absolute top-3 left-3 text-[10px] font-bold text-indigo-500 bg-indigo-50 px-2 py-0.5 rounded-full">
                                     Q{cardIndex + 1}
                                   </span>
-                                  <p className="text-sm font-medium text-gray-800 leading-relaxed">
+                                  <p className="text-sm font-medium text-gray-800 leading-relaxed px-2">
                                     {card.question}
                                   </p>
                                 </div>
+                                
                                 {/* Back */}
                                 <div
-                                  className="absolute w-full h-full bg-gradient-to-br from-orange-500 to-amber-500 rounded-xl p-4 flex flex-col items-center justify-center text-center"
+                                  className="absolute w-full h-full bg-gradient-to-br from-indigo-600 to-violet-600 rounded-xl p-5 flex flex-col items-center justify-center text-center shadow-md"
                                   style={{
                                     backfaceVisibility: "hidden",
                                     transform: "rotateY(180deg)",
                                   }}
                                 >
-                                  <span className="absolute top-2 left-2 text-xs font-bold text-orange-200">
+                                  <span className="absolute top-3 left-3 text-[10px] font-bold text-white/90 bg-white/20 px-2 py-0.5 rounded-full">
                                     A{cardIndex + 1}
                                   </span>
-                                  <p className="text-sm font-medium text-white leading-relaxed">
+                                  <p className="text-sm font-medium text-white leading-relaxed px-2">
                                     {card.answer}
                                   </p>
                                 </div>
-                            </div>
+                              </div>
                             </div>
                           ))}
-                            </div>
                         </div>
+                      </div>
                     </div>
                   )}
-                    </div>
-                ))}
+                </div>
+              ))}
             </div>
           )}
         </div>
       )}
-        </div>
-    );
+    </div>
+  );
 }

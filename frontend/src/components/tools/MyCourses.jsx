@@ -268,55 +268,62 @@ const MyCourses = () => {
           </button>
         </div>
       ) : (
-        /* Course grid */
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {enrolledCourses.map((enrollment) => {
-            const course = enrollment.course || enrollment;
-            return (
-              <div 
-                key={enrollment.courseId || course.id} 
-                onClick={() => handleCourseClick(course.id || enrollment.courseId)} 
-                className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col justify-between h-[200px]"
-              >
-                <div className="flex justify-between items-start">
-                  <span className={`px-3 py-1 rounded-full text-xs font-bold ${getDepartmentColor(course.department)}`}>
-                    {course.department}
-                  </span>
-                  <span className="text-xs font-medium text-gray-400">
-                    {course.courseCode}
-                  </span>
-                </div>
-
-                <div>
-                  <h3 className="text-lg font-bold text-gray-900">
-                    {course.courseName}
-                  </h3>
-                </div>
-
-                <div className="flex justify-between items-end mt-4">
-                  <div className="flex items-center -space-x-2">
-                    <div className="w-8 h-8 rounded-full bg-gray-200 border-2 border-white"></div>
-                    <div className="w-8 h-8 rounded-full bg-gray-300 border-2 border-white"></div>
-                    <div className="w-8 h-8 rounded-full bg-indigo-50 border-2 border-white flex items-center justify-center text-[10px] font-bold text-indigo-600">
-                      +{course.memberCount || 0}
-                    </div>
-                  </div>
-
-                  <button 
-                    onClick={(e) => {
-                      e.stopPropagation(); 
-                      router.push(`/course/${course.id || enrollment.courseId}/chat`);
-                    }}
-                    className="flex items-center gap-2 text-gray-400 hover:text-indigo-600 text-sm font-medium transition-colors"
-                  >
-                    <MessageCircle className="w-4 h-4" />
-                    Chat Room
-                  </button>
-                </div>
+        
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {enrolledCourses.map((enrollment) => {
+          const course = enrollment.course || enrollment;
+          return (
+            <div 
+              key={enrollment.courseId || course.id} 
+              onClick={() => handleCourseClick(course.id || enrollment.courseId)} 
+              className="group relative bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 hover:border-indigo-100 transition-all duration-300 cursor-pointer flex flex-col justify-between min-h-[180px]"
+            >
+              {/* Header: Dept & Code */}
+              <div className="flex justify-between items-start mb-4">
+                <span className={`px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider ${getDepartmentColor(course.department)}`}>
+                  {course.department}
+                </span>
+                <span className="text-xs font-semibold text-gray-400 font-mono bg-gray-50 px-2 py-1 rounded-md">
+                  {course.courseCode}
+                </span>
               </div>
-            );
-          })}
-        </div>
+
+              {/* Title */}
+              <div className="mb-6">
+                <h3 className="text-lg font-bold text-gray-900 leading-tight group-hover:text-indigo-600 transition-colors line-clamp-2">
+                  {course.courseName}
+                </h3>
+              </div>
+
+              {/* Footer: Stats & Actions */}
+              <div className="flex justify-between items-center pt-4 border-t border-gray-50 mt-auto">
+                
+                {/* Member Count - Cleaned Up */}
+                <div className="flex items-center gap-2 text-gray-500" title="Enrolled Members">
+                  <div className="bg-gray-100 p-1.5 rounded-full group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors">
+                    <Users className="w-4 h-4" />
+                  </div>
+                  <span className="text-sm font-medium">
+                    {course.memberCount || 0}
+                  </span>
+                </div>
+
+                {/* Chat Button - Distinct Action */}
+                <button 
+                  onClick={(e) => {
+                    e.stopPropagation(); 
+                    router.push(`/course/${course.id || enrollment.courseId}/chat`);
+                  }}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 text-xs font-bold transition-all"
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  <span>Chat</span>
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
       )}
 
       {/* Join Course Modal */}

@@ -39,6 +39,7 @@ export default function ChatRoom({ courseId, groupId }) {
   const [connected, setConnected] = useState(false);
   const [currentUserId, setCurrentUserId] = useState(null);
   const [aiTyping, setAiTyping] = useState(false);
+  const [hoveredMessageId, setHoveredMessageId] = useState(null);
 
   // Refs
   const bottomRef = useRef(null);
@@ -288,7 +289,7 @@ export default function ChatRoom({ courseId, groupId }) {
       if (listItems.length > 0) {
         const ListTag = listType === 'ol' ? 'ol' : 'ul';
         elements.push(
-          <ListTag key={`list-${elements.length}`} className={`my-2 ${listType === 'ol' ? 'list-decimal' : 'list-disc'} list-inside space-y-1 text-slate-200`}>
+          <ListTag key={`list-${elements.length}`} className={`my-2 ${listType === 'ol' ? 'list-decimal' : 'list-disc'} list-inside space-y-1 text-gray-700`}>
             {listItems.map((item, i) => (
               <li key={i} className="leading-relaxed">{renderInline(item)}</li>
             ))}
@@ -309,7 +310,7 @@ export default function ChatRoom({ courseId, groupId }) {
         const mathMatch = remaining.match(/^\$([^$]+)\$/);
         if (mathMatch) {
           parts.push(
-            <span key={key++} className="font-mono text-violet-300 bg-violet-500/20 px-1 rounded">
+            <span key={key++} className="font-mono text-indigo-700 bg-indigo-50 px-1.5 py-0.5 rounded">
               {mathMatch[1]}
             </span>
           );
@@ -320,7 +321,7 @@ export default function ChatRoom({ courseId, groupId }) {
         // Bold **...**
         const boldMatch = remaining.match(/^\*\*([^*]+)\*\*/);
         if (boldMatch) {
-          parts.push(<strong key={key++} className="font-semibold text-white">{boldMatch[1]}</strong>);
+          parts.push(<strong key={key++} className="font-semibold text-gray-900">{boldMatch[1]}</strong>);
           remaining = remaining.slice(boldMatch[0].length);
           continue;
         }
@@ -337,7 +338,7 @@ export default function ChatRoom({ courseId, groupId }) {
         const codeMatch = remaining.match(/^`([^`]+)`/);
         if (codeMatch) {
           parts.push(
-            <code key={key++} className="px-1.5 py-0.5 bg-slate-700 text-emerald-400 rounded text-[13px] font-mono">
+            <code key={key++} className="px-1.5 py-0.5 bg-gray-100 text-indigo-600 rounded text-[13px] font-mono">
               {codeMatch[1]}
             </code>
           );
@@ -349,7 +350,7 @@ export default function ChatRoom({ courseId, groupId }) {
         const mentionMatch = remaining.match(/^@learnix/i);
         if (mentionMatch) {
           parts.push(
-            <span key={key++} className="bg-violet-500/30 text-violet-300 px-1 py-0.5 rounded font-semibold">
+            <span key={key++} className="bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded font-semibold">
               {mentionMatch[0]}
             </span>
           );
@@ -386,15 +387,15 @@ export default function ChatRoom({ courseId, groupId }) {
           codeBlockContent = [];
         } else {
           elements.push(
-            <div key={`code-${elements.length}`} className="my-3 rounded-lg overflow-hidden bg-slate-950 border border-slate-700">
+            <div key={`code-${elements.length}`} className="my-3 rounded-lg overflow-hidden bg-gray-900 border border-gray-300">
               {codeBlockLang && (
-                <div className="px-3 py-1.5 bg-slate-800 text-xs text-slate-400 font-mono flex items-center gap-1.5 border-b border-slate-700">
+                <div className="px-3 py-1.5 bg-gray-800 text-xs text-gray-300 font-mono flex items-center gap-1.5 border-b border-gray-700">
                   <Code2 size={11} />
                   {codeBlockLang}
                 </div>
               )}
               <pre className="p-3 overflow-x-auto">
-                <code className="text-emerald-400 font-mono text-sm leading-relaxed">
+                <code className="text-green-400 font-mono text-sm leading-relaxed">
                   {codeBlockContent.join('\n')}
                 </code>
               </pre>
@@ -417,7 +418,7 @@ export default function ChatRoom({ courseId, groupId }) {
       if (h4Match) {
         flushList();
         elements.push(
-          <h4 key={`h4-${elements.length}`} className="text-sm font-semibold text-white mt-3 mb-1.5">
+          <h4 key={`h4-${elements.length}`} className="text-sm font-semibold text-gray-900 mt-3 mb-1.5">
             {renderInline(h4Match[1])}
           </h4>
         );
@@ -428,7 +429,7 @@ export default function ChatRoom({ courseId, groupId }) {
       if (h3Match) {
         flushList();
         elements.push(
-          <h3 key={`h3-${elements.length}`} className="text-base font-semibold text-white mt-4 mb-2">
+          <h3 key={`h3-${elements.length}`} className="text-base font-semibold text-gray-900 mt-4 mb-2">
             {renderInline(h3Match[1])}
           </h3>
         );
@@ -439,7 +440,7 @@ export default function ChatRoom({ courseId, groupId }) {
       if (h2Match) {
         flushList();
         elements.push(
-          <h2 key={`h2-${elements.length}`} className="text-lg font-bold text-white mt-4 mb-2">
+          <h2 key={`h2-${elements.length}`} className="text-lg font-bold text-gray-900 mt-4 mb-2">
             {renderInline(h2Match[1])}
           </h2>
         );
@@ -450,7 +451,7 @@ export default function ChatRoom({ courseId, groupId }) {
       if (h1Match) {
         flushList();
         elements.push(
-          <h1 key={`h1-${elements.length}`} className="text-xl font-bold text-white mt-4 mb-2">
+          <h1 key={`h1-${elements.length}`} className="text-xl font-bold text-gray-900 mt-4 mb-2">
             {renderInline(h1Match[1])}
           </h1>
         );
@@ -460,7 +461,7 @@ export default function ChatRoom({ courseId, groupId }) {
       // Horizontal rule
       if (line.match(/^(\*\*\*|---|___)$/)) {
         flushList();
-        elements.push(<hr key={`hr-${elements.length}`} className="my-3 border-slate-700" />);
+        elements.push(<hr key={`hr-${elements.length}`} className="my-3 border-gray-300" />);
         continue;
       }
 
@@ -488,8 +489,8 @@ export default function ChatRoom({ courseId, groupId }) {
         flushList();
         elements.push(
           <div key={`letter-${elements.length}`} className="my-1.5">
-            <span className="font-semibold text-violet-300">{letterMatch[1]}. </span>
-            <span className="text-slate-200">{renderInline(letterMatch[2])}</span>
+            <span className="font-semibold text-indigo-600">{letterMatch[1]}. </span>
+            <span className="text-gray-700">{renderInline(letterMatch[2])}</span>
           </div>
         );
         continue;
@@ -504,7 +505,7 @@ export default function ChatRoom({ courseId, groupId }) {
         elements.push(
           <div key={`table-${elements.length}`} className="flex gap-4 my-1 text-sm">
             {cells.map((cell, ci) => (
-              <span key={ci} className={ci === 0 ? "font-mono text-violet-300 bg-violet-500/20 px-1.5 py-0.5 rounded" : "text-slate-300"}>
+              <span key={ci} className={ci === 0 ? "font-mono text-indigo-700 bg-indigo-50 px-1.5 py-0.5 rounded" : "text-gray-700"}>
                 {renderInline(cell)}
               </span>
             ))}
@@ -522,7 +523,7 @@ export default function ChatRoom({ courseId, groupId }) {
       // Regular paragraph
       flushList();
       elements.push(
-        <p key={`p-${elements.length}`} className="my-1.5 leading-relaxed text-slate-200">
+        <p key={`p-${elements.length}`} className="my-1.5 leading-relaxed text-gray-700">
           {renderInline(line)}
         </p>
       );
@@ -540,7 +541,7 @@ export default function ChatRoom({ courseId, groupId }) {
         return (
           <span
             key={index}
-            className="bg-violet-500/30 text-violet-200 px-1 py-0.5 rounded font-semibold"
+            className="bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded font-semibold"
           >
             {part}
           </span>
@@ -553,10 +554,10 @@ export default function ChatRoom({ courseId, groupId }) {
   // Loading state
   if (loading) {
     return (
-      <div className="flex flex-col h-[calc(100vh-140px)] bg-gradient-to-b from-slate-900 to-slate-950 rounded-xl border border-slate-800 shadow-xl animate-in fade-in duration-500 overflow-hidden">
+      <div className="flex flex-col h-[calc(100vh-140px)] bg-white rounded-xl border border-gray-200 shadow-sm animate-in fade-in duration-500 overflow-hidden">
         <div className="flex-1 flex items-center justify-center">
-          <Loader2 className="w-8 h-8 text-violet-500 animate-spin" />
-          <span className="ml-3 text-slate-400">Loading chat...</span>
+          <Loader2 className="w-8 h-8 text-indigo-600 animate-spin" />
+          <span className="ml-3 text-gray-600">Loading chat...</span>
         </div>
       </div>
     );
@@ -565,13 +566,13 @@ export default function ChatRoom({ courseId, groupId }) {
   // Error state
   if (error && messages.length === 0) {
     return (
-      <div className="flex flex-col h-[calc(100vh-140px)] bg-gradient-to-b from-slate-900 to-slate-950 rounded-xl border border-slate-800 shadow-xl animate-in fade-in duration-500 overflow-hidden">
+      <div className="flex flex-col h-[calc(100vh-140px)] bg-white rounded-xl border border-gray-200 shadow-sm animate-in fade-in duration-500 overflow-hidden">
         <div className="flex-1 flex flex-col items-center justify-center text-center p-8">
-          <AlertCircle className="w-12 h-12 text-red-400 mb-4" />
-          <p className="text-slate-300 font-medium mb-2">{error}</p>
+          <AlertCircle className="w-12 h-12 text-red-500 mb-4" />
+          <p className="text-gray-700 font-medium mb-2">{error}</p>
           <button
             onClick={fetchChatHistory}
-            className="mt-4 px-4 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition-colors"
+            className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
           >
             Try Again
           </button>
@@ -581,27 +582,27 @@ export default function ChatRoom({ courseId, groupId }) {
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-140px)] bg-gradient-to-b from-slate-900 to-slate-950 rounded-xl border border-slate-800 shadow-xl animate-in fade-in duration-500 overflow-hidden">
+    <div className="flex flex-col h-[calc(100vh-140px)] bg-white rounded-xl border border-gray-200 shadow-sm animate-in fade-in duration-500 overflow-hidden">
       {/* Header */}
-      <div className="p-4 border-b border-slate-800 bg-slate-900/80 backdrop-blur-sm flex items-center justify-between">
+      <div className="p-3.5 border-b border-gray-200 bg-gray-50 flex items-center justify-between shrink-0">
         <div>
-          <h2 className="font-bold text-slate-100 flex items-center gap-2">
+          <h2 className="font-bold text-gray-800 flex items-center gap-2 text-sm">
             Group Chat
-            <span className="text-xs text-slate-500 font-normal">
-              Type <span className="text-violet-400 font-medium">@learnix</span>{" "}
+            <span className="text-xs text-gray-500 font-normal">
+              Type <span className="text-indigo-600 font-medium">@learnix</span>{" "}
               to ask AI
             </span>
           </h2>
-          <p className="text-xs text-slate-500">{messages.length} messages</p>
+          <p className="text-xs text-gray-500 mt-0.5">{messages.length} messages</p>
         </div>
         <div className="flex items-center gap-2">
           {connected ? (
-            <span className="flex items-center gap-1.5 text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-full">
+            <span className="flex items-center gap-1.5 text-xs text-green-700 bg-green-50 border border-green-200 px-2.5 py-1 rounded-full">
               <Wifi size={12} />
               Connected
             </span>
           ) : (
-            <span className="flex items-center gap-1.5 text-xs text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-full">
+            <span className="flex items-center gap-1.5 text-xs text-yellow-700 bg-yellow-50 border border-yellow-200 px-2.5 py-1 rounded-full">
               <WifiOff size={12} />
               Connecting...
             </span>
@@ -610,16 +611,16 @@ export default function ChatRoom({ courseId, groupId }) {
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 p-6 overflow-y-auto space-y-4 bg-gradient-to-b from-slate-900/50 to-transparent">
+      <div className="flex-1 p-4 overflow-y-auto space-y-1.5 bg-gray-50">
         {messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full text-center text-slate-500">
-            <Bot className="w-16 h-16 text-slate-700 mb-4" />
-            <p className="text-lg font-medium mb-1 text-slate-400">
+          <div className="flex flex-col items-center justify-center h-full text-center text-gray-500">
+            <Bot className="w-16 h-16 text-gray-300 mb-4" />
+            <p className="text-lg font-medium mb-1 text-gray-600">
               No messages yet
             </p>
             <p className="text-sm">
               Start a conversation or type{" "}
-              <span className="text-violet-400 font-medium">@learnix</span> to
+              <span className="text-indigo-600 font-medium">@learnix</span> to
               ask AI!
             </p>
           </div>
@@ -631,9 +632,11 @@ export default function ChatRoom({ courseId, groupId }) {
             return (
               <div
                 key={msg.id}
-                className={`flex flex-col ${
+                className={`flex flex-col group ${
                   self ? "items-end" : "items-start"
                 }`}
+                onMouseEnter={() => setHoveredMessageId(msg.id)}
+                onMouseLeave={() => setHoveredMessageId(null)}
               >
                 <div
                   className={`flex items-end gap-2 max-w-[85%] ${
@@ -643,14 +646,14 @@ export default function ChatRoom({ courseId, groupId }) {
                   {/* Avatar */}
                   {!self && (
                     <div
-                      className={`w-8 h-8 mb-1 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${
+                      className={`w-7 h-7 mb-0.5 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${
                         ai
-                          ? "bg-gradient-to-br from-violet-600 to-indigo-600 text-white shadow-lg shadow-violet-500/30"
-                          : "bg-slate-800 text-slate-300 border border-slate-700"
+                          ? "bg-gradient-to-br from-indigo-600 to-indigo-500 text-white shadow-md"
+                          : "bg-gray-200 text-gray-700 border border-gray-300"
                       }`}
                     >
                       {ai ? (
-                        <Sparkles size={14} />
+                        <Sparkles size={13} />
                       ) : (
                         msg.senderName?.charAt(0)?.toUpperCase() || "?"
                       )}
@@ -659,22 +662,22 @@ export default function ChatRoom({ courseId, groupId }) {
 
                   {/* Message bubble */}
                   <div
-                    className={`p-3.5 rounded-2xl text-sm shadow-lg ${
+                    className={`px-3 py-2 rounded-2xl text-sm shadow-sm transition-all ${
                       self
-                        ? "bg-gradient-to-br from-indigo-600 to-violet-600 text-white rounded-tr-sm"
+                        ? "bg-indigo-600 text-white rounded-tr-sm"
                         : ai
-                        ? "bg-gradient-to-br from-violet-500/20 to-indigo-500/20 text-slate-100 rounded-tl-sm border border-violet-500/30 backdrop-blur-sm max-w-full"
-                        : "bg-slate-800 text-slate-200 rounded-tl-sm border border-slate-700"
+                        ? "bg-indigo-50 text-gray-800 rounded-tl-sm border border-indigo-200 max-w-full"
+                        : "bg-white text-gray-800 rounded-tl-sm border border-gray-200"
                     }`}
                   >
                     {/* Sender name */}
                     {!self && (
                       <span
                         className={`block text-[10px] font-bold mb-1 ${
-                          ai ? "text-violet-400" : "text-slate-500"
+                          ai ? "text-indigo-600" : "text-gray-500"
                         }`}
                       >
-                        {ai && <Sparkles className="inline w-3 h-3 mr-1" />}
+                        {ai && <Sparkles className="inline w-3 h-3 mr-0.5" />}
                         {msg.senderName}
                       </span>
                     )}
@@ -684,8 +687,12 @@ export default function ChatRoom({ courseId, groupId }) {
                   </div>
                 </div>
 
-                {/* Timestamp */}
-                <span className="text-[10px] text-slate-600 mt-1 px-2">
+                {/* Timestamp - only visible on hover */}
+                <span 
+                  className={`text-[10px] text-gray-400 px-2 transition-opacity duration-200 ${
+                    hoveredMessageId === msg.id ? 'opacity-100' : 'opacity-0'
+                  }`}
+                >
                   {formatTime(msg.createdAt)}
                 </span>
               </div>
@@ -696,14 +703,14 @@ export default function ChatRoom({ courseId, groupId }) {
         {/* AI Typing Indicator */}
         {aiTyping && (
           <div className="flex items-start gap-2">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-violet-500/30">
-              <Sparkles size={14} className="text-white" />
+            <div className="w-7 h-7 rounded-full bg-gradient-to-br from-indigo-600 to-indigo-500 flex items-center justify-center shadow-md">
+              <Sparkles size={13} className="text-white" />
             </div>
-            <div className="bg-gradient-to-br from-violet-500/20 to-indigo-500/20 border border-violet-500/30 rounded-2xl rounded-tl-sm p-4 backdrop-blur-sm">
+            <div className="bg-indigo-50 border border-indigo-200 rounded-2xl rounded-tl-sm px-4 py-3">
               <div className="flex items-center gap-1">
-                <div className="w-2 h-2 bg-violet-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-                <div className="w-2 h-2 bg-violet-400 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-                <div className="w-2 h-2 bg-violet-400 rounded-full animate-bounce"></div>
+                <div className="w-2 h-2 bg-indigo-600 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                <div className="w-2 h-2 bg-indigo-600 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                <div className="w-2 h-2 bg-indigo-600 rounded-full animate-bounce"></div>
               </div>
             </div>
           </div>
@@ -713,25 +720,25 @@ export default function ChatRoom({ courseId, groupId }) {
       </div>
 
       {/* Input Area */}
-      <div className="p-4 bg-slate-900/80 backdrop-blur-sm border-t border-slate-800">
+      <div className="p-3.5 bg-white border-t border-gray-200 shrink-0">
         {error && (
-          <div className="mb-3 p-2.5 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm flex items-center gap-2">
+          <div className="mb-2.5 p-2.5 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm flex items-center gap-2">
             <AlertCircle size={14} />
             {error}
             <button
               onClick={() => setError(null)}
-              className="ml-auto text-red-300 hover:text-red-100"
+              className="ml-auto text-red-600 hover:text-red-800"
             >
               ×
             </button>
           </div>
         )}
-        <form onSubmit={sendMessage} className="flex gap-2">
+        <div className="flex gap-2">
           <div className="relative flex-1">
             <input
               ref={inputRef}
               type="text"
-              className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               placeholder={
                 connected
                   ? "Type a message... (use @learnix to ask AI)"
@@ -739,12 +746,18 @@ export default function ChatRoom({ courseId, groupId }) {
               }
               value={input}
               onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  sendMessage(e);
+                }
+              }}
               disabled={!connected || sending || aiTyping}
               maxLength={2000}
             />
             {input.toLowerCase().includes("@learnix") && (
               <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                <span className="text-xs text-violet-400 bg-violet-500/10 px-2 py-1 rounded-full border border-violet-500/30 flex items-center gap-1">
+                <span className="text-xs text-indigo-600 bg-indigo-50 px-2 py-1 rounded-full border border-indigo-200 flex items-center gap-1">
                   <Sparkles size={10} />
                   AI Mode
                 </span>
@@ -752,11 +765,11 @@ export default function ChatRoom({ courseId, groupId }) {
             )}
           </div>
           <button
-            type="submit"
-            className={`p-3 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
+            onClick={sendMessage}
+            className={`px-3 py-2.5 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
               input.toLowerCase().includes("@learnix")
-                ? "bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 shadow-lg shadow-violet-500/30"
-                : "bg-indigo-600 hover:bg-indigo-500"
+                ? "bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-700 hover:to-indigo-600 shadow-md"
+                : "bg-indigo-600 hover:bg-indigo-700"
             } text-white`}
             disabled={!input.trim() || !connected || sending || aiTyping}
           >
@@ -766,7 +779,7 @@ export default function ChatRoom({ courseId, groupId }) {
               <Send size={18} />
             )}
           </button>
-        </form>
+        </div>
       </div>
     </div>
   );
